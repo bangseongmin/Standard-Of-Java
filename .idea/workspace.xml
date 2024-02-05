@@ -37,7 +37,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;chapter5&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;chapter6&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -159,6 +159,8 @@
       <workItem from="1706797618900" duration="3115000" />
       <workItem from="1707056809127" duration="4000" />
       <workItem from="1707140049336" duration="1957000" />
+      <workItem from="1707142583821" duration="1066000" />
+      <workItem from="1707143915694" duration="678000" />
     </task>
     <servers />
   </component>
