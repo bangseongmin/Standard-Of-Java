@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter6/ProductTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter6/ProductTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter6/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter6/README.MD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,8 +39,8 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;chapter5&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;chapter6&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java/src/chapter6&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -52,24 +54,28 @@
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Study\Standard-Of-Java\src\chapter6" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Study\Standard-Of-Java\src" />
       <recent name="C:\Study\Standard-Of-Java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chapter6" />
       <recent name="chapter5" />
       <recent name="chapter4" />
       <recent name="chapter3" />
       <recent name="chapter2" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ArrayEx19">
-    <configuration name="ArrayEx12" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter5.ArrayEx12" />
+  <component name="RunManager" selected="Application.DocumentTest">
+    <configuration name="BlockTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.BlockTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter5.*" />
+          <option name="PATTERN" value="chapter6.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -77,12 +83,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ArrayEx15" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter5.ArrayEx15" />
+    <configuration name="CarTest3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.CarTest3" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter5.*" />
+          <option name="PATTERN" value="chapter6.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -90,12 +96,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ArrayEx17" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter5.ArrayEx17" />
+    <configuration name="DocumentTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.DocumentTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter5.*" />
+          <option name="PATTERN" value="chapter6.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -103,12 +109,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ArrayEx18" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter5.ArrayEx18" />
+    <configuration name="ProductTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.ProductTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter5.*" />
+          <option name="PATTERN" value="chapter6.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -116,12 +122,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ArrayEx19" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter5.ArrayEx19" />
+    <configuration name="StaticBlockTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.StaticBlockTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter5.*" />
+          <option name="PATTERN" value="chapter6.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -131,11 +137,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ArrayEx19" />
-        <item itemvalue="Application.ArrayEx18" />
-        <item itemvalue="Application.ArrayEx17" />
-        <item itemvalue="Application.ArrayEx15" />
-        <item itemvalue="Application.ArrayEx12" />
+        <item itemvalue="Application.DocumentTest" />
+        <item itemvalue="Application.ProductTest" />
+        <item itemvalue="Application.StaticBlockTest" />
+        <item itemvalue="Application.BlockTest" />
+        <item itemvalue="Application.CarTest3" />
       </list>
     </recent_temporary>
   </component>
@@ -159,6 +165,14 @@
       <workItem from="1706797618900" duration="3115000" />
       <workItem from="1707056809127" duration="4000" />
       <workItem from="1707140049336" duration="1957000" />
+      <workItem from="1707142583821" duration="1066000" />
+      <workItem from="1707143915694" duration="678000" />
+      <workItem from="1707231276301" duration="4038000" />
+      <workItem from="1707749185707" duration="1849000" />
+      <workItem from="1707836078632" duration="698000" />
+      <workItem from="1707921635671" duration="5285000" />
+      <workItem from="1708008113892" duration="5550000" />
+      <workItem from="1708520368986" duration="4499000" />
     </task>
     <servers />
   </component>
