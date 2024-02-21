@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter6/ProductTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter6/ProductTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/chapter6/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter6/README.MD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -68,9 +69,9 @@
       <recent name="chapter2" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.OverloadingTest">
-    <configuration name="FactorialTest2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter6.FactorialTest2" />
+  <component name="RunManager" selected="Application.DocumentTest">
+    <configuration name="BlockTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.BlockTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -82,8 +83,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MyMathTest2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter6.MyMathTest2" />
+    <configuration name="CarTest3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.CarTest3" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -95,8 +96,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="OverloadingTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter6.OverloadingTest" />
+    <configuration name="DocumentTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.DocumentTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -108,8 +109,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ReferenceParamEx" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter6.ReferenceParamEx" />
+    <configuration name="ProductTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.ProductTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -121,8 +122,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ReferenceParamEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter6.ReferenceParamEx2" />
+    <configuration name="StaticBlockTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter6.StaticBlockTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -136,11 +137,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.OverloadingTest" />
-        <item itemvalue="Application.MyMathTest2" />
-        <item itemvalue="Application.FactorialTest2" />
-        <item itemvalue="Application.ReferenceParamEx2" />
-        <item itemvalue="Application.ReferenceParamEx" />
+        <item itemvalue="Application.DocumentTest" />
+        <item itemvalue="Application.ProductTest" />
+        <item itemvalue="Application.StaticBlockTest" />
+        <item itemvalue="Application.BlockTest" />
+        <item itemvalue="Application.CarTest3" />
       </list>
     </recent_temporary>
   </component>
@@ -171,6 +172,7 @@
       <workItem from="1707836078632" duration="698000" />
       <workItem from="1707921635671" duration="5285000" />
       <workItem from="1708008113892" duration="5550000" />
+      <workItem from="1708520368986" duration="4499000" />
     </task>
     <servers />
   </component>
