@@ -6,6 +6,89 @@
   <component name="ChangeListManager">
     <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/FinalCardTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example12/FinalCardTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/README.MD" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/StaticImportEx1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example11/StaticImportEx1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/TV/TV.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example04/TV.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/TV/TVCR.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example04/TVCR.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/TV/VCR.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example04/VCR.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/binding/BindingTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example18/BindingTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/binding/Child.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example18/Child.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/binding/Parent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example18/Parent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/binding2/BindingTest2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example19/BindingTest2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/binding2/Child.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example19/Child.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/binding2/Parent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example19/Parent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/binding3/BindingTest3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example20/BindingTest3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/binding3/Child.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example20/Child.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/binding3/Parent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example20/Parent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/caption/CaptionTV.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example01/CaptionTV.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/caption/CaptionTVTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example01/CaptionTVTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/caption/TV.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example01/TV.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/casting/Car.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example15/Car.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/casting/CastingTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example15/CastingTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/casting/CastingTest2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example16/CastingTest2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/casting/FireEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example15/FireEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/deck/Card.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example03/Card.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/deck/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example03/Deck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/deck/DeckTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example03/DeckTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example05/Child.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example05/Child.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example05/Parent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example05/Parent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example05/SuperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example05/SuperTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example08/Point3D2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example08/Point3D2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example16/Car.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example16/Car.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example16/FireEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example16/FireEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example24/Attackable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example24/Attackable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example24/Fighter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example24/Fighter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example24/FighterTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example24/FighterTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example24/Movable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example24/Movable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example25/HTMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example25/HTMLParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example25/ParserTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example25/ParserTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example25/XMLParser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example25/XMLParser.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example26/AirUnit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example26/AirUnit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example26/Repairable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example26/Repairable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/example26/RepairableTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example26/RepairableTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/importTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example10/ImportTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/instanceofTest/Car.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example17/Car.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/instanceofTest/FireEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example17/FireEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/instanceofTest/InstanceofTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example17/InstanceofTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/parent/Child.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/parent/Child2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/parent/Parent.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/parent/SuperTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/parent/SuperTest2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/point/Point.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/point/Point3D.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/point/Point3D2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/point/PointTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/point/PointTest2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example08/PointTest2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument/Audio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example21/Audio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument/Buyer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example21/Buyer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument/Computer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example21/Computer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument/PolyArgumentTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example21/PolyArgumentTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example21/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument/TV.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example21/TV.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument2/Audio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example22/Audio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument2/Buyer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example22/Buyer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument2/Computer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example22/Computer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument2/PolyArgumentTest2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example22/PolyArgumentTest2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument2/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example22/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument2/TV.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example22/TV.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument3/Audio.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example23/Audio.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument3/Buyer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example23/Buyer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument3/Computer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example23/Computer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument3/PolyArgumentTest3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example23/PolyArgumentTest3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument3/Product.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example23/Product.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/polyArgument3/TV.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example23/TV.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/shape/Circle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example02/Circle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/shape/DrawShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example02/DrawShape.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/shape/Point.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example02/Point.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/shape/Shape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example02/Shape.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/shape/Triangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example02/Triangle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/singleton/Singleton.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example14/Singleton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/singleton/SingletonTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example14/SingletonTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/test/PackageTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example09/PackageTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/time/Time.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example13/Time.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter7/time/TimeTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter7/example13/TimeTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +99,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin Class" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -34,51 +118,51 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;chapter7&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java/src/chapter7/polyArgument3&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "chapter7",
+    "last_opened_file_path": "C:/Study/Standard-Of-Java/src/chapter7/example05",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Study\Standard-Of-Java\src\chapter7\polyArgument3" />
-      <recent name="C:\Study\Standard-Of-Java\src\chapter7\polyArugment2" />
-      <recent name="C:\Study\Standard-Of-Java\src\chapter7\binding3" />
-      <recent name="C:\Study\Standard-Of-Java\src\chapter7\binding2" />
-      <recent name="C:\Study\Standard-Of-Java\src\chapter7\instanceofTest" />
+      <recent name="C:\Study\Standard-Of-Java\src\chapter7\example05" />
+      <recent name="C:\Study\Standard-Of-Java\src\chapter7\example06" />
+      <recent name="C:\Study\Standard-Of-Java\src\chapter7\example07" />
+      <recent name="C:\Study\Standard-Of-Java\src\chapter7\example08" />
+      <recent name="C:\Study\Standard-Of-Java\src\chapter7\example16" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Study\Standard-Of-Java\src" />
       <recent name="C:\Study\Standard-Of-Java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chapter7.interfacetest3" />
+      <recent name="chapter7.repairable" />
+      <recent name="chapter7.parser" />
+      <recent name="chapter7.fighter" />
       <recent name="chapter7.polyArugment" />
-      <recent name="chapter7.binding" />
-      <recent name="chapter7.singleton" />
-      <recent name="chapter7.point" />
-      <recent name="chapter7.parent" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.PolyArgumentTest3">
-    <configuration name="BindingTest2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter7.binding2.BindingTest2" />
+  <component name="RunManager" selected="Application.InterfaceTest3">
+    <configuration name="FighterTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter7.example24.FighterTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter7.binding2.*" />
+          <option name="PATTERN" value="chapter7.example24.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -86,12 +170,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="BindingTest3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter7.binding3.BindingTest3" />
+    <configuration name="InterfaceTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter7.example27.InterfaceTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter7.binding3.*" />
+          <option name="PATTERN" value="chapter7.example27.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -99,12 +183,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PolyArgumentTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter7.polyArgument.PolyArgumentTest" />
+    <configuration name="InterfaceTest2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter7.example28.InterfaceTest2" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter7.polyArgument.*" />
+          <option name="PATTERN" value="chapter7.example28.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -112,12 +196,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PolyArgumentTest2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter7.polyArgument2.PolyArgumentTest2" />
+    <configuration name="InterfaceTest3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter7.example29.InterfaceTest3" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter7.polyArgument2.*" />
+          <option name="PATTERN" value="chapter7.example29.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -125,12 +209,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PolyArgumentTest3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter7.polyArgument3.PolyArgumentTest3" />
+    <configuration name="RepairableTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter7.example26.RepairableTest" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter7.polyArgument3.*" />
+          <option name="PATTERN" value="chapter7.example26.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -140,11 +224,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.PolyArgumentTest3" />
-        <item itemvalue="Application.PolyArgumentTest2" />
-        <item itemvalue="Application.PolyArgumentTest" />
-        <item itemvalue="Application.BindingTest3" />
-        <item itemvalue="Application.BindingTest2" />
+        <item itemvalue="Application.InterfaceTest3" />
+        <item itemvalue="Application.InterfaceTest2" />
+        <item itemvalue="Application.InterfaceTest" />
+        <item itemvalue="Application.RepairableTest" />
+        <item itemvalue="Application.FighterTest" />
       </list>
     </recent_temporary>
   </component>
@@ -177,7 +261,8 @@
       <workItem from="1708008113892" duration="5550000" />
       <workItem from="1708520368986" duration="13631000" />
       <workItem from="1708612073995" duration="6819000" />
-      <workItem from="1708742828955" duration="2758000" />
+      <workItem from="1708742828955" duration="2786000" />
+      <workItem from="1708869719378" duration="7375000" />
     </task>
     <servers />
   </component>
