@@ -5,11 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter8/chainedException/ChainedExceptionEx.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/chainedException/ChainedExceptionEx.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter8/chainedException/InstallException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/chainedException/InstallException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter8/chainedException/MemoryException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/chainedException/MemoryException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter8/chainedException/SpaceException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter8/chainedException/SpaceException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +39,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "chapter8",
+    "git-widget-placeholder": "main",
     "last_opened_file_path": "C:/Study/Standard-Of-Java/src/chapter8/chainedException",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -187,6 +183,7 @@
       <workItem from="1708956364630" duration="4502000" />
       <workItem from="1709039338028" duration="4120000" />
       <workItem from="1709080232723" duration="5183000" />
+      <workItem from="1709089618421" duration="25000" />
     </task>
     <servers />
   </component>
