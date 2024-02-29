@@ -15,7 +15,7 @@ public class ExceptionEx15 {
                 throw new Exception("파일이름이 유효하지 않습니다.");
             }
         }catch (Exception e) {
-            fileName = "제목없음.txt";
+            fileName = "제목없음.data.txt";
         }finally {
             File f = new File(fileName);
             createNewFile(f);
