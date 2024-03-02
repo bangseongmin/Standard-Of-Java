@@ -35,32 +35,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;chapter11&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java/src/chapter09/ex06&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "chapter12",
+    "last_opened_file_path": "C:/Study/Standard-Of-Java/src/chapter12/ex4",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Study\Standard-Of-Java\src\chapter12\ex4" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter09\ex06" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter8\chainedException" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter7\example05" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter7\example06" />
-      <recent name="C:\Study\Standard-Of-Java\src\chapter7\example07" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Study\Standard-Of-Java\src\chapter09\ex37" />
@@ -68,14 +68,14 @@
       <recent name="C:\Study\Standard-Of-Java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chapter12.ex4" />
+      <recent name="chapter12.ex3" />
       <recent name="chapter11" />
       <recent name="chapter10.dateFormatter" />
       <recent name="chapter10.newTime" />
-      <recent name="chapter10.messageFormat" />
-      <recent name="chapter10.choiceFormat" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CollectionEx">
+  <component name="RunManager" selected="Application.FruitBoxEx4">
     <configuration name="CollectionEx" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chapter11.CollectionEx" />
       <module name="Standard-Of-Java" />
@@ -89,12 +89,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PropertiesEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter11.PropertiesEx1" />
+    <configuration name="FruitBoxEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter12.ex1.FruitBoxEx1" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter11.*" />
+          <option name="PATTERN" value="chapter12.ex1.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -102,12 +102,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PropertiesEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter11.PropertiesEx2" />
+    <configuration name="FruitBoxEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter12.ex2.FruitBoxEx2" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter11.*" />
+          <option name="PATTERN" value="chapter12.ex1.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -115,12 +115,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PropertiesEx3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter11.PropertiesEx3" />
+    <configuration name="FruitBoxEx3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter12.ex3.FruitBoxEx3" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter11.*" />
+          <option name="PATTERN" value="chapter12.ex3.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -128,12 +128,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PropertiesEx4" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter11.PropertiesEx4" />
+    <configuration name="FruitBoxEx4" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter12.ex4.FruitBoxEx4" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter11.*" />
+          <option name="PATTERN" value="chapter12.ex4.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -143,11 +143,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.FruitBoxEx4" />
+        <item itemvalue="Application.FruitBoxEx3" />
+        <item itemvalue="Application.FruitBoxEx2" />
+        <item itemvalue="Application.FruitBoxEx1" />
         <item itemvalue="Application.CollectionEx" />
-        <item itemvalue="Application.PropertiesEx4" />
-        <item itemvalue="Application.PropertiesEx3" />
-        <item itemvalue="Application.PropertiesEx2" />
-        <item itemvalue="Application.PropertiesEx1" />
       </list>
     </recent_temporary>
   </component>
@@ -191,6 +191,7 @@
       <workItem from="1709177310393" duration="12235000" />
       <workItem from="1709258421897" duration="14307000" />
       <workItem from="1709297582553" duration="9754000" />
+      <workItem from="1709357467616" duration="4009000" />
     </task>
     <servers />
   </component>
