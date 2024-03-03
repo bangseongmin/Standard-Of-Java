@@ -938,3 +938,486 @@ JDK에서 제공하는 표준 어노테이션은 주로 컴파일러를 위한 �
 
 #### @Override
 
+메서드 앞에만 붙일 수 있는 어노테이션으로, 조상의 메서드를 오버라이딩하는 것이라는 것을 컴파일러에게 알려주는 역할을 한다. 아래의 코드에서와 같이 오버라이딩할 때 조상 메서드의 이름을 잘못 써도 컴파일러는 이것이 잘못된 것인지 알지 못한다.
+
+```JAVA
+class Parent {
+    void parentMethod();
+}
+
+class Child extends Parent {
+    void parentMethod();        // 오버라이딩하려 했으나 실수로 이름을 잘못적음
+}
+```
+
+오버라이딩할 때는 이처럼 메서드의 이름을 잘못 적는 경우가 많은데, 컴파일러는 그저 새로운 메서드가 추가된 것으로 인식할 뿐이다. 게다가 실행 시에도 오류가 발생하지 않고 조상의 메서드가 호출되므로 어디서 잘못되었는지 알아내기 어렵다.
+
+그러나 메서드 앞에 '@Override' 어노테이션 사용하면 컴파일러가 같은 이름의 메서드가 조상에 있는지 확인하고 없으면, 에러메시지를 출력한다. 오버라이딩할 떄 메서드 앞에 '@Override'를 붙이는 것이 필수는 아니지만, 알아내기 어려운 실수를 미연에 방지해주므로 반드시 붙여주도록 하자.
+
+
+#### Deprecated
+
+새로운 버전의 JDK가 소개될 때, 새로운 기능이 추가될 뿐만 아니라 기존의 부족했던 기능들을 개선하기도 한다. 이 가ㅘ정에서 기존의 기능을 대체할 것들이 추가되어도, 이미 여러 곳에서 사용되고 있을지 모르는 기존의 것들을 함부로 삭제할 수 없다.
+
+그래서 생각해낸 방법이 더 이상 사용되지 않는 필드나 메서드에 '@Deprecated'를 붙이는 것이다. 이 어노테이션이 붙은 대상을 다른 것으로 대체되었으니 더 이상 사용하지 않을 것을 권한다는 의미이다. 예를 들어 'java.util.Date'클래스의 대부분의 메서드에는 '@Deprecated'가 붙어있는데, Java API에서 Date클래스의 getDate()를 보면 아래와 같이 적혀있다.
+
+```JAVA
+ /**
+ * Returns the day of the month represented by this {@code Date} object.
+ * The value returned is between {@code 1} and {@code 31}
+ * representing the day of the month that contains or begins with the
+ * instant in time represented by this {@code Date} object, as
+ * interpreted in the local time zone.
+ *
+ * @return  the day of the month represented by this date.
+ * @see     java.util.Calendar
+ * @deprecated As of JDK version 1.1,
+ * replaced by {@code Calendar.get(Calendar.DAY_OF_MONTH)}.
+ */
+@Deprecated
+public int getDate() {
+    return normalize().getDayOfMonth();
+}
+```
+
+이 메서드 대신에 JDK 1.1부터 추가된 Calendar클래스의 get()을 사용하라는 이야기다. 기존의 것 대신 새로 추가된 개선된 기능을 사용하도록 유도하는 것이다. 굳이 기존의 것을 사용하겠다면, 아무도 못 말리겠지만 가능하면 '@Deprecated'가 붙은 것들은 사용하지 않아야 한다.
+
+만일 '@Deprecated'가 붙은 대상을 사용하는 코드를 작성하면, 컴파일 할 때 아래와 같은 메서지가 나타난다.
+
+```JAVA
+Note: AnnotationEx2.java uses or overrides a deprecated API.
+Note: Recompile with -Xlinkt:deprecation for details
+```
+
+해당 소스파일이 'deprecated'된 대상을 사용하고 있으며, '-Xlint:deprecation'옵션을 붙여서 다시 컴파일하면 자세한 내용을 알 수 있다는 뜻이다.
+
+
+#### @FunctionalInterface
+
+'함수형 인터페이스'를 선언할 때, 이 어노테이션을 붙이면 컴파일러가 '함수형 인터페이스'를 올바르게 선언했는지 확인하고, 잘못된 경우 에러를 발생시킨다. 필수는 아니지만, 붙이면 실수를 방지할 수 있으므로 '함수형 인터페이스'를 선언할 때는 이 어노테이션을 반드시 붙이도록 하자.
+
+> [참고] 함수형 인터페이스는 추상 메서드가 하나뿐이어야 한다는 제약이 있다.
+
+```JAVA
+@FunctionalInterface
+public interface Runnable {
+    public abstract void run();
+}
+```
+
+#### @SuppressWarnings
+
+컴파일러가 보여주는 경고메시지가 나타나지 않게 억제해준다. 이전 예제에서처럼 컴파일러의 경고메시지는 무시하고 넘어갈 수도 있지만, 모두 확인하고 해결해서 컴파일 후에 어떠한 메시지도 나타나지 않게 해야 한다.
+
+그러나 경우에 따라서는 경고가 발생할 것을 알면서도 묵인해야 할 때가 있는데, 이 경고를 그대로 놔두면 컴파일할 때마다 메시지가 나타난다. 이전 예제에서 확인한 것과 같이 '-Xlint'옵션을 붙이지 않으면 컴파일러는 경고의 자세한 내용은 보여주지 않으므로 다른 경고들을 놓치기 쉽다. 이 때는 묵인해야하는 경고가 발생하는 대상에 반드시 '@SuppressWarinings'를 붙여서 컴파일 후에 어떤 경고 메시지도 나타나지 않게 해야한다.
+
+'@SuppressWarnings'로 억제할 수 있는 경고 메시지의 종류는 여러 가지가 있는데, JDK의 버전이 올라가면서 앞으로 계속 추가될 것이다. 이 중에서 주로 사용되는 것은 'deprecation', 'unchecked', 'rawtypes', 'varargs'정도이다.
+
+'deprecation'은 '@Depreacte'가 부은 대상을 사용해서 발생하는 경고를, 'unchecked'는 제네릭으로 타입을 지정하지 않았을 때 발생하는 경고를, 'rawtypes'는 제네릭을 사용하지 않아서 발생하는 경고를, 그리고 'varargs'는 가변인자의 타입이 제네릭 타입일 떄 발생하는 경고를 억제할 때 사용한다.
+
+억제하려는 경고메시지를 어노테이션의 뒤에 괄호 안에 문자열로 지정하면 된다.
+
+```JAVA
+@SuppressWarnings("unchecked")
+ArrayList list = new ArrayList();
+list.add(obj);
+
+@SupressWarnings({ "deprecation", "unchecked", "varargs" })
+```
+
+'@SuppressWarings'로 억제할 수 있는 경고 메시지의 종류는 JDK의 버전이 올라가면서 계속 추가될 것이기 때문에, 이전 버전에서는 발생하지 않던 경고가 새로운 버전에서는 발생할 수 있다. 새로 추가된 경고 메시지를 억제하려면, 경고 메시지의 종류를 알아야하는데, -Xlint옵션으로 컴파일해서 나타나는 경고의 내용 중에서 대괄호[]안에 있는 것이 바로 메시지의 종류이다.
+
+> [참고] -Xlint:unchecked와 같이 하면 unchecked와 관련된 경고만 표시한다.
+
+
+#### @SafeVarargs
+
+메스데어 선언된 가변인자의 타입이 non-reifiable타입일 경우, 해당 메서드를 선언하는 부분과 호출하는 부분에서 'unchecked'경고가 발생한다. 해당 코드에 문제가 없다면 이 경고를 억제하기 위해 '@SafeVarargs'를 사용해야 한다.
+
+이 어노테이션은 생성자와 static이나 final이 붙은 메서드에만 붙일 수 있다. 즉, 오버라이딩될 수 있는 메서드에는 사용할 수 없다는 뜻이다.
+
+제네릭에서 살펴본 것과 같이 어떤 타입들은 컴파일 이후에 제거된다. 컴파일 후도 제거되지 않는 타입을 reifiable타입이라고 하고, 제거되는 타입을 non-reifiable타입이라고 한다. 제네릭 타입들은 대부분 컴파일 시에 제거되므로 non-reifiable타입이다.
+
+> [참고] reifiable은 're(다시)' + '-ify(~화 하다) + '-able(~할 수 있는)'의 합성어로 직역하면, '다시 ~화 할수 있는'이라는 뜻이다. 컴파일 후에도 타입정보가 유지되면 reifiable타입이다.
+
+
+예를 들어, java.util.Arrays의 asList()는 다음과 같이 정의되어 있으며, 이 메서드는 매개변수로 넘겨받은 값들로 배열을 만들어서 새로운 ArrayList객체를 만들어서 반환하는데 이 과정에서 경고가 발생한다.
+
+> [주의] 아래의 코드에 사용된 ArrayList는 Arrays클래스의 내부 클래스이다. java.util.ArrayList와 혼동하지 말자.
+
+```JAVA
+/**
+ * Returns a fixed-size list backed by the specified array.  (Changes to
+ * the returned list "write through" to the array.)  This method acts
+ * as bridge between array-based and collection-based APIs, in
+ * combination with {@link Collection#toArray}.  The returned list is
+ * serializable and implements {@link RandomAccess}.
+ *
+ * <p>This method also provides a convenient way to create a fixed-size
+ * list initialized to contain several elements:
+ * <pre>
+ *     List&lt;String&gt; stooges = Arrays.asList("Larry", "Moe", "Curly");
+ * </pre>
+ *
+ * @param <T> the class of the objects in the array
+ * @param a the array by which the list will be backed
+ * @return a list view of the specified array
+ */
+@SafeVarargs
+@SuppressWarnings("varargs")
+public static <T> List<T> asList(T... a) {
+    return new ArrayList<>(a);
+}
+```
+
+asList()의 매개변수가 가변인자인 동시에 제네릭 타입이다. 메서드에 선언된 타입 T는 컴파일 과정에서 Object로 바뀐다. 즉, Object[]가 되는 것이다. Object[]에는 모든 타입의 객체가 들어있을 수 있으므로, 이 배열은 `ArrayList<T>`를 생성하는 것은 위험하다고 경고하는 것이다. 그러나 asList()가 호출되는 부분을 컴파일러가 체크해서 타입 T가 아닌 다른 타입이 들어가지 못하게 할 것이므르 위의 코드는 아무런 문제가 없다.
+
+이럴 떄는 메서드 앞에 '@SafeVarargs'를 붙여서 '이 메서드의 가변인자는 타입 안전성이 있다'고 컴파일러에게 알려서 경고가 발생하지 않도록 해야 한다.
+
+메서드를 선언할 때 `@SafeVarargs`를 붙이면 이 메서드를 호출하는 곳에서 발생하는 경고도 억제된다. 반면에 `@SafeVarargs`대신, `@SuprressWarings("unchcked")`로 경고를 억제하려면, 메서드 선언뿐만 아니라 메서드가 호출되는 곳에도 어노테이션을 붙여야한다.
+
+그리고 `@SafeVarargs`로 'unchecked'경고는 억제할 수 있지만, 'varargs'경고는 억제할 수 없기 때문에 습관적으로 `@SafeVarargs`와 `@SuppressWarings("varargs")`를 같이 붙여야한다.
+
+@SuppressWarnings("varargs")를 붙이지 않아도 경고 없이 컴파일 된다. 그러나 -Xlint옵션을 붙여서 컴파일 해보면, 'varargs'경고가 발생한 것을 확인할 수 있다. 그래서 가능하면 이 두 어노테이션을 항상 같이 사용하는 것이 좋다.
+
+
+### 3.3 메타 어노테이션
+
+메타 어노테이션은 '어노테이션을 위한 어노테이션', 즉 어노테이션에 붙이는 어노테이션으로 어노테이션을 정의할 때, 어노테이션의 적용대상(target)이나 유지기간(retention)등을 지정하는데 사용된다.
+
+
+#### @Target
+
+어노테이션이 적용가능한 대상을 지정하는데 사용도니다. 아래는 '@SuprressWarnings'를 정의한 것인데, 이 어노테이션에 적용할 수 있는 대상을 '@Target'으로 지정하였다. 앞서 언급한 것과 같이 여러 개의 값을 지정할 때는 배열에서처럼 중괄호를 사용해야한다.
+
+```JAVA
+@Target({TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, MODULE})
+@Retention(RetentionPolicy.SOURCE)
+public @interface SuppressWarnings {
+    /**
+     * The set of warnings that are to be suppressed by the compiler in the
+     * annotated element.  Duplicate names are permitted.  The second and
+     * successive occurrences of a name are ignored.  The presence of
+     * unrecognized warning names is <i>not</i> an error: Compilers must
+     * ignore any warning names they do not recognize.  They are, however,
+     * free to emit a warning if an annotation contains an unrecognized
+     * warning name.
+     *
+     * <p> The string {@code "unchecked"} is used to suppress
+     * unchecked warnings. Compiler vendors should document the
+     * additional warning names they support in conjunction with this
+     * annotation type. They are encouraged to cooperate to ensure
+     * that the same names work across multiple compilers.
+     * @return the set of warnings to be suppressed
+     */
+    String[] value();
+}
+```
+
+'@Target'으로 지정할 수 있는 어노테이션 적용대상의 종류는 아래와 같다.
+
+| 대상 타입 | 의미 |
+| --- | --- |
+| ANNOTATION_TYPE | 어노테이션 |
+| CONSTRUCTOR | 생성자 |
+| FIELD | 필드(멤버변수, enum상수) |
+| LOCAL_VARIABLE | 지역변수 |
+| METHOD | 메서드 |
+| PACKAGE | 패키지 |
+| PARAMETER | 매개변수 |
+| TYPE | 타입(클래스, 인터페이스, enum) |
+| TYPE_PARAMETER | 타입 매개변수(JDK 1.8) |
+| TYPE_USE | 타입이 사용되는 모든 곳(JDK 1.8) |
+
+'TYPE'은 타입을 선언할 때, 어노테이션을 붙일 수 있다는 뜻이고 "TYPE_USE"는 해당 타입의 변수를 선언할 때 붙일 수 있다는 의미이다.
+
+
+#### @Retention
+
+어노테이션이 유지(retention)되는 기간을 지정하는데 사용된다. 어노테이션의 유지 정책(retention policy)의 종류는 다음과 같다.
+
+| 유지 정책 | 의미 |
+| --- | --- |
+| SOURCE | 소스 파일에만 존재. 클래스파일에는 존재하지 않음 |
+| CLASS | 클래스 파일에 존재. 실행시에 사용불가. 기본 값 |
+| RUNTIME | 클래스 파일에 존재. 실행시에 사용가능 |
+
+'@Override'나 '@SuppressWarnings'처럼 컴파일러가 사용하는 어노테이션은 유지 정책이 'SOURCE'이다. 컴파일러를 직접 작성할 것이 아니면, 이 유지정책은 필요없다.
+
+```JAVA
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface Override {}
+```
+
+유지 정책을 'RUNTIME'으로 하면, 실행 시에 '리플렉션'을 통해 클래스 파일에 저장된 어노테이션의 정보를 읽어서 처리할 수 있다. '@FunctionalInterface'는 '@Override'처럼 컴파일러가 체크해주는 어노테이션이지만, 실행 시에도 사용되므로 유지 정책이 'RUNTIME'으로 되어 있다. 
+
+```JAVA
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface FunctionalInterface { }
+```
+
+유지 정책 'Class'는 컴파일러가 어노테이션의 정보를 클래스 파일에 저장할 수 있게는 하지만, 클래스 파일이 JVM에 로디오딜 때는 어노테이션의 정보가 무시되어 실행 시에 어노테이션에 대한 정보를 얻을 수없다. 이것이 'CLASS'가 유지정책의 기본값임에도 불구하고 잘 사용되지 않은 이유이다.
+
+> [참고] 지역 변수에 부은 어노테이션은 컴파일러만 인식할 수 있으므로, 유지정책이 'RUNTIME'인 어노테이션을 지역변수에 붙여도 실행 시에는 인식되지 않는다.
+
+
+#### @Documents
+
+어노테이션에 대한 정보가 javadoc으로 작성된 문서에 포함되도록 한다. 자바에서 제공하는 기본 어노테이션 중에 '@Override'와 '@SuppressWarings'를 제외하고는 모두 이 메타 어노테이션이 붙어 있다.
+
+
+#### @Inherited
+
+어노테이션이 자손 클래스에 상속되도록 한다. '@Inherited'가 붙은 어노테이션을 조상 클래스에 붙이면, 자손 클래스도 이 어노테이션이 붙은 것과 같이 인식된다.
+
+```JAVA
+@Inherited          // @SuperAnno가 자손까지 영향을 미치게 
+@Interface SupperAnno { }
+```
+
+#### @Repaeatable
+
+보통은 하나의 대상에 한 종류의 어노테이션을 붙이는데, '@Repeatable'이 붙은 어노테이션은 여러 번 붙일 수 있다.
+
+> [참고] 괄호안의 'ToDos.class'는 반복된 어노테이션을 저장할 어노테이션을 지정한 것으로 곧 설명할 것이다.
+
+
+```JAVA
+@Repeatable(ToDos.class)        /TODO어노테이션을 여러번 반복해서 쓸 수 있게 한다.
+@interface ToDO {
+    String value();
+}
+```
+
+예를 들어 '@ToDo'라는 어노테이션이 위와 같이 정의되어 있을 때, 다음과 같이 MyClass 클래스에 '@Todo'를 여러 번 붙이는 것이 가능하다.
+
+```JAVA
+@ToDO("delete test code")
+@ToDo("override inherited methods")
+class MyClass { 
+
+}
+```
+
+일반적인 어노테이션과 달리 같은 이름의 어노테이션이 여러 개가 하나의 대상에 적용될 수 있기 때문에, 이 어노테이션들을 하나로 묶어서 다룰 수 있는 어노테이션도 추가로 정의해야 한다.
+
+```JAVA
+// 여러 개의 ToDO어노테이션을 담을 컨테이너 어노테이션 ToDos
+@interface ToDos {
+    ToDo[] value();     // Todo어노테이션 배열타입의 요소를 선언. 이름이 반드시 value이어야 함.
+}
+
+@Repeatable(Todos.class)
+@interface ToDo {
+    String value();
+}
+```
+
+#### @Native
+
+네이티브 메서드(native method)에 의해 참조되는 '상수 필드(constant field)'에 붙이는 어노테이션이다. 아래는 java.lang.Long클래스에 정의된 상수이다.
+
+```JAVA
+public final class Long extends Number implements Comparable<Long> {
+    /**
+     * A constant holding the minimum value a {@code long} can
+     * have, -2<sup>63</sup>.
+     */
+    @Native public static final long MIN_VALUE = 0x8000000000000000L;
+}
+```
+
+네이티브 메서드는 JVM이 설치된 OS의 메서드를 말한다. 네이티브 메서드는 보통 C언어로 작성되 있는데, 자바에서는 메서드의 선언부만 정의하고 구현은 하지 않는다. 그래서 추상 메서드처럼 선언부만 있고 몸통이 없다.
+
+```JAVA
+public class Object {
+        private static native void registerNatives();
+    static {
+        registerNatives();
+    }
+
+    @HotSpotIntrinsicCandidate
+    public final native Class<?> getClass();
+    
+    public native int hashCode();
+    
+    @HotSpotIntrinsicCandidate
+    protected native Object clone() throws CloneNotSupportedException;
+
+    @HotSpotIntrinsicCandidate
+    public final native void notify();
+    ...
+}
+```
+
+
+이처럼 모든 클래스의 조상인 Object클래스의 메서드들은 대부분 네이티브 메서드이다. 네이티브 메서드는 자바로 정의도어 있기 때문에 호출하는 방법은 자바의 일반 세더으와 다르지 않지만 실제로 호출되는 것은 OS의 메서드이다.
+
+그냥 아무런 내용도 없는 네이티브 메서드를 선언해 놓고 호출한다고 되는 것은 아니고, 자바에 정의된 네이티브 메서드와 OS의 메서드를 연겨해주는 작업이 추가로 필요하다. 이 역할은 JNI(Java Native Interface)가 담당한다.
+
+
+
+#### 3.4 어노테이션 타입 정의하기
+
+```JAVA
+@interface 어노테이션이름 {
+    타입 요소이름();        // 어노테이션의 요소를 선언
+    ...
+}
+```
+
+엄밀히 말해서 '@Override'는 어노테이션이고 'Override'는 어노테이션의 타입이다.
+
+#### 어노테이션의 요소
+
+어노테이션 내의 선언된 메서드를 '어노테이션의 요소(element)'라고 하며, 아래에 선언된 TestInfo어노테이션은 다섯 개의 요소를 갖는다.
+
+```JAVA
+public @interface Test {
+    
+    int count();
+    String testedBy();
+    String[] testTools();
+    TestType testType();        // enum TestType { FIRST, FINAL }
+    DateTime testDate();        // 자신이 아닌 다른 어노테이션(@DateTime)을 포함할 수 있음.
+}
+
+public @interface DateTime {
+    String yymmdd();
+    String hhmmss();
+}
+```
+
+어노테이션의 요소는 반환값이 있고 매개변수는 없는 추상 메서드의 형태를 가지며, 상속을 통해 구현하지 않아도 된다. 다만, 어노테이션을 적용할 때 이 요소들의 값을 빠짐없이 지정해주어야 한다. 요소의 이름도 같이 적어주므로 순서는 상관없다.
+
+```JAVA
+@TestInfo {
+    count = 3, testedBy = "Kim",
+    testTools = { "JUnit", "AutoTester" }
+    testType = TestType.FIRST,
+    testDate = @DateTime(yyyymmdd="240303", hhmmss="235959")
+}
+
+public class newClass { ... }
+```
+
+어노테이션의 각 요소는 기본값을 가질 수 있으며, 기본값이 있는 요소는 어노테이션을 적용할 때 값을 지정하지 않으면 기본값이 사용된다.
+
+> [참고] 기본값으로 null을 제외한 모든 리터럴이 가능하다.
+
+
+```JAVA
+@interface TestInfo {
+    int count() default 1;      // 기본값을 1로 지정
+}
+
+@TestInfo       // @TestInfo(count = 1)
+```
+
+어노테이션 요소가 오직 하나뿐이고 이름이 value인 경우, 어노테이션을 적용할 때 요소의 일 므을 생략하고 값만 적어도 된다.
+
+```JAVA
+@interface TestInfo {
+    String value();
+}
+
+@TestInfo("passed")
+```
+
+요소의 타입이 배열인 경우, 괄호{}를 사용해서 여러 개의 값을 지정할 수 있다.
+
+```JAVA
+@interface TestInfo {
+    String[] testTools();
+}
+
+@Test(testTools = { "JUnit", "AutoTester" })    // 값이 여러 개인 경우
+@Test(testTools = "JUnit")                      // 값이 하나일 때는 괄호 생략가능
+@Test(testTools = {})                           // 값이 없을 때는 괄호가 반드시 필요
+```
+
+기본값을 지정할 때도 마찬가지로 괄호를 사용할 수 있다.
+
+```JAVA
+@interface TestInfo {
+    String[] info() default { "aaa", "bbb" };
+    String[] info2() default "ccc";
+}
+
+@TestInfo       // @TestInfo(info = { "aaa", "bbb" }, info = "ccc")와 동일
+@TestInfo(info2= {})       // @TestInfo(info = { "aaa", "bbb" }, info = {})와 동일
+```
+
+요소의 타입이 배열일 때도 요소의 이름이 value이면, 요소의 이름을 생략할 수 있다. 예를 들어, @SuppressedWarnings의 경우, 요소의 타입이 String배열이고 이름이 value이다.
+
+```JAVA
+@interface SuppressWarings {
+    String[] value();
+}
+```
+
+그래서 어노테이션을 적용할 때 요소의 이름을 생략할 수 있는 것이다.
+
+#### java.lang.annotation.Annotaion
+
+모든 어노테이션의 조상은 Annotation이다. 그러나 어노테이션은 상속이 허용되지 않으므로 아래와 같이 명시적으로 Annotation을 지정할 수 없다.
+
+```JAVA
+@interface TestInfo extends Annotation {        // 에러. 허용되지 않는 표현
+
+}
+```
+
+Annotation은 어노테이션이 아니라 일반적인 인터페이스로 정의되어 있다.
+
+```JAVA
+public interface Annotation {
+    boolean equals(Object obj);
+    int hashCode();
+    String toString();
+    Class<? extends Annotation> annotationType();
+}
+```
+
+모든 어노테이션의 조상인 Annotation 인터페이스가 위와 같이 정의되어 있기 때문에, 모든 어노테이션 객체에 대해 equals(), hashCode(), toString()과 같은 메서드를 호출하는 것이 가능하다.
+
+```JAVA
+Class<AnnotationTest> cls = AnnotationTest.class;
+Annotation[] annotations = AnnotationTest.class.getAnnotations();
+
+for(Annotation annotation : annotations) {
+    System.out.println("toString : " + annotation.toString());
+    System.out.println("hashCode : " + annotation.hashCode());
+    System.out.println("equals : " + annotation.equals(annotation));
+    System.out.println("annotationType : " + annotation.annotationType());
+}
+```
+
+#### 마커 어노테이션(Marker Annotation)
+
+값을 지정할 필요가 없는 경우, 어노테이션의 요소를 하나도 정의하지 않을 수 있다. Serializable이나 Cloneable인터페이스처럼, 요소가 하나도 정의되지 않은 어노테이션을 마커 어노테이션이라고 한다.
+
+```JAVA
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface Override {
+}
+
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface Test {
+}
+
+```
+
+#### 어노테이션 요소의 규칙
+
+어노테이션의 요소를 선언할 때 반드시 지켜야 하는 규칙은 다음과 같다.
+
+> - 요소의 타입은 기본형, String, enum, 어노테이션, Class만 허용됨
+> - ()안에 매개변수를 선언할 수 없다.
+> - 예외를 선언할 수 없다.
+> - 요소를 타입 매개변수로 정의할 수 없다.
