@@ -441,4 +441,500 @@ public static <T extends Comparable<? super T>> void sort(List<T> list)
 // 2. 'T'는 Comparable을 구현한 클래스이어야 하며 (<T extends Comparable>), 'T' 또는 그 조상의 타입을 비교하는 Comparable이어야한다는 것(Comparable<? super T>)을 의미한다. 만일 T가 Student이고, Person의 자손이라면, <? super T>는 Student, Person, Object가 모두 가능하다.
 ```
 
+### 1.7 제네릭 타입의 형변환
+
+제네릭 타입과 원시 타입(primitive type)간의 형변환이 가능할까?
+
+```JAVA
+Box box = null;
+Box<Object> objBox = null;
+
+box = (Box) objBox;             // OK. 제네릭 타입 to 원시 타입(경고 발생)
+objBox = (Box<Obejct>) box;     // OK. 원시 타입 to 제네릭 타입(경고 발생)
+```
+
+위에서 알 수 있듯이, 제네릭 타입과 넌 제네릭 타입간의 형변환은 항상 가능하다. 다만 경고가 발생할 뿐이다. 그러면, 대입된 타입이 다른 제네릭 타입 간에는 형변환이 가능할까?
+
+```JAVA
+Box<Object> objBox = null;
+Box<String> strBox = null;
+
+objBox = (Box<Object>) strBox;
+strBox = (Box<String>)box;
+```
+
+불가능하다. 대입된 타입이 Object일지라도 말이다. 이 사실은 이미 배웠다. 아래의 문장이 안 된다는 얘기는 `Box<String>`이 `Box<Object>`로 형변환될 수 없다는 사실을 간접적으로 알려주는 것이기 때문이다.
+
+```JAVA
+Box<Object> objBox = new Box<String>();     // 에러. 형변환 불가능
+```
+
+그러면 다음의 문장은 어떨까? `Box<String>`이 `Box<? extends Object>`로 형변환될까?
+
+```JAVA
+Box<? extends Object> wBox = new Box<String>;
+```
+
+형변환이 된다. 그래서 전에 배운 makeJuice메서드의 매개변수에 다형성이 적용될 수 있었던 것이다.
+
+```JAVA
+// 매개변수로 FruitBox<Fruit>, FruitBox<Apple>, FruitBox<Grape>
+FruitBox<? extends Fruit> box = new FruitBox<Fruit>();
+FruitBox<? extends Fruit> box = new FruitBox<Fruit>();
+FruitBox<? extends Fruit> box = new FruitBox<Fruit>();
+```
+
+반대로의 형변환도 성립하지만, 확인되지 않은 형변환이라는 경고가 발생한다. `FruitBox<? extends Fruit>`에 대입될 수 있는 타입이 여러개 인데다, `FruitBox<Apple>`를 제외한 다른 타입은 `FruitBox<Apple>`로 형변환될 수 없기 때문이다.
+
+```JAVA
+FruitBox<? extend Fruit> box = null;
+// OK. 미확인 타입으로 형변환 경고
+FruitBox<Apple> appleBox = (FruitBox<Apple>)box;
+```
+
+실질적인 예로 java.util.Optioinal클래스의 실제 소스의 일부이다.
+
+```JAVA
+public final class Optional<T> {
+    private static final Option<?> EMPTY = new Optional<>();
+    private final T value;
+
+    ...
+
+    public static<T> Optional<T> empty() {
+        Optional<T> t = (Optional<T>) EMPTY;
+        return t;
+    }
+}
+```
+
+static 상수 EMPTY는 비어있는 Optional객체를 생성해서 저장했다가 empty()를 호출하면 EMPTY를 형변환해서 반환한다. 먼저 상수를 선언하는 문자을 단계별로 분석해보면 다음과 같다. 편의상 제어는 생략하였다.
+
+```JAVA
+Optional<?> EMPTY = new Optional<>();
+Optional<? extends Object> EMPTY = new Optional<>();
+Optional<? extends Object> EMPTY = new Optional<Object>();
+```
+
+`<?>`는 `<? extends Object>`를 줄여 쓴 것이며, `<>`안에 생략된 타입은 '?'가 아니라 'Object'이다.
+
+```JAVA
+Optional<?> EMPTY = new Optional<?>();                  // 에러. 미확인 타입의 객체는 생성불가
+Optional<?> EMPTY = new Optional<Object>();            // OK
+Optional<?> EMPTY = new Optional<>();                 // OK
+```
+
+> [주의] `class Box<T extends Object>`의 경우 `Box<?> b= new Box<>;`는 `Box<?> b = new Box<Fruit>`이다.
+
+위의 문장에서 EMPTY의 타입을 `Optional<Object>`가 아닌 `Optional<?>`로 한 이유는 `Optional<T>`로 형변환이 가능하기 때문이다.
+
+```JAVA
+Optional<?>         wopt = new Optional<Object>();
+Optional<Object>    oopt = new Optional<Object>();
+
+Optional<String>    sopt = (Optional<String>) wopt;     // OK. 형변환 가능 
+Optional<String>    sopt = (Optional<String>) oopt;     // 에러. 형변환 불가
+```
+
+empty()의 반환 타입이 `Optional<T>`이므로 EMPTY를 `Optional<T>`로 형변환해야 하는데, 위의 코드에서 알 수 있는 것처럼 `Optional<Object>`는 `Optional<T>`로 형변환이 불가능하다.
+
+```JAVA
+public static<T> Optional<T> empty() {
+    Optional<T> t = (Optional<T>) EMPTY;
+    return t;
+}
+```
+
+정리하면, `Optional<Object>`를 `Optional<String>`으로 직접 형변환하는 것은 불가능하지만, 와일드 카드가 포함된 제네릭 타입으로 형변환하면 가능하다. 대신 확ㄷ인되지 않은 타입으로의 형변환이라는 경고가 발생한다. 와일드 카드가 사용된 제네릭 타입끼리도 형변환이 가능하다.
+
+```JAVA
+FruitBox<? extends Object> objBox = null;
+FruitBox<? extends String> strBox = null;
+
+strBox = (FruitBox<? extends String>) objBox; 
+objBox = (FruitBox<? extends String>) strBox;
+```
+
+형변환이 가능하긴 하지만, 와일드 카드는 타입이 확정된 타입이 아니므로 컴파일러는 미확정된 타입으로 형변환하는 것이라고 경고한다.
+
+
+### 1.8 제네릭 타입의 제거
+
+컴파일러는 제네릭 타입을 이용해서 소스파일을 체크하고, 필요한 곳에 형변환을 넣어준다. 긜고 제네릭 타입을 제거한다. 즉, 컴파일된 파일(*.class)에는 제네릭 타입에 정보가 없는 것이다.
+
+이렇게 하는 주된 이유는 제네릭이 도입되기 이전의 소스 코드와의 호환성을 유지하기 위해서이다. JDK1.5부터 제네릭이 도입되었지만, 아직도 원시 타입을 사용해서 코드를 작성하는 것을 허용한다. 그러나 앞으로 가능하면 원시 타입을 사용하지 않도록 하자. 언제가는 분명히 새로운 기능을 하위 호한성을 포기하게 될 때가 올 것이기 때문이다.
+
+1. 제네릭 타입의 경계(bound)를 제거한다.
+    
+    제네릭 타입이 `<T extend Fruit>`라면 T는 Fruit으로 치환된다. `<T>`인 경우는 T는 Object로 치환된다. 그리고 클래스 옆의 선언은 제거된다.
+
+   ```JAVA
+   // AS-IS
+   class Box<T extends Fruit {
+        void add(T t)
+   }
+
+   // TO-BE
+   class Box {
+        void add(Fruit t) {
+
+        }
+   }
+   ```
+
+2. 제네릭 타입을 제거한 후에 타입이 일치하지 않으면, 형변환을 추가한다.
+
+    List의 get()은 Object타입을 반환하므로 형변환이 필요하다.
+
+    ```JAVA
+    // AS-IS
+    static Juice makeJuice(<FruitBox<? extends Fruit> box> box) {
+        String tmp = "";
+        for(Fruit f : box.getList()) tmp += f + "";
+        return tmp;
+    }
+
+    // TO-BE
+    static Juice makeJuice(FruitBox box) {
+        String tmp = "";
+        Iterator it = box.getList().iterator();
+        while(it.hasNext()) {
+            tmp += (Fruit)it.next() + "";
+        }
+        return tmp;
+    }
+    ```
+
+
+## 2. 열거형
+
+### 2.1 열거형이란? 
+
+자바는 C언어와 달리 열거형이라는 것이 존재하지 않았으나 JDK 1.5부터 새로 추가되었다. 자바의 열거형은 C언어의 열거형보다 더 향상된 것으로 열거형이 갖는 값뿐만 아니라 타입까지 관리하기 때문에 보다 논리적인 오류를 줄일 수 있다.
+
+```JAVA
+public class Card {
+    
+    static final int CLOVER = 0;
+    static final int HEART = 1;
+    static final int DIAMOND = 2;
+    static final int SPADE = 3;
+    
+    static final int TWO = 0;
+    static final int THREE = 1;
+    static final int FOUR = 2;
+    
+    final int kind;
+    final int num;
+}
+```
+
+```JAVA
+public class Card {
+    
+    enum Kind { CLOVER, HEART, DIAMOND, SPADE };
+    enum Value { TWO, THREE, FOUR };
+
+    final Kind kind;
+    final Value num;
+}
+```
+
+기존의 많은 언어들, 예를 들어 C언에서는 타입이 달라도 값이 같으면 조건식 결과가 참이였으나, 자바의 '타입에 안전한 열거형(typesafe enum)'에서는 실제 값이 같아도 타입이 다르면 조건식의 결과가 false가 된다. 이처럼 값뿐만 아니라 타입까지 체크하기 때문에 타입에 안전하다고 하는 것이다.
+
+그리고 더 중요한 것은 상수의 값이 바뀌면, 해당 상수를 참조하는 모든 소스를 다시 컴파일해야 한다는 것이다. 하지만 열거형 상수를 사용하면, 기존의 소스를 다시 컴파일하지 않아도 된다.
+
+
+### 2.2 열거형의 정의와 사용
+
+열거형을 정의하는 방법은 간단하다.
+
+```JAVA
+enum 열거형이름 {
+    상수명1, 상수명2, ...
+}
+```
+
+열거형 사수간의 비교에는 `==` 를 사용할 수 있다. equals()가 아닌 `==`으로 비교가 가능하다는 것은 그만큼 빠른 성능을 제공한다는 의미이다. 그러나 `<`, `>`와 같은 비교연산자는 아용할 수 없고 compareTo()는 사용가능하다. 
+
+#### 모든 열거형의 조상 - java.lang.Enum
+
+values()는 모든 상수를 배열에 담아 반환한다. 이 메서드는 모든 열거형이 가지고 있는 것으로 컴파일러가 자동으로 추가해 준다. 그리고 ordinal()은 모든 열거형의 조상인 java.lang.Enum클래스에 정의된 것으로, 열거형 상수가 정의된 순서(0부터 시작)를 정수로 반환한다.
+
+Enum 클래스에는 그 밖에도 다음과 같은 메서드가 정의되어 있다.
+
+| 메서드 | 설명 |
+| --- | --- |
+| Class<E> getDeclaringClass() | 열거형의 Class객체 반환 |
+| String name() | 열거형 상수의 이름을 문자열로 반환 |
+| int ordinal() | 열거형 상수가 정의된 순서를 반환 |
+| T valueOf(Class<T> enumType, String name) | 지정된 열거형에서 name과 일치하는 열거형 상수를 반환 |
+
+이외에도 values()처럼 컴파일러가 자동으로 추가해주는 메서드가 하나 더 있다.
+
+```JAVA
+static E values()
+static E valueOf(String name)
+```
+
+이 메서드는 열거형 상수의 이름으로 문자열 상수에 대한 참조를 얻을 수 있게 해준다.
+
+
+### 2.3 열거형에 멤버 추가하기
+
+Enum 클래스에 정의된 ordinal()이 열거형 상수가 정의된 순서를 반환하지만, 이 값을 열거형 상수의 값으로 사용하지 않는 것이 좋다. 이 값은 내부적인 용도로만 사용되기 위한 것이기 때문이다.
+
+열거형 상수의 값이 불연속적인 경우에는 이때는 다음과 같이 열거형 상수의 이름 옆에 원하는 값을 괄호()와 함께 적어주면 된다.
+
+```JAVA
+class Direction {
+    EAST(1),
+    SOUTH(2),
+    WEST(-1),
+    NORTH(10)
+}
+```
+
+그리고 지정된 값을 저장할 수 있는 인스턴스 변수와 생성자를 새로 추가해 주어야 한다. 이때 주의할 점은, 먼저 열거형 상수를 모두 정의한 다음에 다른 멤버들을 추가해야한다는 것이다. 그리고 열거형 상수의 마지막에 ';'도 잊지 말아야 한다.
+
+```JAVA
+public enum Direction {
+    EAST(1),
+    SOUTH(5),
+    WEST(-1),
+    NORTH(10);
+
+    private final int value;
+
+    Direction(int value) {
+        this.value = value;
+    }
+    
+    public int getValue() { return value; }
+}
+```
+
+#### 열거형에 추상 메서드 추가
+
+열거형 Tranporation은 운송 수단의 종류 별로 상수를 정의하고 있으며, 각 운송 수단에는 기본요금(BASIC_FARE)이 책정되어 있다.
+
+```JAVA
+enum Transportation {
+	BUS(100)		{ int fare(int distance) { return distance*BASIC_FARE; } },
+	TRAIN(150)		{ int fare(int distance) { return distance*BASIC_FARE; } },
+	SHIP(100)		{ int fare(int distance) { return distance*BASIC_FARE; } },
+	AIRPLANE(300)	{ int fare(int distance) { return distance*BASIC_FARE; } };
+	
+	private final int BASIC_FARE;	// protected로 해야 각 상수에서 접근 가능
+	
+	private Transportation(int basicFare) {	// private Transportation(int basicFare) {
+		BASIC_FARE = basicFare;
+	}
+	
+	int fare(int distance);	// 거리에 따른 요금 계산
+}
+```
+
+그러나 이것만으로 부족하다. 거리에 따른 요금을 계산하는 방식이 각 운송 수단마다 다를 것이기 때문이다. 이럴 때, 열거형에 추상 메서드 `fare(int distance)`를 선언하면 각 열거형 상수가 이 추상 메서드를 반드시 구현해야 한다.
+
+```JAVA
+enum Transportation {
+	BUS(100)		{ int fare(int distance) { return distance*BASIC_FARE; } },
+	TRAIN(150)		{ int fare(int distance) { return distance*BASIC_FARE; } },
+	SHIP(100)		{ int fare(int distance) { return distance*BASIC_FARE; } },
+	AIRPLANE(300)	{ int fare(int distance) { return distance*BASIC_FARE; } };
+	
+	protected final int BASIC_FARE;	// protected로 해야 각 상수에서 접근 가능
+	
+	Transportation(int basicFare) {	// private Transportation(int basicFare) {
+		BASIC_FARE = basicFare;
+	}
+	
+	public int getBasicFare() { return BASIC_FARE; }
+	
+	abstract int fare(int distance);	// 거리에 따른 요금 계산
+}
+```
+
+### 2.4 열거형의 이해
+
+열거형이 내부적으로 어떻게 구현되었는지에 대해 설명하고자 한다.
+
+만약 열거형이 Direction이 다음과 같이 정의되어 있을 때,
+
+```JAVA
+enum Direction {
+    EAST,
+    SOUTH,
+    WEST,
+    NORTH
+}
+```
+
+사실은 열거형 상수 하나가 Direction 객체이다. 위의 문장을 클래스로 정의하면 다음과 같을 것이다.
+
+```JAVA
+class Direction {
+    static final Direction EAST = new Direction("EAST");
+    static final Direction SOUTH = new Direction("SOUTH");
+    static final Direction WEST = new Direction("WEST");
+    static final Direction NORTH = new Direction("NORTH");
+
+    private String name;
+
+    private Direction(String name) {
+        this.name = name;
+    }
+}
+```
+
+Direction클래스의 static상수 EAST, SOUTH, WEST, NORTH의 값은 객체의 주소이고, 이 값은 바뀌지 않는 값이므로 '=='로 비교가 가능한 것이다.
+
+모든 열거형은 추상 클래스 Enum의 자손이므로, Enum을 흉내 내어 MyEnum을 작성하면 다음과 같다.
+
+```JAVA
+public abstract class MyEnum<T extends MyEnum<T>> implements Comparable<T> {
+
+    static int id = 0;  // 객체에 붙일 일련번호(0부터 시작)
+
+    int ordinal;
+    String name = "";
+
+
+    public MyEnum(String name) {
+        this.name = name;
+    }
+    
+    public int compareTo(T t) {
+        return ordinal - t.ordinal;
+    }
+}
+```
+
+앞서 6장에서 배운것과 같이 객체가 생성될 때마다 번호가 붙여서 인스턴스변수 ordinal에 저장한다. 그리고 Comparable인터페이스를 구현해서 열거형 상수간의 비교가 가능하도록 되어 있다. 구현 내용은 간단하다. 두 열거형 상수의 ordinal값을 서로 빼주기만 하면 된다. 만일 클래스 `MyEnum<T>`와 같이 선언하였다면, compareTo()를 위와 같이 간단히 작성할 수 없었을 것이다. 타입 T에 ordinal()이 정의도어 있는지 확인할 수 없기 때문이다.
+
+```JAVA
+public abstract class MyEnum<T> implements Comparable<T> {
+
+    static int id = 0;  // 객체에 붙일 일련번호(0부터 시작)
+
+    int ordinal;
+    String name = "";
+
+
+    public MyEnum(String name) {
+        this.name = name;
+    }
+
+    public int compareTo(T t) {
+        return ordinal - t.ordinal;     // 에러 타입 T에 ordnial() 있나>
+    }
+}
+```
+
+그래서 `MyEnum<T extends<MyEnum<T>>`와 같이 선언한 것이며, 이것은 타입 T가 `MyEnum<T>`의 자손이어야 한다는 의미이다. 타입 T가 MyEnum의 자손이므로 ordinal()이 정의도어 있는 것은 분명하므로 형변환 없이도 에러가 나지 않는다.
+
+그리고 추상 메서드를 새로 추가하면, 클래스 앞에도 `abstract`를 붙여줘야 하고, 각 static 상수들도 추상 메서드를 구현해주어야 한다. 아래의 코드에서는 익명 클래스의 형태로 추상 메서드를 구현하였다.
+
+```JAVA
+public abstract class Direction extends MyEnum {
+
+    static final Direction EAST = new Direction("EAST") {
+        Point move(Point p) { }
+    };
+
+    static final Direction SOUTH = new Direction("SOUTH") {
+        Point move(Point p) { }
+    };
+
+    static final Direction WEST = new Direction("WEST") {
+        Point move(Point p) { }
+    };
+
+    static final Direction SOUTH = new Direction("SOUTH") {
+        Point move(Point p) { }
+    };
+
+    private String name;
+
+    public Direction(String name) {
+        this.name = name;
+    }
+    
+    abstract Point move(Point p);
+}
+```
+
+
+## 3. 어노테이션(annotation)
+
+### 3.1 어노테이션이란? 
+
+자바를 개발한 사람들은 소스코드에 대한 문서를 따로 만들기보다 소스코드와 문서를 하나의 파일로 관리하는 것이 낫다고 생각했다. 그래서 소스코드의 주석 `/** ~ */`에 소스 코드에 대한 정보를 저장하고, 소스코드의 주석으로부터 HTML문서를 생성해내는 프로그램(javadoc.exe)을 만들어서 사용했다. 다음은 모든 어노테이션의 조상인 Annotation인터페이스의 소스코드의 일부이다.
+
+```JAVA
+/**
+ * The common interface extended by all annotation types.  Note that an
+ * interface that manually extends this one does <i>not</i> define
+ * an annotation type.  Also note that this interface does not itself
+ * define an annotation type.
+ *
+ * More information about annotation types can be found in section 9.6 of
+ * <cite>The Java&trade; Language Specification</cite>.
+ *
+ * The {@link java.lang.reflect.AnnotatedElement} interface discusses
+ * compatibility concerns when evolving an annotation type from being
+ * non-repeatable to being repeatable.
+ *
+ * @author  Josh Bloch
+ * @since   1.5
+ */
+public interface Annotation {
+    ...
+}
+```
+
+'/**'으로 시작하는 주석 안에 소스코드에 대한 설명들이 있고, 그 안에 '@'이 붙은 태그 들이 눈에 띌 것이다. 미리 정의된 태그들을 이용해서 주석 안에 정보를 저장하고, javadoc.exe라는 프로그램이 이 정보를 읽어서 문서를 작성하는데 사용한다.
+
+이 기능을 응용하여, 프로그램의 소스코드 안에 다른 프로그램을 위한 정보를 미리 약속된 형식으로 포함시킨 것이 바로 어노테이션이다. 어노테이션은 주석(comment)처럼 프로그래밍 언어에 영향을 미치지 않으면서도 다른 프로그램에게 유용한 정보를 제공할 수 있다는 장점이 있다.
+
+> [참고] 어노테이션의 뜻은 주석, 주해, 메모이다.
+
+예를 들어, 자신이 작성한 소스코드 중에서 특정 메슫만 테스트하기를 원한다면, 다음과 같이 '@Test'라는 어노테이션을 메서드 앞에 붙인다. '@Test'는 '이 메서드를 테스트 해야 한다'는 것을 테스트 프로그램에게 알리는 역할을 할 뿐, 메서드가 포함된 프로그램 자체에는 아무런 영향을 미치지 않는다. 주석처럼 존재하지 않는 것이나 다름 없다.
+
+```JAVA
+@Test
+public void method() {
+    ...
+}
+```
+
+테스트 프로그램에게 테스트할 메서드를 일일이 알려주지 않고, 해당 메서드 앞에 어노테이션만 붙이면 된다니 얼마나 편리한가. 그렇다고 모든 프로그램에게 의미가 있는 것은 아니고, 해당 프로그램에 미리 정의된 종류와 형식으로 작성해야만 의미가 있다. '@TEST'는 테스트 프로그램을 제외한 다름 프로그램에게는 아무런 의미가 없는 정보일 것이다.
+
+어노테이션은 JDK에서 기본적으로 제공하는 것과 다른 프로그램에서 제공하는 것들이 있는데, 어느 것이든 그저 약속된 형식으로 제공하기만 하면 될 뿐이다.
+
+JDK에서 제공하는 표준 어노테이션은 주로 컴파일러를 위한 것으로 컴파일러에게 유용한 정보를 제공한다. 그리고 새로운 어노테이션을 정의할 때 사용하는 메타 어노테이션을 제공한다.
+
+
+### 3.2 표준 어노테이션
+
+자베에서 기본적으로 제공하는 어노테이션은 몇 개 없다. 그나마 이들의 일부는 '메타 어노테이션(meta annotaion)'으로 어노테이션을 정의하는데 사용되는 어노테이션의 어노테이션이다.
+
+
+| 어노테이션 | 설명 |
+| --- | --- |
+| @Override | 컴파일러에게 오버라이딩하는 메서드라는 것을 알린다. |
+| @Deprecated | 앞으로 사용하지 않을 것을 권자앟는 대상에 붙인다. |
+| @SuppressWarnings | 컴파일러의 특정 경고메시지가 나타나지 않게 해준다. |
+| @SafeVarargs | 제네릭 타입의 가변인자에 사용한다(JDK 1.7) |
+| @FunctionalInterface | 함수형 인터페이스라는 것을 알린다(JDK 1.8) |
+| @Native | native 메서드에서 참조되는 상수 앞에 붙인다(JDK 1.8) |
+| @Target* | 어노테이션이 적용가능한 대상을 지정하는데 사용한다. |
+| @Documented | 어노테이션 정보가 javadoc으로 작성된 문서에 포함되게 한다. |
+| @Inherited* | 어노테이션이 자손 클래스에 상속되도록 한다. |
+| @Retention* | 어노테이션이 유지되는 범위는 지정하는데 사용한다. |
+| @Repeatable | 어노테이션을 반속해서 적용할 수 있게 한다(JDK 1.8) |
+
+
+#### @Override
 
