@@ -4,35 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/README.MD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex1/FruitBoxEx1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex01/FruitBoxEx1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex14/AnnotationEx5.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex14/AnnotationEx5.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex14/DateTime.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex14/DateTime.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex14/TestInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex14/TestInfo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex14/TestType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex14/TestType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex2/FruitBoxEx2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex02/FruitBoxEx2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex3/Apple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex03/Apple.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex3/Box.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex03/Box.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex3/Fruit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex03/Fruit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex3/FruitBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex03/FruitBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex3/FruitBoxEx3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex03/FruitBoxEx3.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex3/Grape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex03/Grape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex3/Juice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex03/Juice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex3/Juicer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex03/Juicer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/Apple.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/Apple.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/AppleComp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/AppleComp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/Box.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/Box.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/Fruit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/Fruit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/FruitBox.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/FruitBox.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/FruitBoxEx4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/FruitBoxEx4.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/FruitComp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/FruitComp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/Grape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/Grape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/GrapeComp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/GrapeComp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/Juice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/Juice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter12/ex4/Juicer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter12/ex04/Juicer.java" afterDir="false" />
-    </list>
+    <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,9 +15,9 @@
       <list>
         <option value="Kotlin Class" />
         <option value="Interface" />
-        <option value="Class" />
         <option value="AnnotationType" />
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -63,25 +35,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;chapter12&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java/src/chapter12/ex4&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "chapter13",
+    "last_opened_file_path": "C:/Study/Standard-Of-Java/src/chapter12/ex4",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Problems",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Study\Standard-Of-Java\src\chapter12\ex4" />
@@ -96,20 +68,20 @@
       <recent name="C:\Study\Standard-Of-Java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chapter13" />
       <recent name="chapter12.ex6" />
       <recent name="chapter12.ex4" />
       <recent name="chapter12.ex3" />
       <recent name="chapter11" />
-      <recent name="chapter10.dateFormatter" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.AnnotationEx5">
-    <configuration name="AnnotationEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter12.ex10.AnnotationEx2" />
+  <component name="RunManager" selected="Application.ThreadEx12">
+    <configuration name="ThreadEx08" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx08" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter12.ex10.*" />
+          <option name="PATTERN" value="chapter13.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -117,12 +89,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnnotationEx3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter12.ex11.AnnotationEx3" />
+    <configuration name="ThreadEx10" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx10" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter12.ex11.*" />
+          <option name="PATTERN" value="chapter13.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -130,12 +102,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnnotationEx4" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter12.ex12.AnnotationEx4" />
+    <configuration name="ThreadEx11" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx11" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter12.ex12.*" />
+          <option name="PATTERN" value="chapter13.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -143,12 +115,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnnotationEx5" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter12.ex14.AnnotationEx5" />
+    <configuration name="ThreadEx12" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx12" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter12.ex14.*" />
+          <option name="PATTERN" value="chapter13.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -156,12 +128,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="EnumEx4" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter12.ex08.EnumEx4" />
+    <configuration name="ThreadEx9" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx9" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter12.ex08.*" />
+          <option name="PATTERN" value="chapter13.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -171,11 +143,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.AnnotationEx5" />
-        <item itemvalue="Application.AnnotationEx4" />
-        <item itemvalue="Application.AnnotationEx3" />
-        <item itemvalue="Application.AnnotationEx2" />
-        <item itemvalue="Application.EnumEx4" />
+        <item itemvalue="Application.ThreadEx12" />
+        <item itemvalue="Application.ThreadEx11" />
+        <item itemvalue="Application.ThreadEx10" />
+        <item itemvalue="Application.ThreadEx9" />
+        <item itemvalue="Application.ThreadEx08" />
       </list>
     </recent_temporary>
   </component>
@@ -222,6 +194,7 @@
       <workItem from="1709357467616" duration="4009000" />
       <workItem from="1709378856727" duration="6711000" />
       <workItem from="1709442494828" duration="7525000" />
+      <workItem from="1709457447077" duration="16646000" />
     </task>
     <servers />
   </component>
@@ -234,7 +207,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/chapter08/ExceptionEx9.java</url>
           <line>4</line>
-          <properties class="chapter08.ExceptionEx9" method="main">
+          <properties class="chapter08.ExceptionEx9">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -243,7 +216,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/chapter08/ExceptionEx15.java</url>
           <line>6</line>
-          <properties class="chapter08.ExceptionEx15" method="main">
+          <properties class="chapter08.ExceptionEx15">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -270,11 +243,16 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/chapter11/TreeMapEx1.java</url>
           <line>6</line>
-          <properties class="chapter11.TreeMapEx1" method="main">
+          <properties class="chapter11.TreeMapEx1">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/chapter13/ThreadEx05.java</url>
+          <line>2</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
