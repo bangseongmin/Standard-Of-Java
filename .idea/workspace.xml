@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="" />
+    <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter13/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter13/README.MD" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,25 +38,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "chapter13",
-    "last_opened_file_path": "C:/Study/Standard-Of-Java/src/chapter12/ex4",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Problems",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;chapter13&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java/src/chapter12/ex4&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Study\Standard-Of-Java\src\chapter12\ex4" />
@@ -75,9 +78,9 @@
       <recent name="chapter11" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ThreadEx12">
-    <configuration name="ThreadEx08" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx08" />
+  <component name="RunManager" selected="Application.ThreadEx22">
+    <configuration name="ThreadEx18" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx18" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -89,8 +92,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ThreadEx10" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx10" />
+    <configuration name="ThreadEx19" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx19" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -102,8 +105,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ThreadEx11" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx11" />
+    <configuration name="ThreadEx20" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx20" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -115,8 +118,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ThreadEx12" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx12" />
+    <configuration name="ThreadEx21" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx21" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -128,8 +131,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ThreadEx9" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx9" />
+    <configuration name="ThreadEx22" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx22" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
@@ -143,11 +146,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.ThreadEx12" />
-        <item itemvalue="Application.ThreadEx11" />
-        <item itemvalue="Application.ThreadEx10" />
-        <item itemvalue="Application.ThreadEx9" />
-        <item itemvalue="Application.ThreadEx08" />
+        <item itemvalue="Application.ThreadEx22" />
+        <item itemvalue="Application.ThreadEx21" />
+        <item itemvalue="Application.ThreadEx20" />
+        <item itemvalue="Application.ThreadEx19" />
+        <item itemvalue="Application.ThreadEx18" />
       </list>
     </recent_temporary>
   </component>
@@ -194,7 +197,8 @@
       <workItem from="1709357467616" duration="4009000" />
       <workItem from="1709378856727" duration="6711000" />
       <workItem from="1709442494828" duration="7525000" />
-      <workItem from="1709457447077" duration="16646000" />
+      <workItem from="1709457447077" duration="16669000" />
+      <workItem from="1709565208676" duration="4221000" />
     </task>
     <servers />
   </component>
