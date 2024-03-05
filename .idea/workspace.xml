@@ -78,52 +78,13 @@
       <recent name="chapter11" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.ThreadEx22">
-    <configuration name="ThreadEx18" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx18" />
-      <module name="Standard-Of-Java" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="chapter13.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ThreadEx19" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx19" />
-      <module name="Standard-Of-Java" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="chapter13.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="ThreadEx20" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx20" />
-      <module name="Standard-Of-Java" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="chapter13.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="Application.ThreadWaitEx3">
     <configuration name="ThreadEx21" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="chapter13.ThreadEx21" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter13.*" />
+          <option name="PATTERN" value="chapter13.threadWaitEx1.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -136,7 +97,46 @@
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter13.*" />
+          <option name="PATTERN" value="chapter13.threadWaitEx1.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ThreadWaitEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.threadWaitEx1.ThreadWaitEx1" />
+      <module name="Standard-Of-Java" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chapter13.threadWaitEx1.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ThreadWaitEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.threadWaitEx2.ThreadWaitEx2" />
+      <module name="Standard-Of-Java" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chapter13.threadWaitEx2.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ThreadWaitEx3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter13.threadWaitEx3.ThreadWaitEx3" />
+      <module name="Standard-Of-Java" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="chapter13.threadWaitEx3.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -146,11 +146,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.ThreadWaitEx3" />
+        <item itemvalue="Application.ThreadWaitEx2" />
+        <item itemvalue="Application.ThreadWaitEx1" />
         <item itemvalue="Application.ThreadEx22" />
         <item itemvalue="Application.ThreadEx21" />
-        <item itemvalue="Application.ThreadEx20" />
-        <item itemvalue="Application.ThreadEx19" />
-        <item itemvalue="Application.ThreadEx18" />
       </list>
     </recent_temporary>
   </component>
@@ -199,6 +199,7 @@
       <workItem from="1709442494828" duration="7525000" />
       <workItem from="1709457447077" duration="16669000" />
       <workItem from="1709565208676" duration="4221000" />
+      <workItem from="1709652696058" duration="4575000" />
     </task>
     <servers />
   </component>

@@ -794,3 +794,87 @@ synchronized (객체의 참조변수) {
 
 ### 9.2 wait()과 notify()
 
+synchronized로 동기화해서 공유 데이터를 보호하는 것 까지는 좋은데, 특정 쓰레드가 객체의 락을 가진 상태로 오랜 시간을 보내지 않도록 하는 것도 중요하다. 만일 계좌에 출금할 돈이 부족해서 한 쓰레드가 락을 보유한 채로 돈이 입금될 때까지 오랜 시 간을 보낸다면, 다른 쓰레드들은 모두 해당 객체의 락을 기다리느라 다른 작업들도 원활지 진행되지 않을 것이다.
+
+이러한 상황을 개선하기 위해 고안된 것이 바로 wait()과 notify()이다. 동기화된 임계 영역의 코드를 수행하다가 작업을 수행하다가 작업을 더 이상 진행할 상황이 아니면, 일단 wait()을 호출하여 쓰레드가 락을 반납하고 기다리게 한다. 그러면 다른 쓰레드가 락을 얻어 해당 객체에 대한 작업을 수행할 수 있게 된다. 나중에 작업을 진행할 수 있는 상황이 되면 notify()을 호출해서, 작업을 중단했던 쓰레드가 다시 락을 얻어 작업을 진행할 수 있게 한다.
+
+> [참고] wait()에 의해 lock을 반납했다가, 다시 lock을 얻서서 임계 영역에 들어오는 것을 재진입(reentrance)이라고 한다.
+
+이는 마치 빵을 사려고 빵집 앞에 줄을 서있는 것과 유사한데, 자신의 차례가 되었는데도 자신이 원하는 빵이 나오지 않았으면, 다음 사람에게 순서를 양보하고 기다리다가 자신이 원하는 빵이 나오면 통보를 받고 빵을 사가는 것이다. 
+
+차이가 있다면, 오래 기다린 쓰레드가 락을 얻는다는 보장이 없다는 것이다. wait()이 호출되면, 실행 중이던 쓰레드는 해당 객체의 대기실(waiting pool)에서 통지를 기다린다. notify()가 호출되면, 해당 객체의 대기실에 있던 모든 쓰레드 중에서 임의의 쓰레드만 통지를 받는다. notifyAll()은 기다리고 있는 모든 쓰레드에게 통보를 하지만, 그래도 lock을 얻을 수 있는 것은 하나의 쓰레드일 뿐이고 나머지 쓰레드는 통보를 받긴 했지만, lock을 얻지 못하면 다시 lock을 기다리는 신세가 된다.
+
+wait()과 notify()는 특정 객체에 대한 것이므로 Object클래스에 정의도어 있다.
+
+```java
+void wait()
+void wait(long timeout)
+void wait(long timeout, int nanos)
+void notify()
+void notifyAll()
+```
+
+wait()은 notify() 또는 notifyAll()이 호출될 때까지 기다리지만, 매개변수가 있는 wait()은 지정된 시간동안만 기다린다. 즉, 지정된 시간이 지난 후에 자동적으로 notify()가 호출되는 것과 같다. 
+
+그리고 waiting pool 은 객체마다 존재하는 것이므로 notifyAll()이 호출된다고 해서 모든 객체의 waiting pool에 있는 쓰레드가 깨워지는 것은 아니다. notifyAll()이 호출된 객체의 waiting pool에 대기 중인 쓰레드만 해당된다는 것을 기억하자.
+
+```java
+wait(), notify(), notifyAll()
+- Object에 정의되어 있다.
+- 동기화 블럭(synchronized 블럭)내에서만 사용할 수 있다.
+- 보다 효율적인 동기화를 가능하게 한다.
+```
+
+
+#### 기아 현상과 경쟁 상태
+
+지독히 운이 나쁘면 요리사 쓰레드는 계속 통지를 받지 못하고 오랫동안 기다리게 되는데, 이것을 '기아(starvation) 현상'이라고 한다. 이 현상을 막으려면, notify()대신 notifyAll()을 사용해야 한다. 일단 모든 쓰레드에게 통지를 하면, 손님 쓰레드는 다시 waiting pool에 들어가더라도 요리사 쓰레드는 결국 lock을 얻어서 작업을 진행할 수 있기 때문이다.
+
+notifyAll()로 요리사 쓰레드의 기아현상은 막았지만, 손님 쓰레뜨까지 통지를 받아서 불필요하게 요리사 쓰레드와 lock을 얻기 위해 경쟁하게 된다. 이처럼 여러 쓰레드가 lock을 얻기 위해 서로 경쟁하는 것을 '경쟁 상태(race comdition)'이라고 하는데, 이 경쟁 상태를 개선하기 위해서는 요리사 쓰레드와 손님 쓰레드를 구별해서 통지하는 것이 필요하다.
+
+
+### 9.3 Lock과 Condition을 이용한 동기화
+
+동기화할 수 있는 방법은 synchronized블럭 외에도 'java.util.concurrent.locks'패키지가 제공하는 lock클래스들을 이용하는 방법이 있다. 이 패키지는 JDK1.5에 와서야 추가된 것으로 그 전에는 동기화 방법이 synchronized블럭뿐이었다.
+
+synchronized 블럭으로 동기화를 하면 자동적으로 lock이 잠기고 풀리기 때문에 편리하다. 심지어 synchronized블럭 내에서 예외가 발생해도 lock은 자동적으로 풀린다. 그러나 때로는 같은 메서드 내에서만 lock을 걸 수 있다는 제약이 불편하기도 하다. 그럴 때 lock 클래스를 사용한다. lock 클래스의 종류는 다음과 같이 3가지가 있다.
+
+```java
+ReentrantLock               // 재진입이 가능한 lock, 가장 일반적인 배타 Lock
+ReentrantReadWriteLock      // 읽기에는 공유적이고, 쓰기에는 배타적인 Lock
+StampedLock                 // ReentrantReadWriteLock에 낙관적인 lock의 기능을 추가
+```
+
+ReentrantLock은 가장 일반적인 lock이다. 'reentrant(재진입할 수 있는)'이라는 단어가 앞에 붙은 이유는 wait() & notify()에서 배운 것처럼, 특정 조건에서 lock을 풀고 나중에 다시 lock을 얻고 임계영역으로 들어와서 이후의 작업을 수행할 수 있기 때문이다. 
+
+ReentrantReadWriteLock은 이름에서 알 수 있듯이, 읽기를 위한 lock과 쓰기를 위한 lock을 제공한다. ReentrantLock은 배타적인 lock이라서 무조건 lock이 있어야만 임계 영역읰 코드를 수행할 수 있지만, ReentrantReadWriteLock은 읽기 lock이 걸려있으면 다른 쓰레드가 읽기 lock을 중복해서 걸고 읽기를 수행할 수 있다. 읽기는 내용을 변경하지 않으므로 동시에 여러 쓰레드가 읽어도 문제가 되지 않는다. 그러나 읽기 lock이 걸린 상태에서 쓰기 lock을 거는 것은 허용되지 않는다. 반대의 경우도 마찬가지다. 읽기를 할 때는 읽기 lock을 걸고, 쓰기 할 때는 쓰기 lock을 거는 것일뿐 lock을 거는 방법은 같다.
+
+StampedLock 은 lock을 걸거나 해지할 때 '스탬프(long타입의 정수값)'를 사용하며, 읽기와 쓰기를 위한 lock외에 '낙관적 읽기 lock(optimistic reading lock)'이 추가된 것이다.
+
+읽기 lock 걸려있다면, 쓰기 lock을 얻기 위해서는 읽기 lock이 풀릴 때까지 기다려야하는데 비해 '낙관적 읽기 lock'은 쓰기 lock에 의해 바로 풀린다. 그래서 낙관적 읽기에 실패하면, 읽기 lock을 얻어서 다시 읽어 와야 한다. `무조건 읽기 lock을 걸지 않고, 쓰기와 읽기가 충돌할 때만 쓰기가 끝난 후에 읽기 lock을 거는 것이다.`
+
+다음의 코드는 가장 일반적인 StampedLock을 이용한 낙관적 읽기의 예이다.
+
+```java
+public int getBalance() {
+     long stamp = lock.tryOptimisticRead();      //  낙관적 읽기 lock을 건다.
+
+     int curBalance = this.balance;              // 공유 데이터인 balance를 읽어온다.
+
+     if(lock.validate(stamp)) {                  // 쓰기 lock에 의해 낙관적 읽기 lock이 풀렸는지 확인
+        stamp = lock.readLock();                // lock이 풀렸으면, 읽기 lock을 얻으려고 대기
+
+        try {
+           curBalance = this.balance;
+        }finally {
+           lock.unlockRead(stamp);             // 읽기 lock을 푼다.
+        }
+     }
+
+    return curBalance;                          // 낙관적 읽기 lock이 풀리지 않았으면 곧바로 읽어온 값 반환
+}
+```
+
+lock 클래스들에 대해 자세히 배우지 않았지만, 낙관적 읽기 lock을 어떻게 사용하는지 충분히 감을 잡을 수 있을 것이다.
+
+
