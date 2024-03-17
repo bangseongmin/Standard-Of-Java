@@ -1,0 +1,1184 @@
+# Chatper  13. 쓰레드(Thread)
+
+## 1. 프로세스와 쓰레드
+
+프로세스(process)란 간단히 말해서 '실행 중인 프로그램(program)'이다. 프로그램을 실행하면 OS로부터 실행에 필요한 자원(메모리)을 할당받아 프로세스가 된다.
+
+프로세스는 프로그램을 수행하는 데 필요한 데이터와 메모리 등의 자원 그리고 쓰레드로 구성되어 있으며 프로세스의 자원을 이용해서 실제로 작업을 수행하는 것이 바로 쓰레드이다.
+
+그래서 모든 프로세스에는 최소한 하나 이상의 쓰레드가 존재하며, 둘 이상의 쓰레드를 가진 프로세스를 '멀티쓰레드 프로세스(multi-threaded process)'라고 한다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/a129e51e-5644-4c0e-8d10-7677e443991d)
+
+> [참고] 쓰레드를 프로세스라는 작업공간(공장)에서 작업을 처리하는 일꾼(worker)으로 생각하면 이해하기 쉬울 것이다.
+
+
+하나의 프로세스가 가질 수 있는 쓰레드의 개수는 제한되어 있지 않으나 쓰레드가 작업을 수행하는데 개별적인 메모리 공간(호출스택)을 필요로 하기 때문에 프로세스의 메모리 한계에 따라 생성할 수 있는 쓰레드의 수가 결정된다. 실제로는 프로세스의 메모리 한계에 다다를 정도로 많은 쓰레드를 생성하는 일은 없을 것이다.
+
+#### 멀티태슽킹과 멀티쓰레딩
+
+우리가 사용하고 있는 윈도우나 유닉스를 포함한 대부분의 OS는 멀티태스킹(multi-tasing, 다중작업)을 지원하기 때문에 여러 개의 프로세스가 동시에 실행될 수 있다.
+
+이와 마찬가지로 멀티쓰레딩은 하나의 프로세스 내에서 여러 쓰레드가 동시에 작업을 수행하는 것이다. CPU의 코어(core)가 한 번에 단 하나의 작업만 수행할 수 있으므로, 실제로 동시에 처리되는 작업의 개수는 코어의 개수와 일치한다. 그러나 처리해야하는 쓰레드의 수는 언제나 코의 개수보다 훨씬 많기 떄문에 각 코어가 아주 짧은 시간 동안 여러 작업을 번갈아 가며 수행함으로써 여러 작업들이 모두 동시에 수행되는 것처럼 보이게 한다.
+
+그래서 프로세스의 성능이 단순히 쓰레드의 개수에 비례하는 것이 아니며, 하나의 쓰레드를 가진 프로세스 보다 두 개의 쓰레드를 가진 프로세스가 오히려 더 낮은 성능을 보일 수도 있다.
+
+
+#### 멀티 쓰레딩의 장단점
+
+도스(DOS)와 같이 한 번에 한 가지 작업만 할 수 있는 OS와 윈도우와 같은 멀티태스킹이 가능한 OS의 차이는 이미 경험으로 잘 알고 있을 것이다. 싱글쓰레드 프로그램과 멀티 쓰레드 프로그램의 차이도 이와 같다고 생각하면 된다.
+
+멀티쓰레드의 장점은 다음과 같다.
+
+> **멀티쓰레딩의 장점**
+> 
+> - CPU의 사용률을 향상시킨다.
+> - 자원을 보다 효율적으로 사용할 수 있다.
+> - 사용자에 대한 응답성이 향상된다.
+> - 작업이 분리되어 코드가 간결해진다.
+
+메신저로 채팅하면서 파일을 다운로드 받거나 음성대화를 나눌 수 있는 것이 가능한 이유가 바로 멀티쓰레드로 작성되어 있기 때문이다. 만일 싱글쓰레드로 작성되어 있다면 파일을 다운로드 받는 동안에는 다른 일(채팅)을 전혀 할 수 없을 것이다.
+
+여러 사용자에게 서비스를 해주는 서버 프로그램의 경우 멀티쓰레드로 작성한는 것은 필수적이어서 하나의 서버 프로세스가 여러 개의 쓰레드를 생성해서 쓰레드와 사용자의 요청이 일대일로 처리되도록 프로그래밍해야 한다.
+
+만일 싱글쓰레드로 서버 프로그램을 작성한다면 사용자의 요청 마다 새로운 프로세스를 생성해야하는데 프로세스를 생성하는 것은 쓰레드를 생성하는 것에 비해 더 많은 시간과 메모리 공간이 필요하기 때문에 많은 수의 사용자 요청을 서비스하기 어렵다.
+
+> [참고] 쓰레드를 가변운 프로세스, 즉 경량 프로세스(LWP, light-weight process)라고 부르기도 한다.
+
+그러나 멀티쓰레딩에 장점만 있는 것은 아니어서 멀티쓰레드 프로세스는 여러 쓰레드가 같은 프로세스 내에서 자원을 공유하면서 작업을 하기 때문에 발생할 수 있는 동기화(synchronization), 교착상태(deadlock)와 같은 문제들을 고려해서 신중히 프로그래밍해야 한다.
+
+> [참고] 교착상태란 두 쓰레드가 자원을 점유한 상태에서 서로 상대편이 점유한 자원을 사용하려고 기다리느라 진행이 멈춰 있는 상태를 말한다.
+
+#### 정리
+
+1. 쓰레드 
+    
+    - 프로세스가 할당받은 자원을 이용하는 실행의 단위
+    - 한 프로세스 내에서 동작되는 여러 실행 흐름으로 프로세스 내의 Heap, Data, Code 영역을 공유(멀티 스레드의 경우, 이 프로세스의 영역들을 공유한다)
+    - 하나의 프로세스 안에서 다양한 작업을 담당하는 최소 실행 단위를 스레드라고 한다.
+        
+        예시) 크롬 브라우저(=프로세스)에서 티스토리 작성(스레드 1)하면서 지니 음악 감상(스레드 2)
+   
+    - 멀티 스레딩의 경우, 스레드 간의 자원은 공유하고 자원의 생성과 관리의 중복성을 최소화하여 수행 능력을 향상시킨다.
+    - 각각의 스레드는 독립적인 자원을 수행해야 하기 때문에 고융한 스레드 ID, 프로그램 카운터(PC), 레지스터 집합, 스택을 가지고 있다.
+    
+    <br />
+    
+
+2. 멀티 쓰레드
+    
+    멀티 스레드는 CPU의 최대 활용을 위해 프로그램의 둘 이상을 동시에 실행하는 기술이다. 이러한 작업은 컨텍스트 스위칭(Context Switching)을 통해서 이뤙진다. 하나의 스레드에서 다음 스레드로 이동을 하면서 컨텍스트 스위칭이 일어난다. 그리고 스위칭이 일어나면서 부분적으로 조금씩 조금씩 각각의 스레드에 대한 작업을 끝내게 된다.
+
+    다시 말해 컨텍스트 위치싱이 엄청 빠르게 일어나면서, 프로그램들이 동시에 수행되는 것처럼 보인다.
+
+
+3. 멀티 스레드의 장점
+    
+    1. 응답성
+
+       프로그램의 일부분(스레드 중 하나)이 중단되거나 긴 작업을 수행하더라도 프로그램의 수행이 계속 되어 사용자에 대한 응답성이 증가한다. 다시 말해서, 멀티 스레드 모델은 에러 발생 시 새로운 스레드를 생성하여 극복한다. 다만, 새로운 스레드 생성이나 놀고 있는 스레드 처리에 비용이 발생한다. ( 싱글 스레드는 프로그램 일부분이 중단되거나, 에러가 발생하면 프로그램이 멈춘다 )
+   
+   2. 경제성
+
+      프로세스 내 자원들과 메모리를 공유하기 때문에 메모리 공간과 시스템 자원 소모가 줄어든다. 스레드 간 통신이 필요한 경우에도 쉽게 데이터를 주고 받을 수 있으며, 프로세스의 context switching과 달리 스레드 간의 context switching은 캐시 메모리를 비울 필요가 없기 때문에 더 빠르다.
+    
+   3. 멀티프로세스의 활용
+
+      다중 CPU 구조에서는 각각의 스레드가 다른 프로세서에서 병렬로 수행될 수 있으므로 병렬성이 증가한다.
+
+4. 멀티 스레드의 단점
+
+   1. 성능
+
+      context switching, 동기화 등의 이유 때문에 싱글 코어 멀티 스레딩은 스레드 생성 시간이 오히려 오버헤드로 작용해 단일 스레드보다 느리다.
+
+   2. 동기화
+
+      공유하는 자원에 동시에 접근하는 경우, 프로세스와는 달리 스레드는 데이터와 힙 영역을 공유하기 때문에 어떤 스레드가 다른 스레드에서 사용 중인 변수나 자료구조에 접근하여 엉뚱한 값을 읽어오거나 수정할 수 있다. 따라서 동기화가 필요
+
+   3. 환경
+
+      멀티 스레딩을 위해서는 운영체제의 지원이 필요하다.
+
+   4. 비용
+
+      멀티 스레드 모델은 프로그래밍 난이도가 높다. 또한, 스레드 수만큼 자원을 많이 사용한다. 초보자의 경우, 동일한 프로그램을 만든다면, 싱글 스레드로는 완성이라도 한다. 그러나, 멀티 스레드의 경우는 완성도 못하는 경우도 많다.
+   
+5. 싱글 스레드의 장점
+    
+   1. context switching이 요구되지 않는다.
+
+      context switching은 여러 개의 프로세스가 하나의 프로세서를 공유할 때 발생하는 작업으로 많은 비용을 필요로 한다.
+
+   2. 동기화에 대한 고려 필요 없음
+
+      여러 개의 스레드가 프로세스의 자원을 공유할 경우, 각 스레드가 원하는 결과를 얻게 하려면 공용 자원에 대한 접근을 제어해야 한다. 쉽게 말해서, 모든 스레드가 일정 자원에 동시에 접근하거나, 똑같은 작업을 실행하려는 경우, 에러가 발생하거나 원하는 값이 나오지 않는다. 그래서, 스레드들이 동시에 같은 자원에 접근하지 못하도록 제어해줘야만 한다. 이 작업은 프로그래머에게 많은 노력을 요구하고 비용을 발생시킨다.
+   
+   3. 성능 우위
+
+      단순히 CPU만을 사용하는 계산작업이라면, 오히려 멀티스레드보다 싱글스레드로 프로그래밍하는 것이 더 효율적이다.
+        
+   4. 비용
+
+      프로그래밍 난이도가 쉽고, CPU, 메모리를 적게 사용한다.
+
+6. 싱글 스레드의 단점
+    
+   1. 여러 개의 CPU를 활용하지 못한다.
+   2. 연산량이 많은 작업을 하는 경우, 그 작업이 완료되어야 다른 작업을 수행할 수 있다.
+   3. 싱글 스레드 모델은 에러 처리를 못하는 경우 멈춘다.
+
+
+## 2. 쓰레드의 구현과 실행
+
+쓰레드를 구현하는 방법은 Thread클래스를 상속받는 방법과 Runnable 인터페이스를 구현하는 방법, 모두 두 가지가 있다. 어느 쪽을 선택해도 별 차이는 없지만 Thread 클래스를 상속받으면 다른 클래스를 상속받을 수 없기 때문에, Runnable 인터페이스를 구현하는 방법이 일반적이다.
+
+Runnable 인터페이스를 구현하는 방법은 재사용성(reusability)이 높고 코드의 일관성(consistency)을 유지할 수 있기 때문에 보다 객체지향적인 방법이라고 할 수 있다.
+
+```JAVA
+// 1. Thread 클래스를 상속
+public class MyThread extends Thread {
+    @Override
+    public void run() { /* 작업 내용 */ }
+}
+```
+
+```java
+// 2. Runnable 인터페이스 구현
+public class MyThread implements Runnable {
+    @Override
+    public void run() { /* 작업 내용 */ }
+}
+```
+
+Runnable 인터페이스는 오로지 run()만 정의도어 있는 간단한 인터페이스이다. Runnable 인터페이스를 구현하기 위해서 해야 할 일은 추상메서드 run()의 몸통{}을 만들ㄹ어 주는 것 뿐이다.
+
+쓰레드를 구현한다는 것은, 위의 두 방법 중 어떤 것을 선택하든지, 그저 쓰레드를 통해 작업하고자 하는 내용으로 run()의 몸통을 채우는 것일 뿐이다.
+
+Thread 클래스를 상속받은 경우와 Runnable 인터페이스를 구현한 경우의 인스턴스 생성 방법이 다르다.
+
+```java
+ThreadEx1_1 t1 = new ThreadEx1_1();     // Thread의 자손 클래스의 인스턴스 생성
+
+Runnable r = new ThreadEx1_2();         // Runnable을 구현한 클래스의 인스턴스 생성
+Thread t2 = new Thread(r);			    // 생성자 Thread(Runnable target)
+```
+
+Runnable 인터페이스를 구현한 경우, Runnable인터페이스를 구현한 클래스의 인스턴스를 생성한 다음, 이 인스턴스를 Thread 클래스의 생성자의 매개변수로 제공해야 한다.
+
+아래의 코드는 실제 Thread클래스의 소스코드(Thread.java)를 이해하기 쉽게 수정한 것인데, 인스턴스변수로 Runnable타입의 변수 r을 선언해 놓고 생성자를 통해서 Runnable인터페이스를 구현한 인스턴스를 참조하도록 되어 있는 것을 확인할 수 있다.
+
+그리고 run()을 호출하면 참조변수 r을 통해서 Runnable인터페이스를 구현한 인스턴스의 run()이 호출된다. 이렇게 함으로써 상속을 통해 run()을 오버라이딩하지 않고도 외부로부터 run()을 제공받을 수 있게 된다.
+
+```java
+public class Thread {
+    
+    private Runnable r;
+
+    public Thread(Runnable runnable) {
+        this.r = runnable;
+    }
+    
+    public void run() {
+        if(this.r != null) {
+            r.run();
+        }
+    }
+    
+    ...
+}
+```
+
+Thread클래스를 상속받으면, 자손 클래스에서 조상인 Thread클래스의 메서드를 직접 호출할 수 있지만, Runnable을 구현하면 Thread클래스의 static 메서드인 currentThread()를 호출하여 쓰레드에 대한 참조를 얻어 와야만 호출이 가능하다.
+
+> static Thread currentThread()     현재 실행중인 쓰레드와 참조를 반환한다.
+> String getName()                  쓰레드의 이름을 반환한다.
+
+그래서 Thread를 상속받은 ThreadEx1_1에서는 간단히 getName()을 호출하면 되지만, Runnable을 구현한 ThreadEx1_2에는 멤버라고는 run()밖에 없기 때문에 Thread클래스의 getName()을 호출하려면, "Thread.currentThread().getName()"와 같이 해야 한다.
+
+```java
+class ThreadEx1_1 extends Thread {
+    public void run() {
+        for (int i=0; i<5; i++) {
+            // 조상인 Thread의 getName()을 호출
+            System.out.println(getName());	
+        }
+    }
+}
+
+class ThreadEx1_2 implements Runnable {
+    public void run() {
+        for (int i=0; i<5; i++) {
+            // Thread.currentThread(); - 현재 실행 중인 Thread를 반환
+            System.out.println(Thread.currentThread().getName());
+        }
+    }
+}
+```
+
+
+참고로 쓰레드의 이름은 다음과 같은 생성자나 메서드를 통해서 지정 또는 변경할 수 있다.
+
+```java
+Thread(Runnable taget, String name)
+Thread(String name)
+void setName(String name)
+```
+
+예제 13-1의 결과에서도 알 수 있듯이 쓰레드의 이름을 지정하지 않으면 'Thread-번호'의 형식으로 이름이 정해진다.
+
+그리고, "System.out.println(Thread.currentThread().getName());"는 아래의 코드를 한 줄러 줄여 쓴것이라고 이해하면 된다.
+
+```java
+Thread t = Thread.currentThread();
+String name = t.getName();
+System.out.println(name);
+```
+
+#### 쓰레드의 실행 - start()
+
+쓰레드를 생성했다고 해서 자동으로 실행되는 것은 아니다. start()을 호출해야만 쓰레드가 실행된다.
+
+```java
+t1.start();     // 쓰레드 t1을 실행
+t2.start();     // 쓰레드 t2을 실행
+```
+
+사실은 start()가 호출되었다고 해서 바로 실행되는 것이 아니라, 일단 실행대기 상태에 있다가 자신의 차례가 되어야 실행된다. 물론 실행대기중인 쓰레드가 하나도 없으면 곧바로 실행상태가 된다.
+
+> [참고] 쓰레드의 실행순서는 OS의 스케쥴러가 작성한 스케쥴에 의해 결정된다. 쓰레드의 상태에 대한 내용은 후에 자세히 다룰 것이다.
+
+한 가지 더 알아 두어야 하는 것은 한 번 실행이 종료된 쓰레드는 다시 실행할 수 없다는 것이다. 즉, 하나의 쓰레드에 대해 start()가 한 번만 호출될 수 있다는 뜻이다.
+
+그래서 만일 쓰레드의 작업을 한 번 더 수행해야 한다면 아래의 오른쪽 코드와 같이 새로운 쓰레드를 생성한 다음에 start()를 호출해야 한다. 만일 아래 왼쪽의 코드처럼 하나의 쓰레드에 대해 start()를 두 번 이상 호출하면 실행시에 IllegalThreadStateException이 발생한다.
+
+```java
+// AS-IS
+ThreadEx1_1 t1 = new ThreadEx1_1();
+t1.start();
+t1.start();     // 예외 발생
+
+// TO-BE
+ThreadEx1_1 t1 = new ThreadEx1_1();
+t1.start();
+t1 = new ThreadEx1_1();
+t1.start();
+```
+
+## 3. start()와 run()
+
+쓰레드를 실행시킬 때 run()이 아닌 start()를 호출한다는 것에 대해서 다소 의문이 들었을 것이다. 이제 start()와 run()의 차이와 쓰레드가 실행되는 과정에 대해서 자세히 살펴보자.
+
+메인 메서드에서 run()을 호출하는 것은 생성된 쓰레드를 실행시키는 것이 아니라 단순히 클래스에 선언된 메서드를 호출하는 것일 뿐이다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/2167aa14-8ba9-4531-8dab-a79723424df2)
+
+반면에 start()는 새로운 쓰레드가 작업을 실행하는데 필요한 호출스택(call stack)을 생성한 다음에 run()을 호출해서, 생성된 호출스택에 run()이 첫 번째로 올라가게 한다.
+
+모든 쓰레드는 독립적인 작업을 수행하기 위해 자신만의 호출스택을 필요로 하기 때문에, 새로운 쓰레드를 생성하고 실행시킬 때마다 새로운 호출스택이 생성되고 쓰레드가 종료되면 작업에 사용된 호출스택은 소멸된다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/9ac1ee31-ebc0-4284-8678-c1361a7382dd)
+
+1. main 메서드에서 쓰레드의 start() 호출
+2. start()는 새로운 쓰레드를 생성하고, 쓰레드가 작업하는데 사용될 호출스택 생성
+3. 새로 생성된 호출스택에 run()이 호출되어, 쓰레드가 독립된 공간에서 작업 수행
+4. 호출스택이 2개이므로 스케쥴러가 정한 순서에 의해서 번갈아 가면서 실행
+
+호출스택에서는 가장 위에 있는 메서드가 현재 실행중인 메서드이고 나머지 메서드들은 대기상태에 있다는 것을 기억하고 있을 것이다. 그러나 위의 그림에서와 같이 쓰레드가 둘 이상일 때는 호출스택의 최상위에 있는 메서드일지라도 대기상태에 있을 수 있다.
+
+스케줄러는 실행대기중인 쓰레드들의 우선순위를 고려하여 실행순서와 실행시간을 결정하고, 각 쓰레드들은 작성된 스케줄러에 따라 자신의 순서가 되면 지정된 시간동안 작업을 수행한다.
+
+이 때 주어진 시간동안 작업을 마치지 못한 쓰레드는 다시 자신의 차례가 돌아올 때까지 대기상태로 있게 되며, 작업을 마친 쓰레드, 즉 run()의 수행이 종료된 쓰레드는 호출스택이 모두 비워지면서 이 쓰레드가 사용하던 호출스택은 사라진다.
+
+이는 마치 자바프로그램을 실행하면 호출스택이 생성되고 main메서드가 처음으로 호출되고, main메서드가 종료되면서 호출스택이 비워지면서 프로그램도 종료되는 것과 같다.
+
+
+#### main 쓰레드
+
+main메서드의 작업을 수행하는 것도 쓰레이이며, 이를 main 쓰레드라고 한다. 프로그램을 실행하면 기본적으로 하나의 쓰레드를 생성하고, 그 쓰레드가 main메서드를 호출해서 작업이 수행되도록 하는 것이다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/257fc670-fa3e-4d13-b175-e0433b859b40)
+
+지금까지는 main 메서드가 수행을 마치면 프로그램이 종료되었으나, 위의 그림에서와 같이 main메서드가 수행을 마쳤다하더라도 다른 쓰레드가 아직 작업을 마치지 않은 상태라면 프로그램이 종료되지 않는다.
+
+> 실행 중인 사용자 쓰레드가 하나도 없을 떄 프로그램은 종료된다.
+
+쓰레드는 '사용자 쓰레드(user thread)'와 '데몬 쓰레드(daemon thread)'가 있다.
+
+> [참고] 사용자 쓰레드(user thread)는 'non-daemon thread'라고도 한다.
+
+```java
+public class ThreadEx2 {
+
+    public static void main(String[] args) {
+        ThreadEx2_1 t1 = new ThreadEx2_1();
+        t1.start();
+    }
+}
+
+class ThreadEx2_1 extends Thread {
+    @Override
+    public void run() {
+        throwException();
+    }
+
+    public void throwException() {
+        try {
+            throw new Exception();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+```shell
+java.lang.Exception
+	at chapter13.ThreadEx2_1.throwException(ThreadEx2.java:19)
+	at chapter13.ThreadEx2_1.run(ThreadEx2.java:14)
+```
+
+새로 실성한 쓰레드에서 고의로 예외를 발생시키고 printStackTrace()를 이용해서 예외가 발생한 당시의 호출스택을 출력하는 예제이다. 호출스택의 첫 번째 메서드가 main메서드가 아니라 run메서드인 것을 확인하자.
+
+한 쓰레드가 예외가 발생해서 종료되어도 다른 쓰레드의 실행에는 영향을 미치지 않느다. 아래의 그림에 main 쓰레드의 호출스택이 없는 이유는 main쓰레드가 종료되었기 때문이다.
+
+![image](https://github.com/bangseongmin/Module-Project/assets/22147400/d3abd63c-a054-488d-8277-92af12fa4ebb)
+
+
+```java
+public class ThreadEx3 {
+
+    public static void main(String[] args) {
+        ThreadEx3_1 t1 = new ThreadEx3_1();
+        t1.run();
+    }
+}
+
+class ThreadEx3_1 extends Thread {
+    @Override
+    public void run() {
+        throwException();
+    }
+
+    public void throwException() {
+        try {
+            throw new Exception();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+```shell
+java.lang.Exception
+	at chapter13.ThreadEx3_1.throwException(ThreadEx03.java:19)
+	at chapter13.ThreadEx3_1.run(ThreadEx03.java:14)
+	at chapter13.ThreadEx03.main(ThreadEx03.java:7)
+```
+
+이전 예제와 달리 쓰레드가 새로 생성되지 않았다. 그저 ThreadEx3_1클래스의 run()이 호출되었을 뿐이다. 아래 그림은 main쓰레드의 호출스택이며, main메서드가 포함되어 있음을 확인하자.
+
+![image](https://github.com/bangseongmin/Module-Project/assets/22147400/3c2dc177-ecac-4a23-a621-0b5d0ecfe76e)
+
+
+### 4. 싱글쓰레드와 멀티쓰레드
+
+두 개의 작업을 하나의 쓰레드로 처리하는 경우와 두 개의 쓰레드로 처리하는 경우를 가정해보자. 하나의 쓰레드로 두 작업을 처리하는 경우는 한 작업을 마친 후에 다른 작업을 시작하지만, 두 개의 쓰레드로 작업 하는 경우에는 짧은 시간동안 2개의 쓰레드가 번갈아 가면서 작업을 수행해서 동시에 두 작업이 처리되는 것과 같이 느끼게 한다.
+
+![싱글스레드 프로세스와 멀티스레드 프로세스의 비교(싱글 코어)](https://github.com/bangseongmin/Module-Project/assets/22147400/39e5f9cf-1dc3-4106-b179-bb4dfd51029c)
+
+위의 그래프에서 알 수 있듯이 하나의 쓰레드로 두개의 작업을 수행한 시간과 두 개의 쓰레드로 두 개의 작업을 수행한 시간(t2=t2`)은 거의 같다. 오히려 두 개의 쓰레드로 작업한 시간이 싱글쓰레드로 작업한 시간보다 더 걸리게 되는데 그 이유는 쓰레드간의 작업전환(context switching)에 시간이 걸리기 때문이다.
+
+작업 전환을 할 때는 현재 진행 중인 작업의 상태, 예를 들면 다음에 실행햏야할 위치(PC, 프로그램 카운터) 등의 정보를 저장하고 읽어 오는 시간이 소요된다. 참고로 스레드의 스위칭에 비해 프로세스의 스위칭이 더 많은 정보를 저장해야하므로 더 많은 시간이 소요된다.
+
+> [참고] 프로세스 또는 쓰레드 간의 작업 전환을 `컨텍스트 스위칭(context switching)`이라고 한다.
+
+그래서 싱글 코어에서는 단순히 CPU만을 사용하는 계산작업이라면 오히려 멀티쓰레드보다 싱글쓰레드로 프로그래밍하는 것이 더 효율적이다.
+
+```java
+public class ThreadEx4 {
+    public static void main(String[] args) {
+        long startTime = System.currentTimeMillis();
+        for(int i = 0; i < 1000_000; i++) {
+            System.out.printf("%s", new String("-"));
+        }
+        long endTime1 = System.currentTimeMillis();
+        System.out.println("소요시간1: " + (endTime1 - startTime));
+
+        for(int i = 0; i < 1000_000; i++) {
+            System.out.printf("%s", new String("|"));
+        }
+        long endTime2 = System.currentTimeMillis();
+        System.out.println("소요시간2: " + (endTime2 - endTime1));
+    }
+}
+```
+
+```shell
+실행결과1: 1232
+실행결과2: 1228
+```
+
+새로운 쓰레드를 하나 생성해서 두 개의 쓰레드가 작업을 하나씩 나누어서 수행한 후 실행결과를 비교해보도록 하자.
+
+```java
+public class ThreadEx5 {
+
+    static long startTime = 0;
+
+    public static void main(String[] args) {
+        ThreadEx5_1 th1 = new ThreadEx5_1();
+        th1.start();
+        startTime = System.currentTimeMillis();
+
+        for(int i = 0; i< 1_000_000; i++) {
+            System.out.printf("%s", new String("-"));
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.println("소요시간2: " + (endTime - startTime));
+    }
+}
+
+class ThreadEx5_1 extends Thread {
+    @Override
+    public void run() {
+        for(int i = 0; i< 1_000_000; i++) {
+            System.out.printf("%s", new String("|"));
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.println("소요시간2: " + (endTime - ThreadEx5.startTime));
+    }
+}
+```
+
+```shell
+실행결과1: 3555
+실행결과2: 2995
+```
+
+이전 예제와는 달리 두 작업이 아주 짧은 시간동안 번갈아가면서 실행되었으며 거의 동시에 작업이 완료되었음을 알수 있다.
+
+두 개의 쓰레드로 작업하는데도 더 많은 시간이 걸린 이유는 두 가지이다.
+
+1. 두 쓰레드가 번갈아가면서 작업을 처리하기 때문에 쓰레드간의 작업전환시간이 소요되기 때문
+2. 한 쓰레드가 화면에 출력하고 있는 동안 다른 쓰레드는 출력이 끝나기를 기다려야하는데, 이때 발생하는 대기시간 때문이다.
+
+![싱글코어와 멀티코어의 비교](https://github.com/bangseongmin/Module-Project/assets/22147400/fc1c4473-bee3-4bce-aa98-6cc83d7b60d5)
+
+실행 결과를 싱글 코어일 때와 멀티 코어일 때를 비교해 놓았는데, 싱글 코어인 경우에는 멀티쓰레드라도 하나의 코어가 번갈아가면서 작업을 수행하는 것이므로 두 작업이 절대 겹치지 않는다. 그러나, 멀티 코어에서는 멀티 쓰레드로 두 작업을 수행하면, 동시에 두 쓰레드가 수행될 수 있으므로 실행결과 2와 위 그림(b)처럼 두 작업, A와 B가 겹치는 부분이 발생한다. 그래서 화면(console)이라는 자원을 놓고 두 쓰레드가 경쟁하게 되는 것이다.
+
+> [참고] 여러 쓰레드가 여러 작업을 동시에 진행하는 것을 병행(concurrent)라고 하고, 하나의 작업을 여러 쓰레드가 나눠서 처리하는 것을 병렬(parallel)이라고 한다.
+
+위의 결과는 실행할 때마다 다른 겨로가를 얻을 수 잇는데 그 이유는 실행 중인 예제프로그램(프로세스)이 OS의 프로세스 스케쥴러의 영향을 받기 때문이다. JVM의 쓰레드 스케줄러에 의해서 어떤 쓰레드가 얼마동안 실행될 것인지 결정되는 것과 같이 프로세스도 프로세스 스케줄러에 의해서 실행순서와 실행시간이 결정되기 떄문에 매 순간 상황에 따라 프로세스에게 할당되는 실행시간이 일정하지 않고 쓰레드에게 할당되는 시간 역시 일정하지 않게 된다. 그래서 쓰레드가 이러한 불확실성을 가지고 있다는 것을 염두에 두어야 한다.
+
+자바가 OS(플랫폼) 독립적이라고 하지만 실제로는 OS종속적인 부분이 몇 가지 있는데 쓰레드도 그 중의 하나이다.
+
+> [참고] JVM의 종류에 따라 쓰레드 스케줄러의 구현방법이 다를 수 있기 때문에 멀티쓰레드로 작성된 프로그램을 다른 종류의 OS에서도 충분히 테스트해 볼 필요가 있다.
+
+두 쓰레드가 서로 다른 자원을 사용하는 작업의 경우에는 싱글쓰레드 프로세스보다 멀티 쓰레드 프로세스가 더 효율적이다. 예를 들어 사용자로부터 데이터를 입력받는 작업, 네트워크로 파일을 주고받는 작업, 프린터로 파일을 출력하는 작업과 같이 외부기기와의 입출력을 필요로 하는 경우가 이에 해당한다.
+
+![싱글쓰레드 프로세스(위)와 멀티쓰레드 프로세스(아래)의 비교](https://github.com/bangseongmin/Module-Project/assets/22147400/2a818725-73f4-43b1-be7e-256c7a7938b5)
+
+만일 사용자로부터 입력받는 작업(A)과 화면에 출력하는 작업(B)을 하나의 쓰레드로 처리한다면 그림 13-8의 첫번째 그래프처럼 사용자가 입력을 마칠 때까지 아무 일도 하지 못하고 기다리기만 해야한다.
+
+그러나 두 개의 쓰레드도 처리한다면 사용자의 입력을 기다리는 동안 다른 쓰레드가 작업을 처리할 수 있기 때문에 보다 효율적인 CPU의 사용이 가능하다.
+
+작업 A와 작업 B가 모두 종료되는 시간 t2와 t2`를 비교하면 t2 > t2`로 멀티쓰레드 프로세스의 경우가 작업을 더 빨리 마치는 것을 알 수 있다.
+
+
+
+## 5. 쓰레드의 우선순위 
+
+쓰레드는 우선순위(priority)라는 속성(멤버변수)을 가지고 있는데, 이 우선순위의 값에 따라 스레드가 얻는 실행시간이 달라진다. 쓰레드가 수행하는 작업의 중요도에 따라 쓰레드의 우선순위를 서로 다르게 지정하여 특정 쓰레드가 더 많은 작업시간을 갖도록 할 수 있다.
+
+예를 들어 파일전송기능이 있는 메신저의 경우, 파일다운로드를 처리하는 쓰레드보다 채팅내용을 전송하는 쓰레드의 우선순위가 높아야 사용자가 채팅하는데 불편함이 없을 것이다. 대신 파일다운로드 작업에 걸리는 시간은 더 길어질 것이다.
+
+이처럼 시각적인 부분이나 사용자에게 빠르게 반응해야하는 작업을 하는 쓰레드의 우선 순위는 다른 작업을 수행하는 쓰레드에 비해 높아야 한다.
+
+#### 쓰레드의 수선순위 지정하기
+
+```java
+void setPriority(int newPriority)       // 쓰레드의 우선순위를 지정한 값으로 변경
+void getPriority()                      // 쓰레드의 우선순위를 반환
+
+public static final int MAX_PRIORITY = 10;      // 최대 우선순위
+public static final int MIN_PRIORITY = 1;       // 최소 우선순위
+public static final int NORM_PRIORITY = 5;      // 보통 우선순위
+```
+
+쓰레드가 가질 수 있는 우선순위 범위는 1~10이며 숫자가 높을수록 우선순위가 높다. 
+
+한 가지 더 알아두어야 할 것은 쓰레드의 우선순위는 쓰레드를 생성한 쓰레드로부터 상속받는다는 것이다. main메서드를 수행하는 쓰레드는 우선순위가 5이므로 main메서드내에서 생성하는 쓰레드의 우선순위는 자동적으로 5가 된다.
+
+```java
+public class ThreadEx8 {
+
+    public static void main(String[] args) {
+        ThreadEx8_1 th1 = new ThreadEx8_1();
+        ThreadEx8_2 th2 = new ThreadEx8_2();
+
+        th2.setPriority(7);
+
+        System.out.println("Priority of th1(-) : " + th1.getPriority());
+        System.out.println("Priority of th2(-) : " + th2.getPriority());
+
+        th1.start();
+        th2.start();
+    }
+}
+
+class ThreadEx8_1 extends Thread {
+
+    @Override
+    public void run() {
+        for(int i = 0; i < 300; i++) {
+            System.out.print("-");
+            for(int x = 0; x < 10_000_000; x++) {
+
+            }
+        }
+    }
+}
+
+class ThreadEx8_2 extends Thread {
+
+    @Override
+    public void run() {
+        for(int i = 0; i < 300; i++) {
+            System.out.print("|");
+            for(int x = 0; x < 10_000_000; x++) {
+
+            }
+        }
+    }
+}
+```
+
+th1과 th2 모두 main 메서드에서 생성하였기 때문에 main메서드를 실행하는 쓰레드의 우선순위인 5를 상속받았다. 그 다으메 th2.setPriority(7)로 th2의 우선순위를 7로 변경한 다음에 start()를 호출해서 쓰레드를 실행시켰다. 이처럼 쓰레드를 실행하기 전에만 우선순위를 변경할 수 있다는 것을 기억하자.
+
+우선순위가 높아지면 한 번에 작업이 끝나버릴 수 있기 때문에 아무 일도 하지 않는 반복문을 추가하여 작업을 지연시켰다.
+
+
+## 6. 쓰레드 그룹(thread group)
+
+쓰레드 그룹은 서로 관련된 쓰레드를 그룹으로 다루기 우한 것으로, 폴더를 생성해서 관련된 파일들을 함께 넣어서 관리하는 것처럼 쓰레드 그룹을 생성해서 쓰레드를 그룹으로 묶어서 관리할 수 있다.
+
+또한 폴더 안에 폴더를 생성할 수 있듯이 쓰레드 그룹에 다른 쓰레드 그룹을 포함시킬 수 있다. 사실 쓰레드 그룹은 보안상의 이유로 도입된 개념으로, 자신이 속한 쓰레드 그룹이나 하위 쓰레드 그룹은 변경할 수 있지만 다른 쓰레드 그룹의 쓰레드를 변경할 수는 없다. ThreadGroup을 사용해서 생성할 수 있으며, 주요 생성자와 메서드는 다음과 같다.
+
+| 생성자/메서드                                      | 설명                             |
+|----------------------------------------------|--------------------------------|
+| ThreadGroup(String name)                     | 지정된 이름의 새로운 쓰레드 그룹 생성          |
+| ThreadGroup(ThreadGroup parent, String name) | 지정된 쓰레드 그룹에 포함되는 새로운 쓰레드 그룹 생성 |
+| int activeCount() | 쓰레드 그룹에 포함된 활성상태에 있는 쓰레드의 수 반환 |
+| int activeGroupCount() | 쓰레드 그룹에 포함된 활성상태에 있느 쓰레드 그룹의 수를 반환 |
+| void checkAccess() | 현재 실행중인 쓰레드가 쓰레드 그룹을 변경할 권한이 있는지 체크. 만일 권한이 없다면 SecurityException 발생 |
+| void destroy() | 쓰레드 그룹과 하위 쓰레드 그룹까지 모두 삭제한다. 단, 쓰레드 그룹이나 하위 쓰레드 그룹이 비어있어야 한다. |
+| int enumerate(Thread[] list), int enumerate(Thread[] list, boolean recurse), int enumerate(ThreadGroup[] list), int enumerate(ThreadGroup[] list, boolean recurse) | 쓰레드 그룹에 속한 쓰레드 또는 하위 쓰레드 그룹의 목록을 지정된 배열에 담고 그 개수를 반환. 두 번째 매겨변수인 recurse의 값을 true로 하면 쓰레드 그룹에 속한 하위 쓰레드 그룹에 쓰레드 또는 쓰레드 그룹까지 배열에 담는다. |
+| int getMaxPriority() | 쓰레드 그룹의 최대우선순위 반환 | 
+| String getName() | 쓰레드 그룹의 이름 반환 |
+| ThreadGroup getParent() | 쓰레드 그룹의 상위 쓰레드 그룹을 반환 |
+| void interrupt() | 쓰레드 그룹에 속한 모든 쓰레드를 interrupt |
+| boolean isDaemon() | 쓰레드 그룹이 데몬 쓰레드 그룹인지 확인 |
+| boolean isDestoryed() | 쓰레드 그룹이 삭제되었는지 확인 |
+| void list() | 쓰레드 그룹에 속한 쓰레드와 하위 쓰레드그룹에 대한 정보를 출력 |
+| boolean parentOf(ThreadGroup g) | 쓰레드 그룹에 속한 쓰레드와 하위 쓰레드 그룹에 대한 정보 출력 |
+| void setDaemon(boolean daemon) | 쓰레드 글부을 데몬 쓰레드그룹으로 설정/해제 |
+| void setMaxPriority(int priority) | 쓰레드 그룹의 최대우선순위 설정 |
+
+쓰레드를 쓰레드 그룹에 포함시키려면 Thread의 생성자를 이용해야 한다.
+
+```java
+Thread(ThreadGroup group, String name);
+Thread(ThreadGroup group, Runnable target);
+Thread(ThreadGroup group, Runnable target, String name);
+Thread(ThreadGroup group, Runnable target, String name, long stackSize);
+```
+
+모든 쓰레드는 반드시 쓰레드 그룹에 포함되어 있어야 하기 때문에, 위와 같이 쓰레드 그룹을 지정하는 생성자를 사용하지 않은 쓰레드는 기본적으로 자신을 생성한 쓰레드와 같은 쓰레드 그룹에 속하게 된다.
+
+자바 어플리케이션이 실행되면, JVM은 main과 system이라는 쓰레드 그룹을 만들고 JVM운영에 필요한 쓰레드들을 생성해서 이 쓰레드 그룹에 포함시킨다. 예를 들어 main 메서드를 수행하는 main이라는 이름의 쓰레드는 main쓰레드 그룹에 속하고, 가비지 컬렉션을 수행하는 Finalizer쓰레드는 system쓰레드 그룹에 속한다.
+
+우리가 생성하는 모든 쓰레드 그룹은 main쓰레드 그룹의 하위 쓰레드 그룹이 되며, 쓰레드 그룹을 지정하지 않고 생성한 쓰레드는 자동적으로 main쓰레드 그룹에 속하게 된다.
+
+그 외에 Thread의 쓰레드 그룹과 관련된 메서드는 다음과 같다.
+
+```java
+ThreadGroup getThreadGroup();       // 쓰레드 자신이 속한 쓰레드 그룹 반환
+void uncaughtException(Thread t, Throwable e) // 쓰레드 그룹의 쓰레드가 처리되지 않은 예외에 의해 실행이 종료되었을 때, JVM에 의해 이 메서드가 자동적으로 호출된다.
+```
+
+## 7. 데몬 쓰레드(Daemon Thread)
+
+데몬 쓰레드는 다른 일반 쓰레드(데몬 쓰레드가 아닌 쓰레드)의 작업을 돕는 보조적인 역할을 수행하는 쓰레드이다. 일반 쓰레드가 모두 종료되면 데몬 쓰레드는 강제적으로 자동 종료되는데, 그 이유는 데몬 쓰레드는 일반 쓰레드의 보조역할을 수행하므로 일반 쓰레드가 모두 종료되고 나면 데몬 쓰레드의 존재의 의미가 없기 때문이다.
+
+이 점을 제외하고는 데몬 쓰레드와 일반 쓰레드는 다르지 않다. 데몬 쓰레드의 예로는 가비지 컬렉터, 워드프로세서의 자동저장, 화면자동갱신 등이 있다.
+
+데몬 쓰레드는 무한루프와 조건문을 이용해서 실행 후 대기하고 있다가 특정 조건이 만족되면 작업을 수행하고 다시 대기하도록 작성한다.
+
+데몬 쓰레드는 일반 쓰레드의 작성방법과 실행방법이 같으며 다만 쓰레드를 생성한 다음 실행하기 전에 setDaemon(true)를 호출하기만 하면 된다. 그리고 데몬 쓰레드가 생성한 쓰레드는 자동적으로 데몬 쓰레드가 된다는 점도 알아두자.
+
+```java
+boolean isDaemon()      // 스레드가 데몬 쓰레드인지 확인한다. 데몬쓰레드이면 true를 반환
+void setDaemon(boolean on)  // 쓰레드를 데몬 쓰레드로 또는 사용자 쓰레드로 변경한다. 매개변수 on의 값을 true로 지정하면 데몬 쓰레드가 된다.
+```
+
+
+## 8. 쓰레드의 실행제어
+
+쓰레드 프로그래밍이 어려운 이유는 동기화(synchronization)와 스케줄링(scheduling) 때문이다. 앞서 우선순위를 통해 쓰레드간의 스케줄링을 하는 방법을 배우기는 했지만, 이것만으로는 한참 부족하다. 효율적인 멀티쓰레드 프로그램을 만들기 위해서는 보다 정교한 스케줄링을 통해 프로세스에게 주어진 자원과 시간을 여러 쓰레드가 낭비없이 잘 사용하도록 해야 한다.
+
+쓰레드의 스케줄링을 잘하기 위해서는 쓰레드의 상태와 관련 메서드를 잘 알아야 하는데, 먼저 쓰레드의 스케줄링과 관련된 메서드는 다음과 같다.
+
+| 메서드 | 설명 |
+| --- | --- |
+| static void sleep(long millis), static void sleep(long millis, int nanos) | 지정된 시간(천분의 일초 단위)동안 쓰레드를 일시정지시킨다. 지정한 시간이 지나고 나면, 자동적으로 다시 실행대기상태가 된다. |
+| void join(), void join(long millis), void join(long millis, int nanos) | 지정된 시간동안 쓰레드가 실행되도록 한다. 지정된 시간이 지나거나 작업이 종료되면 join()을 호출한 쓰레드로 다시 돌아와 실행을 계속한다. |
+| void interrupt() | sleep()이나 join()에 의해 일시정지상태인 쓰레드를 깨워서 실행대기상태로 만든다. 해당 쓰레드에서는 interruptedException이 발생함으로써 일시정지상태를 벗어나게 한다. |
+| void stop() | 쓰레드를 즉시 종료시킨다. |
+| void suspend() | 쓰레드를 일시정지시킨다. resume()을 호출함녀 다시 실행대기상태가 된다. |
+| void resume() | suspend()에 의해 일시정지상태에 있는 쓰레드를 실행대기상태로 만든다. |
+| static void yield() | 실행 중에 자신에게 주어진 실행시간을 다른 쓰레드에게 양보(yield)하고 자신은 실행대기상태가 된다. |
+
+> [참고] resume(), stop(), suspend()는 쓰레드를 교착상태(dead-lock)로 만들기 쉽기 때문에 deprecated되었다.
+
+| 상태 | 설명 |
+| --- | --- |
+| NEW | 쓰레드가 생성되고 아직 start()가 호출되지 않은 상태 |
+| RUNNABLE | 실행 중 또는 실행 가능한 상태 |
+| BLOCKED | 동기화블럭에 의해서 일시정지된 상태(lock이 풀릴 때까지 기다리는 상태) |
+| WAITING, TIMED_WAITING | 쓰레드의 작업이 종료되지는 않았지만 실행가능하지 않은(unrunnable) 일시정지 상태, TIMED_WAITING은 일시정지시간이 지정된 경우를 의미한다. |
+| TERMINATED | 쓰레드의 작업이 종료된 상태 |
+
+
+다음 그림은 쓰레드의 생성부터 소멸까지의 모든 과정을 그린 것인데, 앞서 소개한 메서드들에 의해서 쓰레드의 상태가 어떻게 변화되는지를 보여준다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/ea3586c1-6522-47b6-9078-5dbbeabc287f)
+
+1. 쓰레드를 생성하고 start()를 호출하면 바로 실행되는 것이 아니라 실행대기열에 저장되어 자신의 차례가 될 때까지 기다려야 한다. 실행대기열은 큐와 같은 구조로 먼저 실행대기열에 들어온 쓰레드가 먼저 실행된다. 
+2. 실행대기상태에 있다가 자신의 차례가 되면 실행상태가 된다. 
+3. 주어진 실행시간이 다 되거나 yield()를 만나면 다시 실행대기상태가 되고 다음 차례의 쓰레드가 실행 상태가 된다. 
+4. 실행 중에 suspend(), sleep(), wait(), join(), I/O block에 의해 일시정지 상태가 될 수 잇다. I/O block은 입출력작업에서 발생하는 지연상태를 말한다. 사용자의 입력을 기다리는 경우를 예로 들 수 잇는데, 이런 경우 일시정지 상태에 있다가 사용자가 입력을 마치면 다시 실행대기 상태가 된다. 
+5. 지정된 일시정지 시간이 다 되거나(time-out), notify(), resume(), interrupt()가 호출되면 일시정지상태를 벗어나 다시 실행대기열에 저장되어 자신의 차례를 기다리게 된다. 
+6. 실행을 모두 마치거나 stop()이 호추로디면 쓰레드는 소멸한다.
+
+> [참고] 설명을 위해 1부터 6까지 번호를 붙이기는 했지만 번호의 순서대로 쓰레드가 수행되는 것은 아니다.
+
+
+#### sleep(long millis) - 일정시간동안 쓰레드를 멈추게 한다.
+
+sleep()은 지정된 시간동안 쓰레드를 멈추게 한다.
+
+```java
+static void sleep(long millis);
+static void sleep(long millis, int nanos);
+```
+
+밀리세컨드(millis, 1000분의 일초)와 나노세컨드(nanos, 10억분의 일초)의 시간단위로 세밀하게 값을 지정할 수 있지만 어느 정도의 오차가 발생할 수있다는 것은 염두에 둬야한다. 예를 들어, 쓰레드가 0.0015초 동안 멈추게 하려면 다음과 같이 한다.
+
+> [참고] 나노세컨드(nanos)로 지정할 수 있는 값의 범위는 0 ~ 999999이며, 999999나노세컨드는 약 1밀리세컨드이다.
+
+```java
+try {
+    Thread.sleep(1, 500000);
+} catch(InterruptedException e) {
+    
+}
+```
+
+sllep()에 의해 일시정지 상태가 된 쓰레드는 지정된 시간이 다 되거나 interrupt()가 호출되면, InterruptedException이 발생되어 잠에서 깨어나 실행되기 상태가 된다. 그래서 sleep()을 호출할 때는 항상 try-catch문으로 예외를 처리해줘야 한다. 매번 예외처리를 해주는 것이 번거롭기 때문에, 아래와 같이 try-catch문까지 포함하는 새로운 메서드를 만들어서 사용하기도 한다.
+
+```java
+void delay(long millis) {
+    try {
+        Thread.sleep(millis);    
+    } catch(InterruptedException e) {}
+}
+```
+
+#### interrupt()와 interrupted() - 쓰레드의 작업을 취소한다.
+
+진행 중인 쓰레드의 작업이 끝나기 전에 취소시켜야할 때가 있다. 예를 들어 큰 파일을 다운로드받을 때 시간이 너무 오래 걸리면 중간에 다운로드를 포기하고 취소할 수 있어야 한다. interrupt()는 쓰레드에게 작업을 멈추라고 요청한다. 단지 멈추라고 요청만 하는 것일뿐 쓰레드를 강제로 종료시키지는 못한다. interrupt()는 그저 쓰레드의 interrupted상태(인스턴스 변수)를 바꾸는 것일 뿐이다.
+
+그리고 interrupted()는 쓰레드에 대해 interrupt()가 호출되었는지 알려준다. interrupt()가 호출되지 않았다면 false를, interrupt()가 호출되었다면 true를 반환한다.
+
+```java
+Thread th = new Thread();
+th.start();
+...
+th.interrupt();     // 쓰레드 th에 interrupt();
+
+class MyThread extends Thread {
+    public void run() {
+        while(!interrupted()) {     // interrupted()의 결과가 false인 동안 반복
+           ...
+        }
+    }
+}
+```
+
+interrupt()가 호출되면, interrupted()의 결과가 false에서 true로 바뀌어 while문을 벗어나게 된다. while문의 조건식에 '!'가 포함되어 있는 것에 주의하자.
+
+isInterrupted()도 쓰레드의 interrupt()가 호출되었는지 확인하는데 사용할 수 있지만, interrupted()와 달리 isInterrupted()는 쓰레드의 interrupted상태를 false로 초기화하지 않는다.
+
+```java
+void interrupt();               // 쓰레드의 interrupted상태를 false에서 true로 변경.
+boolean isInterrupted();        // 쓰레드의 interrupted상태를 반환.
+static boolean interrupted();   // 현재 쓰레드의 interrupted상태를 반환 후, false로 변경
+```
+
+쓰레드가 sleep(), wait(), join()에 의해 '일시정지 상태(WAITING)'에 있을 때, 해당 쓰레드에 대해 interruptedException이 발생하고 쓰레드는 '실행대기 상태(RUNNABLE)'로 바뀐다. 즉, 멈춰있던 쓰레드는 깨워서 실행가능한 상태로 만드는 것이다.
+
+#### suspend(). resume(), stop()
+
+suspend()는 sleep()처럼 쓰레드를 멈추게 한다. suspend()에 의해 정지된 쓰레드는 resume()을 호출해야 다시 실행대기 상태가 된다. stop()은 호출되는 즉시 쓰레드가 종료된다. suspend()와 stop()이 교착상태(deadlock)를 일으키기 쉽게 작성되었으므로 사용이 권장되지 않는다. 그래서 이 메서드들은 모두 'deprecated'되었다.
+
+
+#### yield() - 다른 쓰레드에게 양보한다.
+
+yield()는 쓰레드 자신에게 주어진 실행시간을 다음 차레의 쓰레드에게 양보한다.
+
+예를 들어 스케줄러에 의해 1초의 실행시간을 할당받은 쓰레드가 0.5초의 시간동안 작업한 상태에서 yield()가 호출되면, 나머지 0.5초는 포기하고 다시 실행대기상태가 된다. 
+
+yield()와 interrupt()를 적절히 사용하면, 프로그램의 응답성을 높이고 보다 효유렂ㄱ인 실행이 가능하게 할 수 있다. 이 메서드들이 실제로 어떻게 사용되는지 예제를 직접 알아보자.
+
+에제 13-18
+
+
+#### join() - 다른 쓰레드의 작업을 기다린다.
+
+쓰레드 자신이 하던 작업을 잠시 멈추고 다른 쓰레드가 지정된 시간동안 작업을 수행하도록 할 때 join()을 사용한다.
+
+시간을 지정하지 않으면, 해당 쓰레드가 작업을 모두 마칠 떄까지 기다리게 된다. 작업 중에 다른 쓰레드의 작업이 먼저 수행되어야할 필요가 있을 때 join()을 사용한다.
+
+join()도 sleep()처럼 interrupt()에 의해 대기상태에서 벗어날 수 있으며, join()이 호출되는 부분은 try-catch문으로 감싸야 한다. join()은 여러모로 sleep()과 유사한 점이 많은데, sleep()과 다른 점은 join()은 현재 쓰레드가 아닌 특정 쓰레드에 대해 동작하므로 static메서드가 아니라는 것이다.
+
+> [참고] join()은 자신의 작업 중간에 다른 쓰레드의 작업을 참여(join) 시킨다는 의미로 이름 지어진 것이다.
+
+## 9. 쓰레드의 동기화
+
+싱글쓰레드 프로세스의 경우 프로세스 내에서 단 하나의 쓰레드만 작업하기 때문에 프로세스의 자원을 가지고 작업하는데 별문제가 없지만, 멀티쓰레드 프로세스의 경우 여러 쓰레드가 같은 프로세스 내의 자원을 공유해서 작업하기 때문에 서로의 작업에 영향을 주게 된다. 만일 쓰레드 A가 작업하던 도중에 다른 쓰레드 B에게 제어권이 넘어갔을 때, 쓰레드 A가 작업하던 공유데이터를 쓰레드 B가 임의로 변경하였다면, 다시 쓰레드 A가 제어권을 받아서 나머지 작업을 마쳤을 때 원래 의도했던 것과는 다른 결과를 얻을 수 있다. 
+
+이러한 일이 발생하는 것을 방지하기 위해서 한 쓰레드가 특정 작업을 끝마치기 전까지 다른 쓰레드에 의해 방해받지 않도록 하는 것이 필요하다. 그래서 도입된 개념이 바로 '임계 영역(critical section)'과 '잠금(Lock)'이다.
+
+공유 데이터를 사용하는 코드 영역을 임계 영역으로 지정해놓고, 공유 데이터(객체)가 가지고 있는 lock을 획득한 단 하나의 쓰레드만 이 영역 내의 코드를 수행할 수 있게 한다. 그리고 해당 쓰레드가 임계 영역 내의 모든 코드를 수행하고 벗어나서 lock을 반납해야만 다른 쓰레드가 반납된 lock을 획득하여 임계 영역의 코드를 수행할 수 있게 된다.
+
+이처럼 **한 쓰레드가 진행 중인 작업을 다른 쓰레드가 간섭하지 못하도록 막는 것을 `쓰레드의 동기화(synchronization)`**라고 한다.
+
+자바에서는 synchronized블럭을 이용해서 쓰레드의 동기화를 지원했지만, JDK1.5부터는 'java.util.concurrent.locks'와 'java.util.concurrent.atomic'패키지를 통해서 다양한 방식으로 동기화를 구현할 수 있도록 지원하고 있다.
+
+### 9.1 synchronized를 이용한 동기화
+
+```java
+// 1. 메서드 전체를 임계 영역으로 지정
+public synchronized void calcSum() {
+    
+}
+
+// 2. 특정 영역을 임계 영역으로 지정
+synchronized (객체의 참조변수) {
+    
+}
+```
+
+첫 번째 방법은 메서드 앞에 synchronized를 붙이는 것인데, synchronized를 붙이면 메서드 전체가 임계 영역으로 설정된다. 쓰레드는 synchronized메서드가 호출된 시점부터 해당 메서드가 포함된 객체의 lock을 얻어 작업을 수행하다가 메서드가 종료되면 lock을 반환한다.
+
+두 번째 방법은 메서드 내의 코드 일부를 블럭{}으로 감싸고 블럭 앞에 'synchronized(참조변수)'를 붙이는 것인데, 이때 참조변수는 락을 걸고자하는 객체를 참조하는 것이어야 한다. 이 블럭을 synchronized블럭이라고 부르며, 이 블럭의 영역 안으로 들어가면서부터 쓰레드는 지정된 객체의 lock을 얻게 되고, 이 블럭을 벗어나면 lock을 반납한다.
+
+두 방법 모두 lock의 획득과 반납이 모두 자동적으로 이루어지므로 해야 할 일은 그저 임계 영역만 설정해주는 것뿐이다.
+
+모든 객체는 lock을 하나씩 가지고 있으며, 해당 객체의 lock을 가지고 있는 쓰레드만 임계 영역의 코드를 수행할 수 있다. 그리고 다른 쓰레드들은 lock을 얻을 때까지 기다리게 된다.
+
+임계 영역을 멀티쓰레드 프로그램의 성능을 좌우하기 때문에 가능하면 메서드 전체에 락을 거는 것보다 synchronized블럭으로 임계 영역을 최소화해서 보다 효율적인 프로그램이 되도록 노력해야 한다.
+
+
+### 9.2 wait()과 notify()
+
+synchronized로 동기화해서 공유 데이터를 보호하는 것 까지는 좋은데, 특정 쓰레드가 객체의 락을 가진 상태로 오랜 시간을 보내지 않도록 하는 것도 중요하다. 만일 계좌에 출금할 돈이 부족해서 한 쓰레드가 락을 보유한 채로 돈이 입금될 때까지 오랜 시 간을 보낸다면, 다른 쓰레드들은 모두 해당 객체의 락을 기다리느라 다른 작업들도 원활지 진행되지 않을 것이다.
+
+이러한 상황을 개선하기 위해 고안된 것이 바로 wait()과 notify()이다. 동기화된 임계 영역의 코드를 수행하다가 작업을 수행하다가 작업을 더 이상 진행할 상황이 아니면, 일단 wait()을 호출하여 쓰레드가 락을 반납하고 기다리게 한다. 그러면 다른 쓰레드가 락을 얻어 해당 객체에 대한 작업을 수행할 수 있게 된다. 나중에 작업을 진행할 수 있는 상황이 되면 notify()을 호출해서, 작업을 중단했던 쓰레드가 다시 락을 얻어 작업을 진행할 수 있게 한다.
+
+> [참고] wait()에 의해 lock을 반납했다가, 다시 lock을 얻서서 임계 영역에 들어오는 것을 재진입(reentrance)이라고 한다.
+
+이는 마치 빵을 사려고 빵집 앞에 줄을 서있는 것과 유사한데, 자신의 차례가 되었는데도 자신이 원하는 빵이 나오지 않았으면, 다음 사람에게 순서를 양보하고 기다리다가 자신이 원하는 빵이 나오면 통보를 받고 빵을 사가는 것이다. 
+
+차이가 있다면, 오래 기다린 쓰레드가 락을 얻는다는 보장이 없다는 것이다. wait()이 호출되면, 실행 중이던 쓰레드는 해당 객체의 대기실(waiting pool)에서 통지를 기다린다. notify()가 호출되면, 해당 객체의 대기실에 있던 모든 쓰레드 중에서 임의의 쓰레드만 통지를 받는다. notifyAll()은 기다리고 있는 모든 쓰레드에게 통보를 하지만, 그래도 lock을 얻을 수 있는 것은 하나의 쓰레드일 뿐이고 나머지 쓰레드는 통보를 받긴 했지만, lock을 얻지 못하면 다시 lock을 기다리는 신세가 된다.
+
+wait()과 notify()는 특정 객체에 대한 것이므로 Object클래스에 정의도어 있다.
+
+```java
+void wait()
+void wait(long timeout)
+void wait(long timeout, int nanos)
+void notify()
+void notifyAll()
+```
+
+wait()은 notify() 또는 notifyAll()이 호출될 때까지 기다리지만, 매개변수가 있는 wait()은 지정된 시간동안만 기다린다. 즉, 지정된 시간이 지난 후에 자동적으로 notify()가 호출되는 것과 같다. 
+
+그리고 waiting pool 은 객체마다 존재하는 것이므로 notifyAll()이 호출된다고 해서 모든 객체의 waiting pool에 있는 쓰레드가 깨워지는 것은 아니다. notifyAll()이 호출된 객체의 waiting pool에 대기 중인 쓰레드만 해당된다는 것을 기억하자.
+
+```java
+wait(), notify(), notifyAll()
+- Object에 정의되어 있다.
+- 동기화 블럭(synchronized 블럭)내에서만 사용할 수 있다.
+- 보다 효율적인 동기화를 가능하게 한다.
+```
+
+
+#### 기아 현상과 경쟁 상태
+
+지독히 운이 나쁘면 요리사 쓰레드는 계속 통지를 받지 못하고 오랫동안 기다리게 되는데, 이것을 '기아(starvation) 현상'이라고 한다. 이 현상을 막으려면, notify()대신 notifyAll()을 사용해야 한다. 일단 모든 쓰레드에게 통지를 하면, 손님 쓰레드는 다시 waiting pool에 들어가더라도 요리사 쓰레드는 결국 lock을 얻어서 작업을 진행할 수 있기 때문이다.
+
+notifyAll()로 요리사 쓰레드의 기아현상은 막았지만, 손님 쓰레뜨까지 통지를 받아서 불필요하게 요리사 쓰레드와 lock을 얻기 위해 경쟁하게 된다. 이처럼 여러 쓰레드가 lock을 얻기 위해 서로 경쟁하는 것을 '경쟁 상태(race comdition)'이라고 하는데, 이 경쟁 상태를 개선하기 위해서는 요리사 쓰레드와 손님 쓰레드를 구별해서 통지하는 것이 필요하다.
+
+
+### 9.3 Lock과 Condition을 이용한 동기화
+
+동기화할 수 있는 방법은 synchronized블럭 외에도 'java.util.concurrent.locks'패키지가 제공하는 lock클래스들을 이용하는 방법이 있다. 이 패키지는 JDK1.5에 와서야 추가된 것으로 그 전에는 동기화 방법이 synchronized블럭뿐이었다.
+
+synchronized 블럭으로 동기화를 하면 자동적으로 lock이 잠기고 풀리기 때문에 편리하다. 심지어 synchronized블럭 내에서 예외가 발생해도 lock은 자동적으로 풀린다. 그러나 때로는 같은 메서드 내에서만 lock을 걸 수 있다는 제약이 불편하기도 하다. 그럴 때 lock 클래스를 사용한다. lock 클래스의 종류는 다음과 같이 3가지가 있다.
+
+```java
+ReentrantLock               // 재진입이 가능한 lock, 가장 일반적인 배타 Lock
+ReentrantReadWriteLock      // 읽기에는 공유적이고, 쓰기에는 배타적인 Lock
+StampedLock                 // ReentrantReadWriteLock에 낙관적인 lock의 기능을 추가
+```
+
+ReentrantLock은 가장 일반적인 lock이다. 'reentrant(재진입할 수 있는)'이라는 단어가 앞에 붙은 이유는 wait() & notify()에서 배운 것처럼, 특정 조건에서 lock을 풀고 나중에 다시 lock을 얻고 임계영역으로 들어와서 이후의 작업을 수행할 수 있기 때문이다. 
+
+ReentrantReadWriteLock은 이름에서 알 수 있듯이, 읽기를 위한 lock과 쓰기를 위한 lock을 제공한다. ReentrantLock은 배타적인 lock이라서 무조건 lock이 있어야만 임계 영역읰 코드를 수행할 수 있지만, ReentrantReadWriteLock은 읽기 lock이 걸려있으면 다른 쓰레드가 읽기 lock을 중복해서 걸고 읽기를 수행할 수 있다. 읽기는 내용을 변경하지 않으므로 동시에 여러 쓰레드가 읽어도 문제가 되지 않는다. 그러나 읽기 lock이 걸린 상태에서 쓰기 lock을 거는 것은 허용되지 않는다. 반대의 경우도 마찬가지다. 읽기를 할 때는 읽기 lock을 걸고, 쓰기 할 때는 쓰기 lock을 거는 것일뿐 lock을 거는 방법은 같다.
+
+StampedLock 은 lock을 걸거나 해지할 때 '스탬프(long타입의 정수값)'를 사용하며, 읽기와 쓰기를 위한 lock외에 '낙관적 읽기 lock(optimistic reading lock)'이 추가된 것이다.
+
+읽기 lock 걸려있다면, 쓰기 lock을 얻기 위해서는 읽기 lock이 풀릴 때까지 기다려야하는데 비해 '낙관적 읽기 lock'은 쓰기 lock에 의해 바로 풀린다. 그래서 낙관적 읽기에 실패하면, 읽기 lock을 얻어서 다시 읽어 와야 한다. `무조건 읽기 lock을 걸지 않고, 쓰기와 읽기가 충돌할 때만 쓰기가 끝난 후에 읽기 lock을 거는 것이다.`
+
+다음의 코드는 가장 일반적인 StampedLock을 이용한 낙관적 읽기의 예이다.
+
+```java
+public int getBalance() {
+     long stamp = lock.tryOptimisticRead();      //  낙관적 읽기 lock을 건다.
+
+     int curBalance = this.balance;              // 공유 데이터인 balance를 읽어온다.
+
+     if(lock.validate(stamp)) {                  // 쓰기 lock에 의해 낙관적 읽기 lock이 풀렸는지 확인
+        stamp = lock.readLock();                // lock이 풀렸으면, 읽기 lock을 얻으려고 대기
+
+        try {
+           curBalance = this.balance;
+        }finally {
+           lock.unlockRead(stamp);             // 읽기 lock을 푼다.
+        }
+     }
+
+    return curBalance;                          // 낙관적 읽기 lock이 풀리지 않았으면 곧바로 읽어온 값 반환
+}
+```
+
+lock 클래스들에 대해 자세히 배우지 않았지만, 낙관적 읽기 lock을 어떻게 사용하는지 충분히 감을 잡을 수 있을 것이다.
+
+
+#### ReentrantLock의 생성자
+
+ReentrantLock은 다음과 같이 두개의 생성자를 가지고 있다.
+
+```java
+ReentrantLock()
+ReentrantLock(boolean fair)
+```
+
+생성자의 매개변수를 true로 주면, lock이 풀렸을 때 가장 오래 기다린 쓰레드가 lock을 획득할 수 있게, 즉 공정(fair)하게 처리한다. 그러나 공정하게 처리하려면 어떤 쓰레드가 가장 오래 기다렸는지 확인하는 과정을 거칠 수밖에 없으므로 성능은 떨어진다.
+
+대부분의 경우 굳이 공정하게 처리하지 않아도 문제가 되지 않으므로 공정함보다 성능을 선택한다.
+
+```java
+void lock();            // lock을 잠근다.
+void unlock();          // lcok을 해지한다.
+boolean isLocked();     // lock이 잠겼는지 확인한다.
+```
+
+자동적으로 lock의 잠금과 해제가 관리되는 synchronized블럭과 달리, ReentrantLock과 같은 lock클래스들은 수동으로 lock을 잠그고 해제해야 한다. 그래도 lock을 잠그고 푸는 것은 간단하다. 그저 메서드를 호출하기만 하면 될 뿐이다. lock을 걸고 나서 푸는 것을 잊어버리는 실수를 하지 않도록 주의를 기울여야 한다는 것을 잊지 말자.
+
+```java
+synchronized(lock) {
+    // 임계 영역
+}
+
+lock.lock();
+// 임계 영역
+lock.unlock();
+```
+
+임계 영역 내에서 예외가 발생하거나 return문으로 빠져 나가게 되면 lock이 풀리지 않을 수 있으므로 unlick()은 try-finally문으로 감싸는 것이 일반적이다. 참조변수 lock은 ReentrantLock객체를 참조한다고 가정하였다.
+
+```java
+lock.lock();
+try {
+    // 임계 영역    
+} finally {
+    lock.unlock();    
+}
+```
+
+이렇게 하면, try블럭 내에서 어떤 일이 발생해도 finally블럭에 있는 unlock()이 수행되어 lock이 풀리지 않는 일은 발생하지 않는다. 대부분의 경우 lock() & unlock()을 대신 synchronized블럭을 사용할 수 있으며, 그럴 때는 그냥 synchronized블럭을 사용하는 것이 더 나을 수 있다.
+
+이외에도 tryLock()이라는 메서드가 있는데, 이 메서드는 lock()과 달리, 다른 쓰레드에 의해 lock이 걸려 있으면 lock을 얻으려고 기다리지 않는다. 또는 지정된 시간만큼만 기다린다. lock을 얻으면 true를 반환하고, 얻지 못하면 false를 반환한다.
+
+```java
+boolean tryLock();
+boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException
+```
+
+lock()은 lock을 얻을 때까지 쓰레드를 블락(block)시키므로 쓰레드의 응답성이 나빠질 수 있다. 응답성이 중요한 경우, tryLock()을 이용해서 지정된 시간동안 lock을 얻지 못하면 다시 작업을 시도할 것인지 포기할 것인지를 사용자가 결정할 수 있게 하는 것이 좋다.
+
+그리고 이 메서드는 InterruptedException을 발생시킬 수 있는데, 이것은 지정된 시간동안 lock을 얻으려고 기다리는 중에 interrupt()에 의해 작업을 취소될 수 있도록 코드를 작성할 수 있다는 뜻이다.
+
+
+#### ReentrantLock과 Condition
+
+wait() & notify() 예제에 요리사 쓰레드와 손님 쓰레드를 구분해서 통과하지 못한다는 단점을 기억할 것이다. Condition은 이 문제점을 해결하기 위한 것이다.
+
+wait() & notify()로 쓰레드의 종류를 구분하지 않고, 공유 객체의 waiting pool에 같이 몰아넣는 대신, 손님 쓰레드를 위한 Condition과 요리사 쓰레드를 위한 Condition을 만들어서 각각의 waiting pool에서 따로 기다리도록 하면 문제는 해결된다. 말로 설명하는 것보다 직접 코드를 보는 쪽이 더 이해가 쉬울 것이다.
+
+Condition은 이미 생성된 lock으로부터 newCondtion()을 호출해서 생성한다.
+
+```java
+private ReentrantLock lock = new ReentrantLock();       // lock을 생성
+
+// lock으로 condition을 생성
+private Condition forCook = lock.newCondition();
+private Condition forCust = lock.newCondition();
+```
+
+위의 코드에서 두 개의 Condtion을 생성했는데, 하나는 요리사 쓰레드를 위한 것이고 다른 하나는 손님 쓰레드를 위한 것이다. 그 다음엔, wait() & notify()대신 Condition의 await & signal()을 사용하면 그걸로 끝이다.
+
+| Object | Condition |
+| --- | --- |
+| void wait() | void wait(), void awaitUninterruptibly() |
+| void wait(long timeout) | boolean await(long time, TimeUnit unit), long awaitNanos(long nanaosTimeout), boolean awaitUntil(Date deadline) |
+| void notify() | void signal() |
+| void notifyAll() | void signalAll() |
+
+아래의 코드는 예제 13-25에서 테이블에 음식을 추가하는 add()인데, wait()과 notify()대신 await()과 signal()을 사용하였다.
+
+```java
+public void add(String dish) {
+        lock.lock();
+
+  try {
+     while (dishes.size() >= MAX_FOOD) {
+        String name = Thread.currentThread().getName();
+        System.out.println(name + " is waiting.");
+        try {
+            forCook.await();        // wait();       COOK 쓰레드 대기
+        } catch (InterruptedException e) {}
+     }
+
+     dishes.add(dish);
+     forCust.signal();       // notify();        // 기다리고 있는 CUSTOMER 깨우기
+     System.out.println("Dishes : " + dishes.toString());
+  }finally {
+  lock.unlock();
+  }
+}
+```
+
+전에는 손님 쓰레드를 기다리게 할 때와 요리사 쓰레드를 기다리게 할 때 모두 wait()을 사용했는데, 이제는 wait() 대신 forCook.wait()과 forCust.wait()을 사용함으로써 대기와 통지의 대상임 ㅕㅇ확이 구분된다.
+
+예제 13-25와 달리, 예제 13-26은 요리사 쓰레드가 통지를 받아야하는 상황에서 손님 쓰레드가 통지를 받는 경우가 없어졌다. '기아 현상'이나 '경쟁 상태'가 확실히 개선된 것이다. 그래도 쓰레드의 종류에 따라 구분하여 통지를 할 수 있게 된 것일 뿐, 여전히 특정 쓰레드를 선택할 수 없기 때문에 같은 종류의 쓰레드간의 '기아 현상'이나 '경쟁 상태'가 발생할 가능성은 남아있다.
+
+손님이 원하는 음식의 종류로 Condition을 더 세분화하면, 통지를 받고도 원하는 음식이 없어서 다시 가디라는 일이 없도록 할 수 있다.
+
+
+### 9.4 volatile
+
+싱글 코어 프로세서가 장착된 컴퓨터에서는 예제 13-16이 아무런 문제없이 실행될 것이다. 그러나 대부분 멀티 코어 프로세서가 장착된 컴퓨터를 사용하기 때문에 이 예제어서 문제가 발생할 가능성이 있다 .그 이유는 멀티 코어 프로세서에서는 코어마다 별도의 캐시를 가지고 있기 때문이다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/f3ee2868-9646-41dc-953c-c4106eedd15b)
+
+코어는 메모리에서 읽어온 값을 캐시에 저장하고 캐시에서 값을 읽어서 작업한다. 다시 같은 값을 읽어 올 때는 먼저 캐시에 있는지 확인하고 없을 때만 메모리에서 읽어온다. 
+
+그러다보니 도중에 메모리에 저장된 변수의 값이 변경되었는데도 캐시에 저장된 값이 갱신되지 않아서 메모리에 저장된 값이 다른 경우가 발생한다. 그래서 변수 stopped의 값이 바뀌었는데도 쓰레드가 멈추지 않고 계속 실행되는 것이다.
+
+```java
+// AS-IS
+boolean suspended = false;
+boolean stopped = false;
+
+volatile boolean suspended = false;
+volatile boolean stopped = false;
+```
+
+그러나 위의 오른쪽과 같이 변수 앞에 volatile을 붙이면, 코어가 변수의 값을 읽어올 때 캐시가 아닌 메모리에서 읽어오기 때문에 캐시와 메모리간의 값의 불일치가 해결된다.
+
+변수에 volatile을 붙이는 대신에 synchronized블럭을 사용해도 같은 효과를 얻을 수 있다. 쓰레드가 synchronized블럭으로 들어갈 때와 나올 때, 캐시와 메모리간의 동기화가 이루어지기 때문에 값의 불일치가 해소되기 때문이다.
+
+```java
+// AS-IS
+public void stop() {
+    stopped = true; 
+}
+
+// TO-BE
+public synchronized void stop() {
+    stopped = true;    
+}
+```
+
+#### volatile로 long과 double을 원자화
+
+JVM은 데이터를 4 byte(=32bit)단위로 처리하기 때문에, int와 int보다 작은 타입들은 한 번에 읽거나 쓰는 것이 가능하다. 즉, 단 하나의 명령어로 읽거나 쓰기가 가능하다는 뜻이다. 하나의 명령어는 더 이상 나눌 수 없는 최소의 작업다누이이므로, 작업의 중간에 다른 쓰레드가 끼어들 틈이 없다.
+
+그러나, 크기가 8byte인 long과 double타입의 변수는 하나의 명령어로 값을 읽거나 쓸 수 없기 때문에, 변수의 값을 읽는 과정에 다른 쓰레드가 끼어들 여지가 있다. 다른 쓰레드가 끼어들지 못하게 하려고 변수를 읽고 쓰는 모든 문장을 synchronized블럭으로 감쌀 수도 있지만, 더 간단한 방법이 있다. 변수를 선언할 때 volatile을 붙이느 것이다.
+
+> [참고] 상수에는 volatile을 붙일 수 없다. 즉, 변수에 final과 vloatile을 같이 붙일 수 없다. 사실 상수는 변하지 않는 값이므로 멀티쓰레드에 안전(thread-safe)하다. 그래서 volatile을 붙일 필요가 없다.
+
+
+```java
+volatile long   sharedVal;        // long 타입의 변수(8 byte)를 원자화
+volatile double sharedVal;        // double타입의 변수(8 byte)를 원자화
+```
+
+volatile은 해당 변수에 대한 읽거나 쓰기가 원자화된다. 원자화라는 것은 작업을 더 이상 나눌 수 없게 한다는 의미인데, synchronized블럭도 일종의 원자화라고 할 수 있다. 즉, synchronized블럭은 여러 문장을 원자화함으로써 쓰레드의 동기화를 구현한 것이라고 보면 된다.
+
+volatile은 변수의 읽거나 쓰기를 원자화 할 뿐, 동기화하는 것은 아니라는 점에 주의하자. 동기화가 필요할 때 synchronized블럭 대신 volatile을 쓸 수 없다.
+
+예를 들어 아래와 같은 코드가 있을 때
+
+```java
+volatile long balance;              // 인스턴스 변수 balance 를 원자화 한다.
+
+synchronized int getBalance() {
+    return this.balance;    
+}
+
+synchronized void withdraw(int money) {
+    if(this.balance >- money) {
+        this.balance -= money;    
+    }    
+}
+```
+
+인스턴스변수 balance를 volatile로 원자화했으므로, 이 값을 이 ㄺ어서 반환하는 메서드 getBlance()를 동기화할 필요가 없다고 생각할 수 있다. 그러나 getBalance()를 synchronized로 동기화하지 않으면, withdraw()가 호출되어 객체에 lock을 걸고 작업을 수행하는 중인데도 getBalance()가 호출되는 것이 가능해진다. 출금이 진행 중일때는 기다렸다가 출금이 끝난 후에 잔고를 조회할 수 있도록 하려면 getBalance()에 synchronized를 붙여서 동기화를 해야 한다.
+
+
+### 9.5 fork & join 프레임워크
+
+10년 전까지만 해도 CPU의 속도는 매년 거의 2배씩 빠르게 향상되어왔다. 그러나 이제 그 한계에 도달하여 속도 보다는 코어의 개수를 늘려서 CPU의 성능을 향상시키는 방향으로 발전해 가고 있다.
+
+이러한 하드웨어의 변화에 발맞춰 프로그래밍도 멀티 코어를 잘 활용할 수 있는 멀티쓰레드 프로그래밍이 점점 더 중요해지고 있다. 
+
+JDK1.7부터 'fork&join 프레임워크'이 추가되었고, 이 프레임워크는 하나의 작업을 작은 단위로 나눠서 여러 쓰레드가 동시에 처리하는 것을 쉽게 만들어 준다.
+
+먼저 수행할 작업에 따라 RecursiveAction과 RecursiveTask, 두 클래스 중에서 하나를 상속받아 구현해야한다.
+
+> **RecursiveAction** 반환값이 없는 작업을 구현할 때 사용
+> 
+> **RecursiveTask** 반환값이 있는 작업을 구현할 때 사용
+
+두 클래스 모두 compute()라는 추상 메서드를 가지고 있는데, 우리는 상속을 통해 이 추상 메서드를 구현하기만 하면 된다.
+
+```java
+import java.util.concurrent.ForkJoinTask;
+
+public abstract class RecursiveAction extends ForkJoinTask<Void> {
+   ...
+
+   protected abstract void computed();       // 상속을 통해 이 메서드를 구현해야 한다.
+   ...
+}
+
+public abstract class RecursiveTask<V> extends ForkJoinTask<V> {
+    V result;
+    
+    protected abstract V computed();         // 상속을 통해 이 메서드를 구현해야 한다.
+}
+```
+
+예를 들어 1부터 n까지의 합을 계산한 결과를 돌려주는 작업의 구현은 다음과 같이 한다.
+
+```java
+import java.util.concurrent.RecursiveTask;
+
+class SumTask extends RecursiveTask<Long> {
+    
+    long from, to;
+    
+    SumTask(long from, long to) {
+        this.from = from;
+        this.to = to;
+    }
+    
+    public Long computed() {
+        // 처리할 작업을 수행하기 위한 문장
+    }
+}
+```
+
+그 다음에는 쓰레드풀과 수행할 작업을 생성하고, invoke()로 작업을 시작한다. 쓰레드를 시작할 때 run()이 아니라 start()를 호출하는 것처럼, fork&join 프레임워크로 수행할 작업도 computed()가 아닌 invoke()로 시작한다.
+
+```java
+ForkJoinPool pool = new ForkJoinPool();     // 쓰레드 풀 생성
+SomeTask task = new SomeTask(from, to);     // 수행할 작업 생성
+
+Long result = pool.invokr(task);            // invoke()를 호출해서 작업 시작
+```
+
+ForkJoinPool은 fork&join 프레임워크에서 제공하는 쓰레드 풀(thread pool)로, 지정된 수의 쓰레드를 생성해서 미리 만들어 놓고 반복해서 재사용할 수 있게 한다. 그리고 쓰레드를 반복해서 생성하지 않아도 된다는 장점과 너무 많은 쓰레드가 생성되어 성능이 저하되는 것을 막아준다는 장점이 있다.
+
+쓰레드 풀은 쓰레드가 수행해야하는 작업이 담긴 큐를 제공하며, 각 쓰레드는 자신의 작업 큐에 담긴 작업을 순선대로 처리한다.
+
+> [참고] 쓰레드 풀은 기본적으로 코어의 개수와 동일한 개수의 쓰레드를 생성한다.
+
+#### computed의 구현
+
+computed를 구현할 때는 수행할 작업 외에도 작업을 어떻게 나눌 것인가에 대해서도 알려줘야 한다. 
+
+```java
+public Long computed() {
+    long size = to - from + 1;
+    if(size <= 5) return sum();
+    
+    long halg = (from + to) / 2;
+    
+    SumTask leftSum = new SumTask(from, half);
+    SumTask rightSUm = new SumTask(half + 1, to);
+    leftSum.fork();         // 작업(leftSum)을 작업 큐에 넣는다.
+    return rightSum.computed() + leftSum.join();
+}
+```
+
+실제 수행할 작업은 sum()뿐이고 나머지는 수행할 작업의 범위를 반으로 나눠서 새로운 작업을 실행해서 실행시키기 위한 것이다. 좀 복잡해 보이지만, 작업의 범위를 어떻게 나눌 것인지만 정의해 주면 나머지는 항상 같은 패턴이다.
+
+지정된 범위를 절반으로 나누어서 나눠진 범위의 합을 계산하기 위한 새로운 SumTask를 생성하는데, 이 과정은 작업이 더 이상 나눠질 수 없을 때까지, size의 값이 5보다 작거나 같을 때까지, 반복된다.
+
+> [참고] computed()의 구조는 일반적인 재귀호출 메서드와 동일하다.
+
+![그림1](https://github.com/Potenday/Potenday_Back/assets/22147400/6407a533-8504-4265-9fc0-007cf646c444)
+
+이해를 돕기 위해 1부터 8까지의 숫자를 더하는 과정을 그림으로 그려보았다. 이 그림에서 작업의 size가 2가 될 때까지 나눈다. computed()가 처음 호출되면, 더 할 숫자의 범위를 반으로 나눠서 한 쪽에는 fork()를 호출해서 작업을 큐에 저장한다. 하나의 쓰레드는 computed()를 재귀호출하면서 작업을 계속해서 반으로 나누고, 다른 쓰레드는 fork()에 의해 작업 큐에 추가된 작업을 수행한다.
+
+#### 다른 쓰레드의 작업 훔쳐오기
+
+fork()가 호출되어 작업 큐에 추가된 작업 역시, computed()에 의해 더 이상 나눌 수 없을 때까지 반복해서 나뉘고, 자신의 작업 큐가 비어있는 쓰레드는 다른 쓰레드의 작업 큐에 서 작업을 가져와서 수행한다. 이것을 작업 훔쳐오기(work stealing)라고 하며, 이 과정은 모두 쓰레드풀에 의해 자동적으로 이루어진다.
+
+위의 그림은 작업 큐가 비어있는 쓰레드가 다른 쓰레드의 작업을 가져와서 수행하는 것을 그린 것이다. 이런 과정을 통해 한 쓰레드에 작업이 몰리지 않고, 여러 쓰레드가 골고루 작업을 나누어 처리하게 된다.
+
+> [참고] 작업의 크기를 충분히 작게 해야 각 쓰레드가 골고루 작업을 나눠가질 수 있다.
+
+#### fork()와 join()
+
+fork()는 작업을 쓰레드의 작업 큐에 넣는 것이고, 작업 큐에 들어간 작업은 더 이상 나눌 수 없을 때까지 나뉜다. 즉 computed()로 나누고 fork()로 작업 큐에 넣는 작업이 계속해서 반복된다. 그리고 나눠진 작업은 각 쓰레드가 골고루 나눠서 처리하고, 작업의 결과는 join()을 호출해서 얻을 수 있다.
+
+fork()와 join()의 중요한 차이점이 하나 있는데, 그것은 fork()는 비동기 메서드이고, join()은 동기 메서드이다.
+
+> **fork()** 해당 작업을 쓰레드 풀의 작업 큐에 넣는다. (비동기 메서드)
+> 
+> **join()** 해당 작업의 수행이 끝날 때까지 기다렸다가, 수행이 끝나면 그 결과를 반환한다. (동기 메서드)
+
+비동기 메서드는 일반적인 메서드와 달리 메서드를 호출만 할 뿐, 그 결과를 기다리지 않는다. (내부적으로는 다른 쓰레드에게 작업을 수행하도록 지시만 하고 결과를 기다리지 않고 돌아오는 것이다.) 그래서 아래의 코드에서, fork()를 호출하면 결과를 기다리지 않고 다음 문장인 ruturn문으로 넘어간다.
+
+return문에서 computed가 재귀호출 될 때, join()은 호출되지 않는다. 그러다가 작업을 더 이상 나눌 수 없게 되었을 때,  computed()의 재귀호출은 끝나고 join()의 결과를 기다렸다가 더해서 결과를 반환한다. 재귀호출된 computed()가 모두 종료될 떄, 최종결과를 얻는다.
+
+예제 13-27을 실행 결과를 보면, fork&join 프레임워크로 계산한 결과보다 for문으로 계산한 결과가 시간이 덜 걸린 것을 알 수 있따. 왜냐하면, 작업을 나누고 다시 합치는데 걸리는 시간이 있기 때문이다. 재귀호출보다 for문이 더 빠른 것과 같은 이유인데, 항상 멀티쓰레드로 처리하는 것이 빠르다고 생각해서는 안 된다. 반드시 테스트해보고 이득이 있을 때만 멀티 쓰레드로 처리해야 한다.
+
