@@ -7,8 +7,6 @@
     <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/src/chapter14/README.MD" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter14/lambda/ex2/LambdaEx2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter14/lambda/ex2/LambdaEx2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter14/lambda/ex2/MyFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter14/lambda/ex2/MyFunction.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,11 +71,11 @@
       <recent name="C:\Study\Standard-Of-Java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chapter14.lambda.ex3" />
       <recent name="chapter13" />
       <recent name="chapter12.ex6" />
       <recent name="chapter12.ex4" />
       <recent name="chapter12.ex3" />
-      <recent name="chapter11" />
     </key>
   </component>
   <component name="RunManager" selected="Application.LambdaEx3">
@@ -204,7 +202,7 @@
       <workItem from="1709652696058" duration="4575000" />
       <workItem from="1709827468536" duration="1998000" />
       <workItem from="1710431467281" duration="3481000" />
-      <workItem from="1710678891846" duration="6846000" />
+      <workItem from="1710678891846" duration="7789000" />
     </task>
     <servers />
   </component>
