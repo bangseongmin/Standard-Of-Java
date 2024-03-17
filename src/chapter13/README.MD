@@ -878,3 +878,307 @@ public int getBalance() {
 lock 클래스들에 대해 자세히 배우지 않았지만, 낙관적 읽기 lock을 어떻게 사용하는지 충분히 감을 잡을 수 있을 것이다.
 
 
+#### ReentrantLock의 생성자
+
+ReentrantLock은 다음과 같이 두개의 생성자를 가지고 있다.
+
+```java
+ReentrantLock()
+ReentrantLock(boolean fair)
+```
+
+생성자의 매개변수를 true로 주면, lock이 풀렸을 때 가장 오래 기다린 쓰레드가 lock을 획득할 수 있게, 즉 공정(fair)하게 처리한다. 그러나 공정하게 처리하려면 어떤 쓰레드가 가장 오래 기다렸는지 확인하는 과정을 거칠 수밖에 없으므로 성능은 떨어진다.
+
+대부분의 경우 굳이 공정하게 처리하지 않아도 문제가 되지 않으므로 공정함보다 성능을 선택한다.
+
+```java
+void lock();            // lock을 잠근다.
+void unlock();          // lcok을 해지한다.
+boolean isLocked();     // lock이 잠겼는지 확인한다.
+```
+
+자동적으로 lock의 잠금과 해제가 관리되는 synchronized블럭과 달리, ReentrantLock과 같은 lock클래스들은 수동으로 lock을 잠그고 해제해야 한다. 그래도 lock을 잠그고 푸는 것은 간단하다. 그저 메서드를 호출하기만 하면 될 뿐이다. lock을 걸고 나서 푸는 것을 잊어버리는 실수를 하지 않도록 주의를 기울여야 한다는 것을 잊지 말자.
+
+```java
+synchronized(lock) {
+    // 임계 영역
+}
+
+lock.lock();
+// 임계 영역
+lock.unlock();
+```
+
+임계 영역 내에서 예외가 발생하거나 return문으로 빠져 나가게 되면 lock이 풀리지 않을 수 있으므로 unlick()은 try-finally문으로 감싸는 것이 일반적이다. 참조변수 lock은 ReentrantLock객체를 참조한다고 가정하였다.
+
+```java
+lock.lock();
+try {
+    // 임계 영역    
+} finally {
+    lock.unlock();    
+}
+```
+
+이렇게 하면, try블럭 내에서 어떤 일이 발생해도 finally블럭에 있는 unlock()이 수행되어 lock이 풀리지 않는 일은 발생하지 않는다. 대부분의 경우 lock() & unlock()을 대신 synchronized블럭을 사용할 수 있으며, 그럴 때는 그냥 synchronized블럭을 사용하는 것이 더 나을 수 있다.
+
+이외에도 tryLock()이라는 메서드가 있는데, 이 메서드는 lock()과 달리, 다른 쓰레드에 의해 lock이 걸려 있으면 lock을 얻으려고 기다리지 않는다. 또는 지정된 시간만큼만 기다린다. lock을 얻으면 true를 반환하고, 얻지 못하면 false를 반환한다.
+
+```java
+boolean tryLock();
+boolean tryLock(long timeout, TimeUnit unit) throws InterruptedException
+```
+
+lock()은 lock을 얻을 때까지 쓰레드를 블락(block)시키므로 쓰레드의 응답성이 나빠질 수 있다. 응답성이 중요한 경우, tryLock()을 이용해서 지정된 시간동안 lock을 얻지 못하면 다시 작업을 시도할 것인지 포기할 것인지를 사용자가 결정할 수 있게 하는 것이 좋다.
+
+그리고 이 메서드는 InterruptedException을 발생시킬 수 있는데, 이것은 지정된 시간동안 lock을 얻으려고 기다리는 중에 interrupt()에 의해 작업을 취소될 수 있도록 코드를 작성할 수 있다는 뜻이다.
+
+
+#### ReentrantLock과 Condition
+
+wait() & notify() 예제에 요리사 쓰레드와 손님 쓰레드를 구분해서 통과하지 못한다는 단점을 기억할 것이다. Condition은 이 문제점을 해결하기 위한 것이다.
+
+wait() & notify()로 쓰레드의 종류를 구분하지 않고, 공유 객체의 waiting pool에 같이 몰아넣는 대신, 손님 쓰레드를 위한 Condition과 요리사 쓰레드를 위한 Condition을 만들어서 각각의 waiting pool에서 따로 기다리도록 하면 문제는 해결된다. 말로 설명하는 것보다 직접 코드를 보는 쪽이 더 이해가 쉬울 것이다.
+
+Condition은 이미 생성된 lock으로부터 newCondtion()을 호출해서 생성한다.
+
+```java
+private ReentrantLock lock = new ReentrantLock();       // lock을 생성
+
+// lock으로 condition을 생성
+private Condition forCook = lock.newCondition();
+private Condition forCust = lock.newCondition();
+```
+
+위의 코드에서 두 개의 Condtion을 생성했는데, 하나는 요리사 쓰레드를 위한 것이고 다른 하나는 손님 쓰레드를 위한 것이다. 그 다음엔, wait() & notify()대신 Condition의 await & signal()을 사용하면 그걸로 끝이다.
+
+| Object | Condition |
+| --- | --- |
+| void wait() | void wait(), void awaitUninterruptibly() |
+| void wait(long timeout) | boolean await(long time, TimeUnit unit), long awaitNanos(long nanaosTimeout), boolean awaitUntil(Date deadline) |
+| void notify() | void signal() |
+| void notifyAll() | void signalAll() |
+
+아래의 코드는 예제 13-25에서 테이블에 음식을 추가하는 add()인데, wait()과 notify()대신 await()과 signal()을 사용하였다.
+
+```java
+public void add(String dish) {
+        lock.lock();
+
+  try {
+     while (dishes.size() >= MAX_FOOD) {
+        String name = Thread.currentThread().getName();
+        System.out.println(name + " is waiting.");
+        try {
+            forCook.await();        // wait();       COOK 쓰레드 대기
+        } catch (InterruptedException e) {}
+     }
+
+     dishes.add(dish);
+     forCust.signal();       // notify();        // 기다리고 있는 CUSTOMER 깨우기
+     System.out.println("Dishes : " + dishes.toString());
+  }finally {
+  lock.unlock();
+  }
+}
+```
+
+전에는 손님 쓰레드를 기다리게 할 때와 요리사 쓰레드를 기다리게 할 때 모두 wait()을 사용했는데, 이제는 wait() 대신 forCook.wait()과 forCust.wait()을 사용함으로써 대기와 통지의 대상임 ㅕㅇ확이 구분된다.
+
+예제 13-25와 달리, 예제 13-26은 요리사 쓰레드가 통지를 받아야하는 상황에서 손님 쓰레드가 통지를 받는 경우가 없어졌다. '기아 현상'이나 '경쟁 상태'가 확실히 개선된 것이다. 그래도 쓰레드의 종류에 따라 구분하여 통지를 할 수 있게 된 것일 뿐, 여전히 특정 쓰레드를 선택할 수 없기 때문에 같은 종류의 쓰레드간의 '기아 현상'이나 '경쟁 상태'가 발생할 가능성은 남아있다.
+
+손님이 원하는 음식의 종류로 Condition을 더 세분화하면, 통지를 받고도 원하는 음식이 없어서 다시 가디라는 일이 없도록 할 수 있다.
+
+
+### 9.4 volatile
+
+싱글 코어 프로세서가 장착된 컴퓨터에서는 예제 13-16이 아무런 문제없이 실행될 것이다. 그러나 대부분 멀티 코어 프로세서가 장착된 컴퓨터를 사용하기 때문에 이 예제어서 문제가 발생할 가능성이 있다 .그 이유는 멀티 코어 프로세서에서는 코어마다 별도의 캐시를 가지고 있기 때문이다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/f3ee2868-9646-41dc-953c-c4106eedd15b)
+
+코어는 메모리에서 읽어온 값을 캐시에 저장하고 캐시에서 값을 읽어서 작업한다. 다시 같은 값을 읽어 올 때는 먼저 캐시에 있는지 확인하고 없을 때만 메모리에서 읽어온다. 
+
+그러다보니 도중에 메모리에 저장된 변수의 값이 변경되었는데도 캐시에 저장된 값이 갱신되지 않아서 메모리에 저장된 값이 다른 경우가 발생한다. 그래서 변수 stopped의 값이 바뀌었는데도 쓰레드가 멈추지 않고 계속 실행되는 것이다.
+
+```java
+// AS-IS
+boolean suspended = false;
+boolean stopped = false;
+
+volatile boolean suspended = false;
+volatile boolean stopped = false;
+```
+
+그러나 위의 오른쪽과 같이 변수 앞에 volatile을 붙이면, 코어가 변수의 값을 읽어올 때 캐시가 아닌 메모리에서 읽어오기 때문에 캐시와 메모리간의 값의 불일치가 해결된다.
+
+변수에 volatile을 붙이는 대신에 synchronized블럭을 사용해도 같은 효과를 얻을 수 있다. 쓰레드가 synchronized블럭으로 들어갈 때와 나올 때, 캐시와 메모리간의 동기화가 이루어지기 때문에 값의 불일치가 해소되기 때문이다.
+
+```java
+// AS-IS
+public void stop() {
+    stopped = true; 
+}
+
+// TO-BE
+public synchronized void stop() {
+    stopped = true;    
+}
+```
+
+#### volatile로 long과 double을 원자화
+
+JVM은 데이터를 4 byte(=32bit)단위로 처리하기 때문에, int와 int보다 작은 타입들은 한 번에 읽거나 쓰는 것이 가능하다. 즉, 단 하나의 명령어로 읽거나 쓰기가 가능하다는 뜻이다. 하나의 명령어는 더 이상 나눌 수 없는 최소의 작업다누이이므로, 작업의 중간에 다른 쓰레드가 끼어들 틈이 없다.
+
+그러나, 크기가 8byte인 long과 double타입의 변수는 하나의 명령어로 값을 읽거나 쓸 수 없기 때문에, 변수의 값을 읽는 과정에 다른 쓰레드가 끼어들 여지가 있다. 다른 쓰레드가 끼어들지 못하게 하려고 변수를 읽고 쓰는 모든 문장을 synchronized블럭으로 감쌀 수도 있지만, 더 간단한 방법이 있다. 변수를 선언할 때 volatile을 붙이느 것이다.
+
+> [참고] 상수에는 volatile을 붙일 수 없다. 즉, 변수에 final과 vloatile을 같이 붙일 수 없다. 사실 상수는 변하지 않는 값이므로 멀티쓰레드에 안전(thread-safe)하다. 그래서 volatile을 붙일 필요가 없다.
+
+
+```java
+volatile long   sharedVal;        // long 타입의 변수(8 byte)를 원자화
+volatile double sharedVal;        // double타입의 변수(8 byte)를 원자화
+```
+
+volatile은 해당 변수에 대한 읽거나 쓰기가 원자화된다. 원자화라는 것은 작업을 더 이상 나눌 수 없게 한다는 의미인데, synchronized블럭도 일종의 원자화라고 할 수 있다. 즉, synchronized블럭은 여러 문장을 원자화함으로써 쓰레드의 동기화를 구현한 것이라고 보면 된다.
+
+volatile은 변수의 읽거나 쓰기를 원자화 할 뿐, 동기화하는 것은 아니라는 점에 주의하자. 동기화가 필요할 때 synchronized블럭 대신 volatile을 쓸 수 없다.
+
+예를 들어 아래와 같은 코드가 있을 때
+
+```java
+volatile long balance;              // 인스턴스 변수 balance 를 원자화 한다.
+
+synchronized int getBalance() {
+    return this.balance;    
+}
+
+synchronized void withdraw(int money) {
+    if(this.balance >- money) {
+        this.balance -= money;    
+    }    
+}
+```
+
+인스턴스변수 balance를 volatile로 원자화했으므로, 이 값을 이 ㄺ어서 반환하는 메서드 getBlance()를 동기화할 필요가 없다고 생각할 수 있다. 그러나 getBalance()를 synchronized로 동기화하지 않으면, withdraw()가 호출되어 객체에 lock을 걸고 작업을 수행하는 중인데도 getBalance()가 호출되는 것이 가능해진다. 출금이 진행 중일때는 기다렸다가 출금이 끝난 후에 잔고를 조회할 수 있도록 하려면 getBalance()에 synchronized를 붙여서 동기화를 해야 한다.
+
+
+### 9.5 fork & join 프레임워크
+
+10년 전까지만 해도 CPU의 속도는 매년 거의 2배씩 빠르게 향상되어왔다. 그러나 이제 그 한계에 도달하여 속도 보다는 코어의 개수를 늘려서 CPU의 성능을 향상시키는 방향으로 발전해 가고 있다.
+
+이러한 하드웨어의 변화에 발맞춰 프로그래밍도 멀티 코어를 잘 활용할 수 있는 멀티쓰레드 프로그래밍이 점점 더 중요해지고 있다. 
+
+JDK1.7부터 'fork&join 프레임워크'이 추가되었고, 이 프레임워크는 하나의 작업을 작은 단위로 나눠서 여러 쓰레드가 동시에 처리하는 것을 쉽게 만들어 준다.
+
+먼저 수행할 작업에 따라 RecursiveAction과 RecursiveTask, 두 클래스 중에서 하나를 상속받아 구현해야한다.
+
+> **RecursiveAction** 반환값이 없는 작업을 구현할 때 사용
+> 
+> **RecursiveTask** 반환값이 있는 작업을 구현할 때 사용
+
+두 클래스 모두 compute()라는 추상 메서드를 가지고 있는데, 우리는 상속을 통해 이 추상 메서드를 구현하기만 하면 된다.
+
+```java
+import java.util.concurrent.ForkJoinTask;
+
+public abstract class RecursiveAction extends ForkJoinTask<Void> {
+   ...
+
+   protected abstract void computed();       // 상속을 통해 이 메서드를 구현해야 한다.
+   ...
+}
+
+public abstract class RecursiveTask<V> extends ForkJoinTask<V> {
+    V result;
+    
+    protected abstract V computed();         // 상속을 통해 이 메서드를 구현해야 한다.
+}
+```
+
+예를 들어 1부터 n까지의 합을 계산한 결과를 돌려주는 작업의 구현은 다음과 같이 한다.
+
+```java
+import java.util.concurrent.RecursiveTask;
+
+class SumTask extends RecursiveTask<Long> {
+    
+    long from, to;
+    
+    SumTask(long from, long to) {
+        this.from = from;
+        this.to = to;
+    }
+    
+    public Long computed() {
+        // 처리할 작업을 수행하기 위한 문장
+    }
+}
+```
+
+그 다음에는 쓰레드풀과 수행할 작업을 생성하고, invoke()로 작업을 시작한다. 쓰레드를 시작할 때 run()이 아니라 start()를 호출하는 것처럼, fork&join 프레임워크로 수행할 작업도 computed()가 아닌 invoke()로 시작한다.
+
+```java
+ForkJoinPool pool = new ForkJoinPool();     // 쓰레드 풀 생성
+SomeTask task = new SomeTask(from, to);     // 수행할 작업 생성
+
+Long result = pool.invokr(task);            // invoke()를 호출해서 작업 시작
+```
+
+ForkJoinPool은 fork&join 프레임워크에서 제공하는 쓰레드 풀(thread pool)로, 지정된 수의 쓰레드를 생성해서 미리 만들어 놓고 반복해서 재사용할 수 있게 한다. 그리고 쓰레드를 반복해서 생성하지 않아도 된다는 장점과 너무 많은 쓰레드가 생성되어 성능이 저하되는 것을 막아준다는 장점이 있다.
+
+쓰레드 풀은 쓰레드가 수행해야하는 작업이 담긴 큐를 제공하며, 각 쓰레드는 자신의 작업 큐에 담긴 작업을 순선대로 처리한다.
+
+> [참고] 쓰레드 풀은 기본적으로 코어의 개수와 동일한 개수의 쓰레드를 생성한다.
+
+#### computed의 구현
+
+computed를 구현할 때는 수행할 작업 외에도 작업을 어떻게 나눌 것인가에 대해서도 알려줘야 한다. 
+
+```java
+public Long computed() {
+    long size = to - from + 1;
+    if(size <= 5) return sum();
+    
+    long halg = (from + to) / 2;
+    
+    SumTask leftSum = new SumTask(from, half);
+    SumTask rightSUm = new SumTask(half + 1, to);
+    leftSum.fork();         // 작업(leftSum)을 작업 큐에 넣는다.
+    return rightSum.computed() + leftSum.join();
+}
+```
+
+실제 수행할 작업은 sum()뿐이고 나머지는 수행할 작업의 범위를 반으로 나눠서 새로운 작업을 실행해서 실행시키기 위한 것이다. 좀 복잡해 보이지만, 작업의 범위를 어떻게 나눌 것인지만 정의해 주면 나머지는 항상 같은 패턴이다.
+
+지정된 범위를 절반으로 나누어서 나눠진 범위의 합을 계산하기 위한 새로운 SumTask를 생성하는데, 이 과정은 작업이 더 이상 나눠질 수 없을 때까지, size의 값이 5보다 작거나 같을 때까지, 반복된다.
+
+> [참고] computed()의 구조는 일반적인 재귀호출 메서드와 동일하다.
+
+![그림1](https://github.com/Potenday/Potenday_Back/assets/22147400/6407a533-8504-4265-9fc0-007cf646c444)
+
+이해를 돕기 위해 1부터 8까지의 숫자를 더하는 과정을 그림으로 그려보았다. 이 그림에서 작업의 size가 2가 될 때까지 나눈다. computed()가 처음 호출되면, 더 할 숫자의 범위를 반으로 나눠서 한 쪽에는 fork()를 호출해서 작업을 큐에 저장한다. 하나의 쓰레드는 computed()를 재귀호출하면서 작업을 계속해서 반으로 나누고, 다른 쓰레드는 fork()에 의해 작업 큐에 추가된 작업을 수행한다.
+
+#### 다른 쓰레드의 작업 훔쳐오기
+
+fork()가 호출되어 작업 큐에 추가된 작업 역시, computed()에 의해 더 이상 나눌 수 없을 때까지 반복해서 나뉘고, 자신의 작업 큐가 비어있는 쓰레드는 다른 쓰레드의 작업 큐에 서 작업을 가져와서 수행한다. 이것을 작업 훔쳐오기(work stealing)라고 하며, 이 과정은 모두 쓰레드풀에 의해 자동적으로 이루어진다.
+
+위의 그림은 작업 큐가 비어있는 쓰레드가 다른 쓰레드의 작업을 가져와서 수행하는 것을 그린 것이다. 이런 과정을 통해 한 쓰레드에 작업이 몰리지 않고, 여러 쓰레드가 골고루 작업을 나누어 처리하게 된다.
+
+> [참고] 작업의 크기를 충분히 작게 해야 각 쓰레드가 골고루 작업을 나눠가질 수 있다.
+
+#### fork()와 join()
+
+fork()는 작업을 쓰레드의 작업 큐에 넣는 것이고, 작업 큐에 들어간 작업은 더 이상 나눌 수 없을 때까지 나뉜다. 즉 computed()로 나누고 fork()로 작업 큐에 넣는 작업이 계속해서 반복된다. 그리고 나눠진 작업은 각 쓰레드가 골고루 나눠서 처리하고, 작업의 결과는 join()을 호출해서 얻을 수 있다.
+
+fork()와 join()의 중요한 차이점이 하나 있는데, 그것은 fork()는 비동기 메서드이고, join()은 동기 메서드이다.
+
+> **fork()** 해당 작업을 쓰레드 풀의 작업 큐에 넣는다. (비동기 메서드)
+> 
+> **join()** 해당 작업의 수행이 끝날 때까지 기다렸다가, 수행이 끝나면 그 결과를 반환한다. (동기 메서드)
+
+비동기 메서드는 일반적인 메서드와 달리 메서드를 호출만 할 뿐, 그 결과를 기다리지 않는다. (내부적으로는 다른 쓰레드에게 작업을 수행하도록 지시만 하고 결과를 기다리지 않고 돌아오는 것이다.) 그래서 아래의 코드에서, fork()를 호출하면 결과를 기다리지 않고 다음 문장인 ruturn문으로 넘어간다.
+
+return문에서 computed가 재귀호출 될 때, join()은 호출되지 않는다. 그러다가 작업을 더 이상 나눌 수 없게 되었을 때,  computed()의 재귀호출은 끝나고 join()의 결과를 기다렸다가 더해서 결과를 반환한다. 재귀호출된 computed()가 모두 종료될 떄, 최종결과를 얻는다.
+
+예제 13-27을 실행 결과를 보면, fork&join 프레임워크로 계산한 결과보다 for문으로 계산한 결과가 시간이 덜 걸린 것을 알 수 있따. 왜냐하면, 작업을 나누고 다시 합치는데 걸리는 시간이 있기 때문이다. 재귀호출보다 for문이 더 빠른 것과 같은 이유인데, 항상 멀티쓰레드로 처리하는 것이 빠르다고 생각해서는 안 된다. 반드시 테스트해보고 이득이 있을 때만 멀티 쓰레드로 처리해야 한다.
+

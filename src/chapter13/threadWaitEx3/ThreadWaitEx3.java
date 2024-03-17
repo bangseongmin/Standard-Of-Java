@@ -115,21 +115,4 @@ class Table {
         return dishNames.length;
     }
 
-    public int getBalance() {
-        long stamp = lock.tryOptimisticRead();      //  낙관적 읽기 lock을 건다.
-
-        int curBalance = this.balance;              // 공유 데이터인 balance를 읽어온다.
-
-        if(lock.validate(stamp)) {                  // 쓰기 lock에 의해 낙관적 읽기 lock이 풀렸는지 확인
-            stamp = lock.readLock();                // lock이 풀렸으면, 읽기 lock을 얻으려고 대기
-
-            try {
-                curBalance = this.balance;
-            }finally {
-                lock.unlockRead(stamp);             // 읽기 lock을 푼다.
-            }
-        }
-
-        return curBalance;                          // 낙관적 읽기 lock이 풀리지 않았으면 곧바로 읽어온 값 반환
-    }
 }
