@@ -323,3 +323,278 @@ interface TriFunction<T,U,V,R> {
     R apply(T t, U u, V v);
 }
 ```
+
+#### UnaryOperator와 BinaryOperator
+
+Function의 또 다른 변형으로 UnaryOperator와 BinaryOperator가 있는데, 매개변수의 타입과 반환타입의 타입이 모두 일치한다는 점만 제외하고는 Function과 같다.
+
+> [참고] UnaryOperator와 BinaryOperator의 조상은 각각 Function과 BiFunction이다.
+
+| 함수형 인터페이스 | 메서드 | 설명 |
+| --- | --- | --- |
+| UnaryOperator<T> | T apply(T t) | Function의 자손, Function과 달리 매개변수와 결과의 타입이 같다. |
+| BinaryOperator<T> | T apply(T t) | BiFunction의 자손, BiFunction과 달리 매개변수와 결과의 타입이 같다. |
+
+#### 컬렉션 프레임워크와 함수형 인터페이스
+
+컬렉션 프레임워크의 인터페이스에 다수의 디폴트 메서드가 추가되었는데, 그 중 일부는 함수형 인터페이스를 사용한다. 다음은 그 메서드들의 목록이다.
+
+> [참고] 단순화하기 위해 와일드 카드는 생략하였다.
+
+| 인터페이스 | 메서드 | 설명 |
+| --- | --- | --- |
+| Collection | boolean removeIf(Predicate<E> filter) | 조건에 맞는 요소를 삭제 |
+| List | void replaceAll(UnaryOperator<E> operator) | 모든 요소를 변환하여 대체 |
+| Iterable | void forEach(Consumer<T> action) | 모든 요소에 작업 action을 수행 | 
+| Map | V compute(K key, BiFunction<K, V, V> f) | 지정된 키의 값에 작업 f를 수행 |
+| Map | V computedIfAbsent(K key, BiFunction<K, V> f) | 키가 없으면, 작업 f 수행 후 추가 |
+| Map | V computedIfPresent(K key, BiFunction<K, V, V> f) | 지정된 키가 있을 때, 작업 f 수행 |
+| Map | V merge(K key, V value, BiFunction<V, V, V> f) | 모든 요소에 병합작업 f를 수행 |
+| Map | void forEach(BiConsumer<K, V> action) | 모든 요소에 작업 action을 수행 |
+| Map | void replaceAll(BiFunction<K, V, V> f) | 모든 요소에 치환작업 f를 수행 |
+
+
+이름만 봐도 어떤 일을 하는 메서드인지 충분히 알 수 있을 것이다. Map인터페이스에 있는 'computed'로 시작하는 메서드들은 맵의 value를 변환하는 일을 하고 merge()는 Map을 병합하는 일을 한다. 이 메서드들을 어떤 식으로 사용하는 지는 다음의 예제를 보자.
+
+#### 기본형을 사용하는 함수형 인터페이스
+
+함수형 인터페이스는 매개변수와 반환값의 타입이 모두 제네릭 타입이었는데, 기본형 타입의 값을 처리할 때도 래퍼(wrapper)클래스를 사용해왔다. 그러나 기본형 대신 래퍼클래스를 사용하는 것은 당연히 비효율적이다. 그래서 보다 효율적으로 처리할 수 있도록 기본형을 사용하는 함수형 인터페스들이 제공된다.
+
+| 함수형 인터페이스 | 메서드 | 설명 |
+| --- | --- | --- |
+| DoubleToIntFunction | int applyAsInt(Double d) | AToBFunction은 입력이 A타입 출력이 B 타입 |
+| ToIntFunction<T> | int applyAsInt(T value) | ToBFunction은 출력이 B타입이다. 입력은 제네릭 타입 | 
+| IntFunction<R> | R apply(T t, U u) | AFunction은 입력이 A타입이고 출력은 제네릭 타입 |
+| ObjIntConsumer<T> | void accept(T t, U u) | ObjAFunction은 입력이 T, A 타입이고 출력은 없다. |
+
+
+### 1.5 Function의 합성과 Predicate의 결합
+
+java.util.function패키지의 함수형 인터페이스에는 추상메서드 외에도 디폴트 메서드와 static메서드가 정의되어 있다. 우리는 Function과 Predicate에 정의된 메서드에 대해서만 살펴볼 것인데, 그 이유는 다른 함수형 인터페이스의 메서드도 유사하기 때문이다.
+
+> [참고] Function인터페이스는 반드시 두 개의 타입을 지정해 줘야하기 때문에, 두 타입이 같아도 Function<T>라고 쓸 수 없다. Function<T, T>라고 써야 한다.
+
+```java
+// **Function**
+default <V> Function<T, V> andThen(Function<? super R, ? extends V> after);
+default <V> Function<V, R> compose(Function<? super V, ? extends T> before);
+default <T> Function<T, T> identity();
+
+// **Predicate**
+default Predicate<T> and(Predicate<? super T> other);
+default Predicate<T> or(Predicate<? super T> other);
+default Predicate<T> negate();
+static <T> Predicate<T> isEqual(Object targetRef)
+```
+
+
+#### Function의 합성
+
+수학에서 두 함수를 합성해서 하나의 새로운 함수를 만들어낼 수 있는 것처럼, 두 람다식을 합성해서 새로운 람다식을 만들 수 있다. 이미 알고 있는 것처럼, 두 함수의 합성은 어느 함수를 먼저 적용하느냐에 따라 달라진다. 함수 f, g가 있을 때, f.andThen(g)는 함수 f를 먼저 적용하고, 그다음에 함수 g를 적용한다. 그리고 f.compose(g)는 반대로 g를 먼저 적용하고 f를 적용한다.
+
+```java
+default <V> Function<T, V> andThen(Function<? super R, ? extends V> after)
+
+default <V> Function<V, R> compose<Function<? super V, ? extends T> before)
+```
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/61e6b7ca-86b9-4bd1-b62a-a77f0644c534)
+
+예를 들어, 문자열을 숫자로 변환하는 함수 f와 숫자를 2진 문자열로 변환하는 함수 g를 andThen()으로 합성하여 새로운 함수 h를 만들어낼 수 있다.
+
+```java
+Function<String, Integer> f = (s) -> Integer.parseInt(s, 16);
+Function<Integer, String> g = (i) -> Integer.toBinaryString(i);
+Function<String, String> h = f.andThen(g);
+```
+
+ 함수 h의 제네릭 타입이 `<String, String>`이다. 즉, String을 입력받아서 String을 결과로 반환한다. 예를 들어 함수 h에 문자열 'FF'를 입력하면, 결과로 '11111111'을 얻는다.
+
+이번엔 compose()를 이용해서 두 함수를 반대의 순서로 합성해보자.
+
+```java
+Function<Integer, String> g = (i) -> Integer.toBinaryString(i);
+Function<String, Integer> f = (s) -> Integer.parseInt(s, 16);
+Function<Integer, Integer> h = f.compose(g);
+```
+
+이전과 달리 함수 h의 제네릭 타입이 `<Integer, Integer>`이다. 함수 h에 숫자 2를 입력하면, 결과를 16을 얻는다.
+
+그리고 identity()는 함수를 적용하기 이전과 이후가 동일한 '항등 함수'가 필요할 때 사용한다. 이 함수를 람다식으로 표현하면 `x -> x`이다. 아래의 두 문장은 동등하다.
+
+> [참고] 항등 함수는 함수에 x를 대입하면 결과가 x인 함수를 만한다.
+
+```java
+Function<String, String> f = x -> x;
+FUnction<String, String> f = Function.identity();       // 위의 문장과 동일
+
+System.out.println(f.apply("AAA"));
+```
+
+
+#### Predicate의 결합
+
+여러 조건식을 논리 연산자인 &&(and), ||(or), !(not)으로 여결해서 하나의 식을 구성할 수 있는 것처럼, 여러 Predicate를 and(), or(), negate()로 연결해서 하나의 새로운 Predicate로 결합할 수 있다.
+
+```java
+Predicate<Integer> p = i -> i < 100;
+Predicate<Integer> q = i -> i < 200;
+Predicate<Integer> r = i -> i % 2 == 0;
+Predicate<Integer> notP = p.negate();
+
+Predicate<Integer> all = notP.and(q.or(r));
+System.out.println(all.test(150)); 
+```
+
+이처럼 and(), or(), negate()로 여러 조건식을 하나로 합칠 수 있다. 물론 아래와 같이 람다식을 직접 넣어도 된다.
+
+```java
+Predicate<Integer> all = notP.and(i -> i < 200).or(i - > i % 2 == 0);
+```
+
+> [주의] Predicate의 끝에 negate()를 붙이면 조건식 전체가 부정이 된다.
+ 
+그리고 static 메서드인 isEqual()은 두 대상을 비교하는 Predicate를 만들 때 사용한다. 먼저, isEqual()의 매개변수로 비교대상을 하나 지정하고, 또 다른 비교대상은 test()의 매개변수로 지정한다.
+
+```java
+Predicate<String> p = Predicate.isEqual(str1);
+boolean result = p.test(str2);
+```
+
+위의 두 문장을 합치면 아래와 같다. 오히려 아래의 문장이 이해하기 더 쉬울 것이다.
+
+```java
+boolean result = Prediate.isEqual(str1).test(str2);
+```
+
+### 1.6 메서드 참조
+
+람다식으로 메서드를 이처럼 간결하게 표현할 수 있다는 것에 충분히 감탄했을 텐데, 놀랍게도 람다식을 더욱 간결하게 표현할 수 있는 방법이 있다. 항상 그런 것은 아니고, 람다식이 하나의 메서드만 호출하는 경우에는 '메서드 참조(method reference)'라는 방법으로 람다식을 간략히 할 수 있다. 예를 들어 문자열을 정수로 변환하는 람다식은 아래와 같이 작성할 수 있다.
+
+```java
+Function<String, Integer> f = (String s) -> Integer.pareseInt(s);
+```
+
+보통은 이렇게 람다식을 작성하는데, 이 람다식을 메서드로 표현하면 아래와 같다.
+
+> [참고] 람다식은 엄밀히 말하자면 익명클래스의 객체지만 간단히 메서드만 적었다.
+
+```java
+Integer wrapper(String s) {
+    return Integer.pareseInt(s);
+}
+```
+
+이 wrapper메서드는 별로 하는 일이 없다. 그저 값을 받아서 Integer.parseInt()에게 넘겨주는 일만 할 뿐이다. 차라리 이 거추장스러운 메서드를 벗겨내고 Integer.paresInt()를 직접 호출하는 것이 낫지 않을까?
+
+```java
+Function<String, Integer> f = (String s) -> Integer.parseInt(s);
+Function<String, Integer> f = Integer::parseInt;        // 메서드 참조
+```
+
+위 메서드 참조에서 람다식의 일부가 생략되었지만, 컴파일러는 생략된 부분을 우변의 pareseInt메서드의 선언부로부터 또는 좌변의 Function인터페이스에 지정된 제네릭 타입으로부터 쉽게 알아낼 수 있다.
+
+한 가지 예를 더 보자. 아래의 람다식을 메서드 참조로 변경하려면, 어떻게 되겠는가? 람다식에서 생략해도 좋을만한 부분이 어디인지 한번 생각해 보자.
+
+```java
+BiFunction<String, String, Boolean> f = (s1, s2) -> s1.equals(s2);
+```
+
+참조변수 f의 타입만 봐도 람다식이 두 개의 String타입의 매개변수를 받는 다는 것을 알 수 있으므로, 람다식의 매개변수들은 없어도 된다. 위의 람다식에서 매개변수들을 제거해서 메서드 참조로 변경하면 아래와 같다.
+
+```java
+BiFunction<String, String, Boolean> f = (s1, s2) -> s1.equals(s2);
+BiFunction<String, String, Boolean> f = String::equals;     // 메서드 참조
+```
+
+매개변수 s1과 s2를 생략해버리고 나면 equals만 남는데, 두 개의 String을 받아서 Boolean을 반환하는 equals라는 이름의 메서드는 다른 클래스에도 존재할 수 있기 때문에 equals앞에 클래스 이름은 반드시 필요하다.
+
+메서드 참조를 사용할 수 있는 경우가 한 가지 더 있는데, 이미 생성된 객체의 메서드를 람다식에서 사용한 경우에는 클래스 이름 대신 그 객체의 참조변수를 적어줘야 한다.
+
+```java
+MyClass obj = new MyClass();
+Function<String, Boolean> f = (x) -> obj.equals(x);     // 람다식
+Function<String, Boolean> f2 = obj::equals;             // 메서드 참조
+```
+
+> 하나의 메서드만 호출하는 람다식은 `클래스이름::메서드이름` 또는 `참조변수::메서드이름`으로 바꿀 수 있다.
+
+#### 생성자의 메서드 참조
+
+생성자를 호출하는 람다식도 메서드 참조로 변환할 수 있다.
+
+```java
+Supplier<MyClass> s = () -> new MyClass();
+Supplier<MyClass> s = MyClass:new;
+```
+
+매개변수가 있는 생성자라면, 매개변수의 개수에 따라 알맞은 함수형 인터페이스를 사용하면 된다. 필요하다면 함수형 인터페이스를 새로 정의해야 한다.
+
+```java
+Function<Integer, MyClass> f = (i) -> new MyClass(i);       // 람다식
+Function<Integer, MyClass> f2 = MyClass::new;               // 메서드 참조
+
+BiFunction<Integer, String, MyClass> bf = (i, s) -> new MyClass(i, s);
+BiFunction<Integer String, MyClass> bf2 = MyClass::new;     // 메서드 참조
+```
+
+그리고 배열을 생성할 때는 아래와 같이 하면 된다.
+
+```java
+Function<Integer, int[]> f = x -> new int[x];       // 람다식
+Function<Integer, int[]> f2 = int[]::new;           // 메서드 참조
+```
+
+메서드 참조는 람다식을 마치 static변수처럼 다룰 수 있게 해준다. 메서드 참조는 코드를 간략히 하는데 유용해서 많이 사용된다.
+
+
+## 2. 스트림(Stream)
+
+### 2.1 스트림이란?
+
+컬렉션이나 배열에 데이터를 담고 원하는 결과를 얻기 위해 for문과 Iterator를 이용해서 코드를 작성해왔다. 그러나 이러한 방식으로 작성된 코드는 너무 길고 알아보기 어렵다. 그리고 재사용성도 떨어진다.
+
+또 다른 문제는 데이터 소스마다 다른 방식으로 다뤄야한다는 것이다. Collection이나 Iterator와 같은 인터페이스를 이용해서 컬렉션을 다루는 방식을 표준화하기는 했지만, 각 컬렉션 클래스에는 같은 기능의 메서드들이 중복해서 정의되어 있다. 예를 들어 List를 정렬할 때는 Collections.sort()를 사용해야하고, 배열을 정렬할 때는 Arrays.sort()를 사용해야한다.
+
+이러한 문제점들을 해결하기 위해서 만든 것이 '스트림(Stream)'이다. 스트림은 데이터 소스를 추상화하고, 데이터를 다루는데 자주 사용되는 메서드들을 정의해 놓았다. 데이터 소스를 추상화하였다는 것은, 데이터 소스가 무엇이던 간에 같은 방식으로 다룰 수 있게 되었다는 것과 코드의 재사용성이 높아진다는 것을 의미한다.
+
+스트림을 이용하면, 배열이나 컬렉션뿐만 아니라 파일에 저장된 데이터도 모두 같은 방식으로 다룰 수 있다.
+
+예를 들어, 문자열 배열과 같은 내용의 문자열을 저장하는 List가 있을 때, 
+
+```java
+String[] strArr = { "aaa", "bbb", "ccc" };
+List<String> strList = Arrays.asList(strArr);
+```
+
+이 두 데이터 소스를 기반으로 하는 스트림은 다음과 같이 생성한다.
+
+```java
+Stream<String> strStream1 = strList.stream();
+Stream<String> strStream2 = Arrays.stream(strArr);
+```
+
+이 두 스트림으로 데이터 소스의 데이터를 읽어서 정렬하고 화면에 출력하는 방법은 다음과 같다. 데이터 소스가 정렬되는 것응은 아니라는 것에 유의하자.
+
+```java
+strStream1.sorted().forEach(System.out::println);
+strStream2.sorted().forEach(System.out::println);
+```
+
+두 스트림의 데이터 소스는 서로 다르지만, 정렬하고 출력하는 방법은 완전히 동일하다.
+
+이처럼 스트림을 사용한 코드가 간결하고 이해하기 쉬우며 재사용성도 높다는 것을 알 수 있다.
+
+#### 스트림은 데이터 소스를 변경하지 않는다.
+
+스트림은 데이터 소스로부터 데이터를 읽기만할 뿐, 데이터 소스를 변경하지 않는다는 차이가 있다. 필요하다면, 정렬된 결과를 컬렉션이나 배열에 담아서 반환할 수 있다. 
+
+#### 스트림은 일회용이다.
+
+스트림은 iterator처럼 일회용이다. Iterator로 컬렉션의 요소를 모두 읽고 나면 다시 사용할 수 없는 것처럼, 스트림도 한번 사용하면 닫혀서 다시 사용할 수 없다. 필요하다면 스트림을 다시 생성해야한다.
+
+#### 스트림은 작업을 내부 반복으로 처리한다.
+
+스트림을 이용한 작업이 간결할 수 있는 기려중의 하나가 바로 '내부 반복'이다. 내부 반복이라는 것은 반복문을 메서드의 내부에 숨길 수 있다는 것을 의미한다. forEach()는 스트림에 정의된 메서드 중의 하나로 매개변수에 대입된 람다식을 데이터 소스의 모든 요소에 적용한다.
+
+#### 스트림의 연산
