@@ -598,3 +598,229 @@ strStream2.sorted().forEach(System.out::println);
 스트림을 이용한 작업이 간결할 수 있는 기려중의 하나가 바로 '내부 반복'이다. 내부 반복이라는 것은 반복문을 메서드의 내부에 숨길 수 있다는 것을 의미한다. forEach()는 스트림에 정의된 메서드 중의 하나로 매개변수에 대입된 람다식을 데이터 소스의 모든 요소에 적용한다.
 
 #### 스트림의 연산
+
+스트림이 제공하는 다양한 연산을 이용해서 복잡한 작업들을 간단히 처리할 수 있다. 마치 데이터베이스에 SELECT문으로 질의(쿼리, query)하는 것과 같은 느낌이다.
+
+> [참고] 스트림에 정의된 메서드 중에서 데이터 소스를 다루는 작업을 수행하는 것을 연산(operation)이라고 한다.
+
+스트림이 제공하는 연산은 중간 연산과 최종 연산으로 분류할 수 있는데, 중간 연산은 연산결과를 스트림으로 반환하기 때문에 중간 연산을 연속해서 연결할 수 있다. 반면에 최종 연산은 스트림의 요소를 소모하면서 연산을 수행하므로 단 한번만 연산이 가능하다.
+
+> **중간 연산**: 연산 결과가 스트림인 연산. 스트림에 연속해서 중간 연산할 수 있음.
+> 
+> **최종 연산**: 연산 결과가 스트림이 아닌 연산. 스트림의 요소를 소모하므로 단 한번만 가능.
+
+```java
+stream.distinct().limit(5).sorted().forEach(System.out::println)
+```
+
+모든 중간 연산의 결과는 스트림이지만, 연산 전의 스트림과 같은 것은 아니다. 위의 문장과 달리 모든 스트림 연산을 나누어 쓰면 아래와 같다. 각 연산의 반환타입을 눈여겨보자.
+
+```java
+String[] strArr = { "dd", "aaa", "CC", "cc", "b" };
+Stream<String> stream = Stream.of(strArr);                  // 문자열 배열이 소스인 스트림
+Stream<String> filteredStream = stream.filter();            // 걸러내기(중간 연산)
+Stream<String> distintedStream = stream.distint();          // 중복제거(중간 연산)
+Stream<String> sortedStream = stream.sort();                // 정렬(중간 연산)
+Stream<String> limitedStream = stream.limit(5);             // 스트림 자르기(중간 연산)
+int total = stream.count();                                 // 요소 개수 세기(최종연산)
+```
+
+Stream에 정의된 연산을 정리하면 다음과 같다. 앞으로 하나씩 자세히 설명할 것이므로 지금은 어떤 것들이 있다는 정도만 가볍게 봐두자.
+
+| 중간 연산                                                                                                                                                                                                                                                                                                                                                                                                       | 설명 |
+|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| --- |
+| Stream<T> distint()                                                                                                                                                                                                                                                                                                                                                                                         | 중복을 제거 |
+| Stream<T> filter(Predicate<T> predicate)                                                                                                                                                                                                                                                                                                                                                                    | 조건에 안 맞는 요소 제외 |
+| Stream<T> limit(long maxSize)                                                                                                                                                                                                                                                                                                                                                                               | 스트림의 일부를 잘라낸다. |
+| Stream<T> skip(long n)                                                                                                                                                                                                                                                                                                                                                                                      | 스트림의 일부를 건너뛴다. |
+| Stream<T> sorted(), Stream<T> sorted(Comparator<T> comparator)                                                                                                                                                                                                                                                                                                                                              | 스트림의 요소를 정렬한다. |
+| Stream<R> map(Function<T, R> mapper), DoubleStream mapToDouble(ToDoubleFunction<T> mapper), IntStream mapToInt(ToIntFunction<T> mapper), LongStream mapToLong(ToLongFunction<T> mapper), Stream<R> flatMap(Function<T, Stream<R>> mapper), DoubleStream flatMapToDouble(Function<T, DoubleStream> m), IntStream flatMapToInt(Function<T, IntStream> m), LongStream flatMapToLong(Function<T, LongStream> m) | 스트림의 요소를 변환한다. |
+| void forEach(Consumer<? super T> action), void forEachOrdered(Consumer<? super T> action)                                                                                                                                                                                                                                                                                                                   | 각 요소에 지정된 작업 수행 |
+| long count()                                                                                                                                                                                                                                                                                                                                                                                                | 스트림의 요소의 개수 반환 | 
+| Optional<T> max(Comparator<? super T> comparator)                                                                                                                                                                                                                                                                                                                                                           | 스트림의 최대값/최소값 반환 |
+| Optional<T> findAny(), Optional<T> findFirst()                                                                                                                                                                                                                                                                                                                                                              | 스트림의 요소 하나를 반환 |
+| boolean allMatch(Predicate<T> p) // 모두 만족하는지, boolean anyMatch(Predicate<T> p) // 하나라도 만족하는지 boolean noneMatch(Predicate<T> p) // 모두 만족하지 않는지 | 주어진 조건을 모든 요소가 만족시키는지, 만족시키지 앟는지 확인 | 스트림의 모든 요소를 배열로 반환 |
+| Optional<T> reduce(BinaryOperator<T> acculmulator), T reduce(T identity, BinaryOperator<T> acculmulator), U reduce(U identity, BiFunction<U, T, U> acculmulator, BinaryOperator<U> combiner) | 스트림의 요소를 하나씩 줄여가면서(리듀싱) 계산한다. |
+| R collection<Collector<T, A, R> collector), R collector(Supplier<R> supplier, BiConsumer<R, T> accumulator, BiConsumer<R, R> combiner) | 스트림의 요소를 수집한다. 주로 요소를 그룹화하거나 분할한 결과를 컬레겻ㄴ에 담아 반환하는데 사용된다. |
+
+중간 연산은 map()과 flatMap(), 최종연산은 reduce()와 collect()가 핵심이다.
+
+
+#### 지연된 연산
+
+스트림 연산에서 한 가지 중요한 점은 최종 연산이 수행되기 전까지 중간 연산이 수해오디지 않는다느 것이다. 스트림에 대해 distinct()나 sort()같은 중간 연산을 호출해도 즉각적인 ㅕㅇㄴ산이 수행되는 것은 아니라는 것이다. 중간 연산을 호출하는 것은 단지 어떤 작업이 수행되어야하는지를 지정해주는 것일뿐이다. 최종 연산이 수행되어야 스트릠의 요소들이 중간연산을 거쳐 최종 연산에서 소모된다.
+
+#### Stream<Integer>와 IntStream
+
+요소의 타입이 T인 스트림은 기본적으로 `Stream<T>`이지만, 오토박싱&언박싱으로 인한 비효율을 줄이기 위해 데이터 소스의 요소를 기본형으로 다루는 스트림, IntStream, LongStream, DoubleStream이 제공된다. 일반적으로 `Stream<Integer>`대신 IntStream을 사용하는 것이 더 효율적이고, IntStream에는 int타입의 값으로 자 ㄱ업하는데 유용한 메서드들이 포함되어 있다.
+
+#### 병렬 스트림
+
+스트림으로 데이터를 다룰 때의 장점 중 하나가 병렬 처리가 쉽다는 것이다. fork&join프레임워크으로 작업을 병렬처리하는 것을 13장에서 진행했었는데, 병렬 스트림은 내부적으로 이 프레임워크를 이용해서 자동적으로 연산을 병렬로 수행한다. 우리가 할일이라고는 그저 스트림에 parallel()이라는 메서드를 호출해서 병렬로 연산을 수행하도록 지 시하면 될 뿐이다. 반대로 병렬로 처리되지 않게 하려면 sequential()을 호출하면 된다. 모든 스트림은 기본적으로 병렬 스트림이 아니므로 sequential()을 호출하면 된다. 모든 스트림은 기본적으로 병렬 스트림이 아니므로 sequential()을 호출할 필요가 없다. 이 메서드는 parallel()을 호출한 것을 취소할 때만 사용한다.
+
+> [참고] parallel()과 sequential()은 새로운 스트림을 생성하는 것이 아니라, 그저 스트림의 속성을 변경할 뿐이다.
+
+### 2.2 스트림 만들기
+
+스트림으로 작업을 하려면, 스트림이 필요하니까 일단 스트림을 생성하는 방법부터 먼저 시작하자. 스트림의 소스가 될 수 있는 대상은 배열, 컬렉션, 임의의 수 등 다양하며, 이 다양한 소스들로부터 스트림을 생성하는 방법에 대해서 배우게 될 것이다.
+
+#### 컬렉션
+
+컬렉션의 최고 조상인 Collection에 stream()이 정의되어 있다. 그래서 Collection의 자손인 List와 Set을 구현한 컬렉션 클래스들은 모두 이 메서드로 스트림을 생성할 수 있다. stream()은 해당 컬렉션을 소스(source)로 하는 스트림을 반환한다.
+
+```java
+Stream<T> Collection.stream()
+```
+
+예를 들어 List로부터 스트림을 생성하는 코드는 다음과 같다.
+
+```java
+List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);      // 가변인자
+Stream<Integer> intStream = list.stream();
+```
+
+forEach는 지정된 작업을 스트림의 모든 요소에 대해 수행한다. 아래의 문장은 스트림의 모든 요소를 화면에 출력한다.
+
+```java
+intStream.forEach(System.out::println); // 스트림의 모든 요소를 출력
+intStream.forEach(System.out::println); // 에러. 스트림이 모두 닫힘
+```
+
+한 가지 주의할 점은 forEach()가 스트릠의 요소를 소모하면서 작업을 수행하므로 같은 스트림에 forEach()를 두 번 호출할 수 없다는 것이다. 그래서 스트림의 요소를 한번 더 호출하려면 스트림을 새로 생성해야 한다. forEach()에 의해 스트림의 요소가 소모되는 것이지, 소스의 요소가 소모되는 것은 아니기 때문에 같은 소스로부터 다시 스트림을 생성할 수 있다. 
+
+
+#### 배열
+
+배열을 소스로 하는 스트림을 생성하는 메서드는 다음과 같이 Stream과 Arrays에 static 메서드로 정의되어 있다.
+
+```java
+Stream<T> Stream.of(T... values)
+Stream<T> Stream.of(T[])
+Stream<T> Arrays.stream(T[])
+Stream<T> Arrays.stream(T[] array, int startInclusive, int endExclusive)
+```
+
+예를 들어 문자열 스트림은 다음과 같이 생성한다.
+
+
+```java
+Stream<String> strStream = Stream.of("a", "b", "c");
+Stream<String> strStream = Stream.of(new String[]{"a", "b", "c"});
+Stream<String> strStream = Arrays.stream(new String[]{"a", "b", "c"});
+Stream<String> strStream = Arrays.stream(new String[]{"a", "b", "c"}, 0, 3);
+```
+
+그리고 int, long, double과 같은 기본형 배열을 소스로 하는 스트림을 생성하는 메서드도 있다.
+
+```java
+IntStream IntStream.of(int... values)
+IntStream IntStream.of(int[])
+IntStream Arrays.stream(int[])
+IntStream Arrays.stream(int[] array, int startInclusive, int endExclusive)
+```
+
+이 외에도 long과 double타입의 배열로부터 LongStream과 DoubleStream을 반환하는 메서드들이 있지만, 일일이 나열하지 않아도 쉽게 유추해낼 수 있을 것이므로 생략한다.
+
+#### 특정 범위의 정수
+
+IntStream과 LongStream은 다음과 같이 지정된 범위의 연속된 정수를 스트림으로 생성해서 반환하는 range()와 rangeClosed()를 가지고 있다.
+
+```java
+IntStream IntStream.range(int begin, int end)
+IntStream IntStream.rangeClosed(int begin, int end)
+```
+
+range()의 경우 경계의 끝인 end가 포함되지 않고, rangeClosed()의 경우는 포함된다.
+
+int보다 큰 범위의 스트림을 생성하려면 LongStream에 있는 동일한 이름의 메서드들 사용하면 된다.
+
+#### 임의의 수
+
+난수를 생성하는데 사용하는 Random클래스에는 아래와 같은 인스턴스 메서드들이 포함되어 있다. 임 메서드들은 해당 타입의 난수들로 이루어진 스트림을 반환한다.
+
+```java
+IntStream ints()
+LongStream longs()
+DoubleStream doubles()
+```
+
+이 메서드들이 반환하는 스트림은 크기가 정해지지 않은 '무한 스트림(infinite stream)'이므로 limit()도 같이 사용해서 스트림의 크기를 제한해 주어야 한다. limit()은 스트림의 개수를 지정하느데 사용되며, 무한 스트림을 유한 스트림으로 만들어 준다.
+
+```java
+IntStream intStream = new Random().ints();              // 무한 스트림
+intStream.limit(5).forEach(System.out::println);        // 5개의 요소만 출력
+```
+
+아래의 메서드들은 매개변수로 스트림의 크기를 지정해서 `유한 스트림`을 생성해서 반환하므로 limit()을 사용하지 않아도 된다.
+
+```java
+IntStream ints(long streamSize)
+LongStream longs(long streamSize)
+DoubleStream doubles(long streamSize)
+```
+
+위 메서드들에 의해 생성된 스트림의 난수는 아래의 범위를 갖는다.
+
+```java
+Integer.MIN_VALUE <= ints() <= Integer.MAX_VALUE
+Long.MIN_VALUE <= longs() <= LONG.MAX_VALUE
+0.0 <= doubles() <= 1.0
+```
+
+지정된 범위(begin~end)의 난수를 발생시키는 스트림을 얻는 메서드는 아래와 같다. 단, end는 범위에 포함되지 않는다.
+
+```java
+IntStream ints(int begin, int end);
+LongStream longs(long begin, long end);
+DoubleStream doubles(double begin, double end);
+
+IntStream ints(long streamSize, int begin, int end);
+LongStream longs(long streamSize, long begin, long end);
+DoubleStream doubles(long streamSize, double begin, double end);
+```
+
+#### 람다식 - iterate(), generate()
+
+Stream클래스의 iterate()와 generate()는 람다식을 배개변수로 받아서, 이 람다식에 의해 계산되는 값들을 요소로 하는 무한 스트림을 생성한다.
+
+```java
+static <T> Stream<T> iterate(T seed, UnaryOperator<T> t);
+static <T> Stream<T> generate(Supplier<T> s);
+```
+
+iteate()는 씨앗값(seed)으로 지정된 값부터 시작해서, 람다식 f에 의해 계산된 결과를 다시 seed값으로 해서 계산을 반속한다. 아래의 eventStream은 0부터 시작해서 값이 2씩 계속 증가한다.
+
+```java
+Stream<Integer> evenStream = Stream.iterate(0, n -> n + 2);     // 0, 2, 4, 6, ...
+```
+
+generate()도 iterate()처럼, 람다식에 의해 계산되는 값을 요소로 하는 무한 스트림을 생성해서 반환하지만, iterate()와 달리, 이전 결과를 이용해서 다음 요소를 게산하지 않는다. 
+
+```java
+Stream<Double> randomStream = Stream.generate(Math::random);
+Stream<Integer> oneStream = Stream.generate(() -> 1);
+```
+
+그리고 generate()에 정의된 매개변수의 타입은 Supplier<T>이므로 매개변수가 없는 람다식만 허용된다. 한 가지 주의할 점은 iterate()와 generate()에 의해 생성된 스트림을 아래와 같이 기본형 스트림 타입의 참조변수로 다룰 수 없다는 것이다.
+
+```java
+IntStream evenStream = Stream.iterate(0, n -> n + 2);      // 에러.
+DoubleStream randomStream = evenStream.generate(Math::random);      // 에러.
+```
+
+굳이 필요하다면, 아래와 같이 mapToInt()와 같은 메서드로 변환을 해야 한다.
+
+```java
+IntStream evenStream = Stream.iterate(0, n -> n + 2).mapToInt(Integer::valueOf);      // 에러.
+Stream<Integer> stream = evenStream.generate(Math::random).boxed();      // 에러.
+```
+
+반대로 IntStream타입의 스트림을 Stream<Integer>타입으로 변환하려면, boxed()를 사용하면 된다.
+
+#### 파일
+
+java.nio.file.Files는 파일을 다루는데 필요한 유용한 메서드들을 제공하는데, list()는 지정된 디렉토리(dir)에 있는 파이르이 목록을 소스로 하는 스트림을 생성해서 반환한다.
+
+```java
+Stream<Path> Files.list(Path dir)                                                                                                                                                                                                            
+```
