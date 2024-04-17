@@ -824,3 +824,891 @@ java.nio.file.Files는 파일을 다루는데 필요한 유용한 메서드들�
 ```java
 Stream<Path> Files.list(Path dir)                                                                                                                                                                                                            
 ```
+
+이 외에도 Files 클래스에는 Path를 요소로 하는 스트림을 생성하는 메서드가 더 있지만, 이 장의 주제를 벗어나므로 설명을 생략한다.
+그리고 파일의 한 행(line)을 요소로 하는 스트림을 생성하는 메서드도 있다. 아래의 세 번째 메서드는 BufferedReader클래스에 속한 것인데, 파일 뿐만 아니라 다른 입력대상으로부터도 데이터를 행단위로 읽어올 수 있다.
+> [참고] BufferedReader에 대한 자세한 내용은 p.904 참고
+```Java
+Stream<String> Files.lines(Path path)
+Stream<String> Files.lines(Path path, Charset cs)
+Stream<String> lines()      // BufferedReader 클래스의 메서드
+```
+#### 빈 스트림
+요소가 하나도 없는 비어있는 스트림을 생성할 수도 있다. 스트릠에 연산을 수행한 겨로가가 하나도 없을 때, null보다 빈 스트림을 반환하는 것이 낫다.
+```angular2html
+Stream emptyStream = Stream.empty();
+long count = emptyStream.count();
+```
+count()는 스트림 요소의 개수를 반환하며, 위의 문장에서 변수 count의 값은 0이 된다.
+#### 두 스트림의 연결
+Stream의 static 메서드인 concat()을 사용하면, 두 스트림을 하나로 연결할 수 있다. 물론 연결하려는 두 스트림의 요소는 같은 타입이어야 한다.
+```java
+String[] str1 = {“123”, “456", “789”};
+String[] str2 = {“ABC”, “abc”, “DEF”};
+Stream<String> strs1 = Stream.of(str1);
+Stream<String> strs2 = Stream.of(str2);
+Stream<String> strs3 = Stream.concat(strs1, strs2);
+```
+### 2.3 스트림의 중간 연산
+#### 스트림 자르기 - skip(), limit()
+skit()과 limit()은 스트림의 일부를 잘라낼 때 사용하며, 사용법은 아주 간단하다. skip(3)은 처음 3개의 요소를 건너뛰고, limit(5)는 스트림의 요소를 5개로 제한한다.
+```java
+Stream<T> skip(long n)
+Stream<T> limit(long maxSize)
+```
+예를 들어 10개의 요소를 가진 스트림에 skip(3)과 limit(5)을 순서대로 적용하면 4번째 요소부터 5개의 요소를 가진 스트림이 반환된다.
+```java
+IntStream intStream = IntStream.rangeClosed(1, 10); // 1 ~ 10의 요소를 가진 스트림
+intStream.skip(3).limit(5).forEach(System.out::println);
+```
+기본형 스트림에도 skip()과 limit()이 정의되어 있는데, 반환 타입이 기본형 스트림이라는 점만 다르다.
+```java
+IntStream skip(long n)
+IntStream limit(long maxSize)
+```
+#### 스트림 요소 걸러내기 - filter, distinct()
+distinct()는 스트림에서 중복된 요소들을 제거하고, filter()는 주어진 조건(Predicate)에 맞지 않는 요소를 걸러낸다.
+```java
+Stream<T> filter(Predicate<? super T> predicate);
+Stream<T> distinct()
+```
+distinct()의 사용 방법은 간단하다.
+```java
+IntStream intStream = IntStream.of(1, 2, 3, 4, 5, 5);
+intStream.distinct().forEach(System.out::print);      // 12345
+```
+filter는 매개변수로 Predicate를 필요로 하는데, 아래와 같이 연산결과가 boolean인 람다식을 사용해도 된다.
+```java
+IntStream intStream = IntStream.of(1, 2, 3, 4, 5, 5);
+intStream.filter(i -> i % 2 == 0).forEach(System.out::print);      // 24
+```
+#### 정렬 - sorted()
+스트림을 정렬할 때는 sorted()를 사용하면 된다.
+```java
+Stream<T> sorted()
+Stream<T> sorted(Comparator<? super T> comparator)
+```
+sorted()는 지정된 Comparator로 스트림을 정렬하는데, Comparator대신 int값을 반환하는 람다식을 사용하는 것도 가능하다. Comparator를 지정하지 않으면 스트림의 요소의 기본 정렬 기준(Comparator)으로 정렬한다. 단, 스트림의 요소가 Comparable을 구현한 클래스가 아니라면 예외가 발생한다.
+```java
+Stream<String> strStream = Stream.of(“dd”, “aaa”, “CC”, “cc”, “b”);
+strStream.sorted().forEach(System.out::print);  // CCaaabccdd
+```
+위의 코드는 문자열 스트림을 String에 정의된 기본 정렬(사전순 정렬)로 정렬해서 출력한다. 아래의 표는 위의 문자열 스트림(strStream)을 다야한 방법으로 정렬한 후에 forEach(System.out::println)로 출력한 겨로가를 보여준다.
+> [참고] String.CASE_INSENSITIVE_ORDER는 String클래스에 정의한 Comparator이다.
+| 문자열 스트림 정렬 방법                                                                                                                                                                                       | 출력 결과 |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------| --- |
+| - strStream.sorted() // 기본 정렬 - strStream.sorted(Comparator.naturalOrder()) // 기본 정렬 - strStream.sorted((s1, s2)-> s1.compareTo(s2)) // 람다식도 가능 - strStream.sorted(String::compareTo); // 위의 문장과 동일 | CCaaabccdd |
+| - strStream.sorted(Comparator.reverseOrder()) // 기본 정렬의 역순, strStream.sorted(Comparator.<String>naturalOrder().reversed())                                                                          | ddccbaaaCC |
+| strStream.sorted(String.CASE_INSENSITIVE_ORDER)   // 대소문자 구분 안함                                                                                                                                     | aaaCCccdd |
+| strStream.sorted(String.CASE_INSENSITIVE_ORDER.reveresed())                                                                                                                                         | ddCCccbaaa |
+| strStrean.sorted(Comparator.comparing(String::length)), strStream.sorted(Comparator.comparingInt(String::length))                                                                                   | bddCCccaaa |
+| strStream.sorted(Comparator.comparing(String::length).reversed()) | aaaddCCccb|
+JDK1.8부터 Comparator 인터페이스에 static메서드와 default 메서드가 많이 추가되었는데, 이 메서드들을 이용하면 정렬이 쉬워진다. 이 메서드들은 모두 Comparator<T>를 반환하며, 아래의 메서드 목록은 제네릭에서 와일드 카드를 제거하며 간단히 한 것이다. 보다 정확한 메서드의 선언을 보려면 Java API 문서를 참조하자.
+```java
+// Comparator의 default 메서드
+reversed()
+thenComparing(Comparator<T> other)
+thenComparing(Function<T, U> keyExtrator)
+thenComparing(Function<T, U> keyExtrator, Compartor<U> keyComp)
+thenComparingInt(ToIntFunction<T> keyExtrator)
+thenComparingLong(ToLongFunction<T> keyExtrator)
+thenComparingDouble(ToDoubleFunction<T> keyExtrator)
+// Comparator의 static 메서드
+naturalOrder()
+reverseOrder()
+comparing(Function<T, U> keyExtractor)
+comparing(Function<T, U> keyExtractor, Compartor<U> keyComparator)
+comparingInt(ToIntFunction<T> keyExtractor)
+comparingLong(ToLongtFunction<T> keyExtractor)
+comparingDouble(ToDoubleFunction<T> keyExtractor)
+nullsFirst(Compartor<T> compartor)
+nullsLast(Compartor<T> compartor)
+```
+정렬에 사용되는 메서드의 개수가 많지만, 가장 기본적인 메서드는 comparing()이다.
+```java
+comparing(Function<T, U> keyExtrator)
+comparing(Function<T, U> keyExtrator, Comparator<U> keyComparator)
+```
+스트림의 요소가 Comparable을 구현한 경우, 매개변수 하나짜리를 사용하면 되고 그렇지 않은 경우, 추가적인 매개변수로 정렬기준(Comparator)을 따로 지정해 줘야한다.
+```java
+comparingInt(ToIntFunction<T> keyExtrator)
+comparingLong(ToLongFunction<T> keyExtrator)
+comparingDouble(ToDoubleFunction<T> keyExtrator)
+```
+비교대상이 기본형인 경우, comparing()대신 위의 메서드를 사용하면 오토박싱과 언박싱과정이 없어서 더 효율적이다. 그리고 정렬 조건을 추가할 때는 thenComparing()을 사용한다.
+```java
+thenComparing(Comparator<T> other)
+thenComparing(Function<T, U> keyExtractor)
+thenComparing(Function<T, U> keyExtractor, Comparator<U> keyComp)
+```
+예를 들어 학생 스트림(studentStream)을 반별, 성적순, 그리고 이름순으로 정렬하여 출력하려면 다음과 같이 한다.
+```java
+studentStream.sorted(Compartor.comparing(Student::getBan)
+                            .thenComparing(Student::getTotalScore))
+                            .thenComparing(Student::getName)
+                            .forEach(System.out::println);
+```
+예제 14-8는 학생의 성적을 반별 오름차순, 총점별 내림차순으로 정렬하여 출력한다.
+
+#### 변환 - map()
+스트릠의 요소에 저정된 값 중에서 원하는 필드만 뽑아내거나 특정 형태로 변환해야 할 때가 있다. 이 때 사용하는 것이 바로 map()이다. 이 메서드의 선언부는 아래와 같으며, 매개변수로 T타입을 R타입으로 변환해서 반환하는 함수를 지정해야 한다.
+
+```java
+Stream<R> map(Function<? super T, ? extends R> mapper)
+```
+예를 들어 File의 스트릠에서 파일의 이름만 뽑아서 출력하고 싶을 때, 아래와 같이 map()을 이용하면 File객체에서 파일의 이름(String)만 간단히 뽑아낼 수 있다.
+
+```java
+Stream<File> fileStream = Stream.of(new File("Ex1.java"), new File("Ex1"), new File("Ex1.bak"), new File("Ex2.java"), new File("Ex1.txt"));
+
+// map()으로 Stream<File>을 Stream<String>으로 변환
+Stream<String> filenameStream = fileStream.map(File::getName);
+filenameStream.forEach(System.out::println);    // 스트림의 모든 파일이름을 출력
+```
+
+map() 역시 중간 연산이므로, 연산결과는 String을 요소로 하는 스트림이다. map()으로 Stream<File>을 Stream<String>으로 변환했다고 볼 수 있다.
+
+그리고 map()도 filter()처럼 하나의 스트림에 여러 번 적용할 수 있다. 다음의 문장은 File의 스트림에서 파일의 확장자만을 뽑은 다음 중복을 제거해서 출력한다.
+
+```java
+fileStream.map(File::getName)
+        .filter(s -> s.indexOf(".") != -1)
+        .map(s -> s.substring(s.indexOf(".") + 1))
+        .map(String::toUpperCase)
+        .distinct()
+        .forEach(System.out::print);
+```
+
+#### 조회 - peek()
+
+연산과 연산 사이에 올바르게 처리되었는지 확인하고 싶다면, peek()을 사용하자. forEach()와 달리 스트림의 요소를 소모하지 않으므로 연산 사이에 여러 번 끼워 넣어도 문제가 되지 않는다.
+
+```java
+fileStream.map(File::getName)
+        .filter(s -> s.indexOf(".") != -1)
+        .peek(s -> System.out.printf("fileName = %s%n", s))
+        .map(s -> s.substring(s.indexOf(".") + 1))
+        .peek(s -> System.out.printf("extension = %s%n", s))
+        .forEach(System.out::print);
+```
+
+filter()나 map()의 결과를 확인할 때 유용하게 사용될 수 있다.
+
+
+#### mapToInt(), mapToLong(), mapToDouble()
+
+map()은 연산의 결과로 Stream<T> 타입의 스트림을 반환하는데, 스트림의 요소를 숫자로 변환하는 경우 IntStream과 같은 기본현 스트림으로 변환하는 것이 더 유용할 수 있다. Stream<T>타입의 스트림을 기본형 스트림으로 변환할 때 사용하는 것이 아래의 메서드들이다.
+
+```java
+DoubleStream mapToDouble(ToDoubleFunction<? super T> mapper)
+IntStream mapToInt(ToIntFunction<? super T> mapper)
+LongStream mapToLong(ToLongFunction<? super T> mapper)
+```
+
+앞서 사용했던 studentStream에서, 스트림에 포함된 모든 학생의 성적을 합산해야 한다면, map()으로 학생의 총점을 뽑아서 새로운 스트림을 만들어 낼 수 있다.
+
+```java
+Stream<Integer> studentScoreStream = studentStream.amp(Student::getTotalScore);
+```
+
+그러나 이럴 때는 애초부터 mapToInt()를 사용해서 Stream<Integer>가 아닌 IntStream타입의 스트림을 생성해서 사용하는 것이 더 효율적이다. 성적을 더할 때, Interger를 int로 변환할 필요가 없기 때문이다.
+
+```java
+IntStream studentScoreStream = studentStream.mapToInt(Student::getTotalScore);
+int allTotalScore = studentScoreStream.sum();
+```
+
+count()만 지원하는 Stream<T>와 달리 IntStream과 같은 기본형 스트림은 숫자를 다루는데 편리한 메서드들을 제공한다.
+
+```java
+int sum()
+OptionalDouble average()
+OptionalInt max()
+OptionalInt min()
+```
+
+스트림의 요소가 하나도 없을 때, sum()은 0을 반환하면 그만이지만 다른 메서드들은 단순히 0을 반환한ㄹ 수 없다. 여러 요소들을 합한 평균이 0일 수도 있기 때문이다. 이를 구분하기 위해 단순휘 dobule값을 반환하는 대신, dobule타입의 값을 내부적으로 가지고 있는 OptionalDouble을 반환하는 것이다. OptionalInt, OptionalDouble 등은 일종의 래퍼클래스로 각각 int값과 Double값을 내부적으로 가지고 있다.
+
+그리고 이 메서드들은 최종연산이기 때무에 호출 후에 스트림이 닫힌다는 점을 주의해야 한다. 아래의 코드에서처럼 하나의 스트림에 sum()과 average()를 연산해서 호출할 수 없다.
+
+```java
+IntStream scoreStream = studentStream.mapToInt(Student::getTotalScore);
+
+long totalScore = scoreStream.sum();
+OptionalDouble average = scoreStream.average();
+
+double d = average.getAsDouble();
+```
+
+sum()과 average()를 모두 호출해야할 때, 스트림을 또 생성해야하므로 불편하다. 그래서 summaryStatistics()라는 메서드가 따로 제공된다.
+
+```java
+IntSummaryStatistics stat = scoreStream.summaryStatistics();
+long totalCount = stat.getCount();
+long totalScore = stat.getSum();
+double avgScore = stat.getAverage();
+int minScore = stat.getMin();
+int maxScore = stat.getMax();
+```
+
+IntSummaryStatistics는 위와 같이 다양한 종류의 메서드를 제공하며, 이 중에서 필요한 것만 골라서 사용하면 된다.
+
+기본형 스트림 LongStream과 DoubleStream도 IntStream도 IntStream과 같은 연산(반환타입은 다름)을 지원한다. 반대로 IntStream을 Stream<T>로 변환할 때는 mapToObj()를, Stream<Integer>로 변환할 때는 boxed()를 사용한다.
+
+```java
+Stream<U> mapToObj(IntFunction<? extends U> mapper)
+Stream<Integer> boxed()
+```
+
+아래의 로또번호를 생성해서 출력하는 코드인데, mapToObj()를 이용해서 IntStream을 Stream<String>으로 변환하였다.
+
+```java
+IntStream intStream = new Random().ints(1, 46);
+Stream<String> lottoStream = intStream.distinct().limit(6).sorted().mapToObj(i -> i + ",");
+lottoStream.forEach(System.out::print);
+```
+
+참고로 CharSequence에 정의된 chars()는 String이나 StringBuffer에 저장된 문자들을 IntStream으로 다룰 수 있게 해준다.
+
+```java
+IntStream charStream = "12345".chars();
+int charSum = charStream.map(ch -> ch - '0').sum();
+```
+
+위의 코드에서 사용된 map()은 IntStream에 정의된 것으로 IntStream을 결과로 반환한다. 그리고 mapToInt()와 함께 자주 사용되는 메서드로는 Integer의 parseInt()나 valueOf()가 있다는 것도 알아두자.
+
+```java
+Stream<String> -> IntStream 변환 할 때, mapToInt(Integer::parseInt)
+Stream<Integer> -> IntStream 변환 할 때, mapToInt(Integer::intValue)
+```
+
+#### flatMap() - Stream<T[]>를 Stream<T>로 변환
+
+스트림의 요소가 배열이거나 map()의 연산결과가 배열인 경우, 즉 스트림의 타입이 Stream<T[]>인 경우, Stream<T>로 다루는 것이 더 편리할 때가 있다. 그럴 때는 map() 대신 flatMap()을 사용하면 된다.
+
+예를 들어 아래와 같이 요소가 문자열 배열(String[])인 스트림이 있을 때, 
+
+```java
+Stream<String[]> strArrStream = Stream.of(
+        new String[]{"abc", "def", "ghi"},
+        new String[]{"ABC", "DEF", "GFG"}
+);
+```
+
+각 요소의 문자열들을 합쳐서 문자열이 요소인 스트림, 즉 Stream<String>으로 만들려면 어떻게 해야 할까?
+
+먼저 스트림의 요소를 변환해야하니까 일단 map()을 써야할 것이고 여기에 배열을 스트림으로 만들어주는 Arrays.stream(T[])를 함께 사용해보자.
+
+```java
+Stream<String<String>> strStream = strArrStream.map(Arrays::stream);
+```
+
+예상한 것과 달리, Stream<String[]>을 'map(Arrays::stream)' 으로 변환한 결과는 Stream<String>이 아닌, Stream<Stream<String>>이다. 즉 스트림의 스트림인 것이다. 이 상황을 그림으로 그려보면 다음과 같다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/4eacc283-d65d-49a6-9f56-f39ec9dea45a)
+
+각 요소의 문자열들이 합쳐지지 않고, 스트림의 스트림 형태로 되어버렸다. 이 때, 간단히 map()을 아래와 같이 faltMap()으로 바꾸기만 하면 우리가 원하는 결과를 얻을 수 있다.
+
+```java
+Stream<Stream<String>> strStrStream = strArrStream.map(Arrays::stream);
+Stream<String> strStream = strArrStream.flatMap(Arrays::stream);
+```
+
+위의 코드를 그림으로 표현하면 다음과 같다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/1bfbe220-cc85-49a2-ae98-a67a74d1aade)
+
+flatMap()은 map()과 달리 아래의 그림처럼, 스트림의 스트림이 아닌 스트림으로 만들어 준다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/f824bc57-a318-4623-a8b2-3848c4993722)
+
+또 다른 경우를 예로 들어보자. 아래와 같이 여러 문장을 요소로 하는 스트림이 있을 때, 이 문장들을 split()으로 나눠서 요소가 단어인 스트림을 만들고 싶다면 어떻게 해야할까?
+
+```java
+String[] lineArr = {
+    "Beliver or not It is true",
+    "Do or do not There is no try",
+};
+
+Stream<String> lineStream = Arrays.stream(lineArr);
+Stream<String[]> strArrStream = lineStream.map(line -> Stream.of(line.split(" +")));
+```
+
+위의 문장에서 알 수 있는 듯이, map()은 Stream<String>이 아니라 Stream<String[]>을 결과로 돌려준다. 이럴 때도 map()대신 flatMap()으로 원하는 결과를 얻을 수 있다.
+
+```java
+Stream<String[]> strArrStream = lineStream.map(line -> Stream.of(line.split(" +")));
+```
+
+map()과 flatMap()의 차이를 간단히 정리하면 다음과 같다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/8f8f2a54-d668-4b58-89c0-a4caa0386302)
+
+strStream의 단어들을 모두 소문자로 변환하고, 중복된 단어들을 제거한 다음에 정렬해서 출력하는 문장은 다음과 같다.
+
+```java
+strStream.map(String::toLowerCase)          // 모든 문자를 소문자로 변경
+        .distinct()                         // 중복된 단어 제거
+        .sorted()                           // 사전순으로 정렬
+        .forEach(System.out::println);      // 출력
+```
+
+드물지만, 스트림을 요소로 하는 스트림, 즉 스트림의 스트림을 하나의 스트림으로 합칠때도 flatMap()을 사용한다.
+
+```java
+Stream<String> strStream = Stream.of("abc", "def", "jklmn");
+Stream<String> strStream2 = Stream.of("ABC", "GHI", "JKLMN");
+
+Stream<Stream<String>>  strmStream = Stream.of(strStream, strStream2);
+```
+
+위와 같이 요소의 타입이 Stream<String>인 스트림(Stream<Stream<String>>>)이 있을 때, 이 스트림을 Stream<String>으로 변환하려면 다음과 같이 map()과 flatMap()을 함께 사용해야 한다.
+
+```java
+Stream<String> strStream = strStrm.map(s -> s.toArray(String[]::new))       // Stream<Stream<String>> => Stream<String[]>
+        .flatMap(Arrays::stream);                                           // Stream<String[]> => Stream<String>
+```
+
+toArray()는 스트림을 배열로 변환해서 반환한다. 매개변수를 지정하지 않으면 Object[]을 반환하므로 위와 같이 특정 타입의 생성자를 지정해줘야 한다. 여기서는 String[] 배열의 생성자(String[]::new)를 지정하였다. 그 다음엔 flatMap()으로 Stream<String[]>을 Stream<String>으로 변환한다.
+
+
+### 2.4 Optional<T>와 OptionalInt
+
+Optional<T>은 제네릭 클래스로 "T타입의 객체"를 감싸는 래퍼 클래스이다. 그래서 Optional타입의 객체에는 모든 타입의 참조변수를 담을 수 있다.
+
+> [참고] java.util.Optional은 JDK1.8부터 추가되었다.
+
+```java
+public final class Optional<T> {
+    private final T value;      // T 타입의 참조변수
+}
+```
+
+최종 연산의 결과를 그냥 반환하는 게 아니라 Optional객체에 담아서 반환하는 것이다.
+
+이처럼 객체에 담아서 반환을 하면, 반환된 결과가 null인지 매번 if문으로 체크하는 대신 Optional에 정의된 메서드를 통해서 간단히 처리할 수 있다.
+
+널 체크를 위한 if문 없이도 NullPointerException이 발생하지 않는 보다 간견하고 안전한 코드로 작성하는 것이 가능해진 것이다.
+
+> [참고] Objects 클래스에는 isNull(), nonNull(), requireNonNull()과 같은 메서드가 있는 것도 널 체크를 위한 if문을 메서드 안으로 넣어서 코드의 복잡도를 낮추기 위한 것이다.
+
+
+#### Optional객체 생성하기
+
+Optional객체를 생성할 떄는 of() 또는 ofNullable()을 사용한다.
+
+```java
+String str = "abc";
+Optional<String> optVal = Optional.of(str);
+Optional<String> optVal = Optional.of("abc");
+Optional<String> optVal = Optional.of(new String("abc"));
+```
+
+만일 참조변수의 값이 null일 가능성이 있으면, of()대신 ofNullable()을 사용해야한다. of()는 매개변수의 값이 null이면 NullPointerException이 발생하기 때문이다.
+
+```java
+Optional<String> optVal = Optional.of(null);            // NullPointerException 발생
+Optional<String> optVal = Optional.ofNullable(null);    // OK
+```
+
+Optional<T> 타입의 참조변수를 기본값으로 초기화할 때는 empty()를 사용한다. null로 초기화하는 것이 가능하지만, empty()로 초기화하는 것이 바람직하다.
+
+> [참고] empty()는 제네릭 메서드라서 앞에 <T>를 붙였다. 추정 가능하므로 생략할 수 있다.
+
+```java
+Optional<String> optVal = null;                         // 널로 초기화
+Optional<String> optVal = Optional.<String>empty();     // 빈 객체로 초기화
+```
+
+#### Optional객체의 값 가져오기
+
+Optional 객체에 저장된 값을 가져올 때는 get()을 사용한다. 값이 null일 때는 NoSuchElementException이 발생하며, 이를 대비해서 orElse()로 대체할 값을 지정할 수 있다.
+
+```java
+Optional<String> optVal = Optional.of("abc");
+String str1 = optVal.get();          // optVal에 저장된 값을 반환. null이면 예외발생
+String str2 = optVal.getElse("");    // optVal에 저장된 값이 null일 때는, ""반환 
+```
+
+orElse()의 변형으로는 null을 대체할 값을 반환하는 람다식을 지정할 수있는 orElseGet()과 null일 때 지정된 예외를 발생시키는 orElseThrow()가 있다.
+
+```java
+T orElseGet(Supplier<? extends T> other);
+T orElseThrow(Supplier<? extends X> exceptionSupplier)
+```
+
+사용하는 방법은 아래와 같다.
+
+```java
+String str3 = optVal2.orElseGet(String::new);                       // () -> new String()와 동일
+String str4 = optVal2.orElseThrow(NullPointerException::new);       // 널이면 예외 발생
+```
+
+Stream처럼 Optional객체에도 filter(), map(), flatMap()을 사용할 수 있다. map()의 연산결과가 Optional<Optional<T>>일 때, flatMap()을 사용하면 Optional<T>를 결과로 얻는다. 만일 Optional객체의 값이 null이면, 이 메서드들은 아무 일도 하지 않는다.
+
+```java
+int result = Optional.of("123")
+        .filter(x -> x.length() > 0)
+        .map(Integer::parseInt).orElse(-1);     // result = 123
+
+result = Optional.of("")
+        .filter(x -> x.length() > 0)
+        .map(Integer::parseInt).orElse(-1);     // result = -1;
+```
+
+parseInt()는 예외가 발생하기 쉬운 메서드이다. 만일 예외처리된 메서드를 만든다면 다음과 같을 것이다.
+
+```java
+static int optStrToInt(Optional<String> optStr, int defaultValue) {
+    try {
+        return optStr.map(Integer::parseInt).get();        
+    }catch(Exception e) {
+        return defaultValue;
+    }
+}
+```
+
+isPresent()는 Optional객체의 값이 null이면 false를, 아니면 true를 반환한다. ifPresent(Consumer<T> block)은 값이 있으면 주어진 람다식을 실행하고, 없으면 아무일도 하지 않는다.
+
+```java
+if(str != null) {
+    System.out.println(str);    
+}
+```
+
+만일 위와 같은 조건문이 있다면, isPresent()를 다음과 같이 쓸 수 있다.
+
+```java
+if(Optional.ofNullable(str).isPresent()) {
+    System.out.println(str);    
+}
+```
+
+이 코드를 ifPresent()를 이용해서 바꾸면 더 간단히 할 수 있다. 아래의 문장은 참조변수 str이 null이 아닐때만 값을 출력하고, null이면 아무 일도 일어나지 않는다.
+
+```java
+Optional.ofNullable(str).ifPresent(System.out::println);
+```
+
+ifPresent()는 Optional<T>를 반환하는 findAny()나 findFirst()와 같은 최종 연산과 잘 어울린다. Stream클래스에 정의된 메서드 중에서 Optional<T>를 반환하는 것들은 다음과 같다.
+
+```java
+Optional<T> findAny()
+Optional<T> findFirst()
+Optional<T> max(Comparator<? super T> comparator)
+Optional<T> min(Comparator<? super T> comparator)
+Optional<T> reduce(BinaryOperator<T> acculmulator)
+```
+
+이처럼 Optional<T>를 결과로 반환하는 최종 연산 메서듣들은 몇 개 없다. 심지어 amx()와 min()같은 메서드들은 reduce()를 이용해ㅔ서 작성된 것이다.
+
+#### OptionalInt, OptionalLong, OptionalDouble
+
+IntStream과 같은 기본현 스트림에는 Optional도 기본형을 값으로 하는 OptionalInt, OptionalLong, OptionalDouble을 반환한다. 아래의 목록은 IntStream에 정의된 메서드들이다.
+
+```java
+OptionalInt findAny()
+OptionalInt findFirst()
+OptionalInt reduce(IntBinaryOperator op)
+OptionalInt max()
+OptionalInt min()
+OptionalDouble average()
+```
+
+반환 타입이 Optional<T>가 아니라는 것을 제외하고는 Stream에 정의된 것과 비슷하다. 그리고 기본형 Optional에 저장된 값을 꺼낼 때 사용하는 메서드의 이름이 조금씩 다르다는 것에 주의하자.
+
+| Optional클래스 | 값을 반환하는 메서드 |
+| --- | --- |
+| Optional<T> | T get() |
+| OptionalInt | Int getAsInt() |
+| OptionalLong | long getAsLong() |
+| OptionalDouble | Double getAsDouble() |
+
+OptionalInt는 다음과 같이 정의되어 있다. 앞서 래퍼 클래스에 대해서 배웠으므로, 이렇게 정의되어 있을 것이라고 짐작하는 것은 그리 어려운 일이 아니었을 것이다.
+
+```java
+public final class OptionalInt {
+    private final boolean isPresent;        // 값이 저장되어 있으면 true
+    private final int value;                // int 타입의 변수
+}
+```
+
+기본형 int의 기본값은 0이므로 아무런 값도 갖지 않는 OptionalInt에 저장되는 값은 0일 것이다. 그러면, 아래의 두 OptionalInt객체는 같은 것일까?
+
+```java
+OptionalInt opt = OptionalInt.of(0);            // OptionalInt에 0을 저장
+OptionalInt opt2 = OptionalInt.empty(0);        // OptionalInt에 0을 저장
+```
+
+다행이 저장된 값이 없는 것과 0이 저장된 것은 isPresent라는 인스턴스 변수로 구분이 가능하다. isPresent()는 이 인스턴스변수의 값을 반환한다.
+
+```java
+System.out.println(opt.isPresent());        // true
+System.out.println(opt2.isPresent());       // false
+        
+System.out.println(opt.getAsInt());         // 0
+System.out.println(opt2.getAsInt());        // NoSuchElementException 발생
+        
+System.out.println(opt.equals(opt2));       // false
+```
+
+그러나 Optional객체의 경우 null을 저장하면 비어있는 것과 동일하게 취급한다.
+
+```java
+Optional<String> opt = Optional.ofNullable(null);
+Optional<String> opt2 = Optional.empty();
+
+System.out.println(opt.equals(opt2));   // true
+```
+
+
+### 2.5 스트림의 최종 연산
+
+최종 연산은 스트림의 요소를 소모해서 결과를 만들어낸다. 그래서 최종 연산후에는 스트림이 닫히게 되고 더 이상 사용할 수 없다. 최종 연산의 결과는 스트림 요소의 합과 같은 단일 값이거나, 스트림의 요소가 담긴 배열 또는 컬렉션일 수 있다.
+
+#### forEach()
+
+forEach()는 peek()과 달리 스트림의 요소를 소모하는 최종연산이다. 반환 타입이 void이므로 스트림의 요소를 출력하는 용도로 많이 사용된다.
+
+```java
+void forEach(Consumer<? super T> action)
+```
+
+#### 조건 검사 - allMatch(), anyMatch(), noneMatch(), findFirst(), findAny()
+
+스트림의 요소에 대해 지정된 조건에 모든 요소가 일치하는 지, 일부가 일치하는지 아닌면 어떤 요소도 일치하지 않는지 확인하는데 사용할 수 있는 메서드들이다. 이 메서드들은 모두 매개변수로 Predicate를 요구하며, 연산결과로 boolean을 반환한다.
+
+```java
+boolean allMatch(Predicate<? super T> predicate)
+boolean anyMatch(Predicate<? super T> predicate)
+boolean noneMatch(Predicate<? super T> predicate)
+```
+
+예를 들어 학생들의 성적 정보 스트림 stuStream에서 총점이 낮게점(총점 100점이하)인 학생이 있는지 확인하는 방법은 다음과 같다.
+
+```java
+boolean noFailed = stuStream.anyMatch(s -> s.getTotalScore() <= 100)
+```
+
+이외에도 스트림의 요소 중에서 조건에 일치하는 첫 번째 것을 반환하는 findFirst()가 있는데, 주로 filter()와 함께 사용되어 조건에 맞는 스트림의 요소가 있는지 확인하는데 사용된다. 병렬 스트림인 경우에는 findFirst()대신 findAny()를 사용해야 한다.
+
+```java
+Optional<Student> stu = stuStream.filter(s -> s.getTotalScore() <= 100).findFirst();
+Optional<Student> stu = parallelStream.filter(s -> s.getTotalScore() <= 100).findAny();
+```
+
+findAny()와 findFirst()의 반환 타입은 Optioanl<T>이며, 스트림의 요소가 없을 때는 비어있는 Optional객체를 반환한다.
+
+> [참고] 비어있는 Optioanal 객체는 내부적으로 null을 저장하고 있다.
+
+
+#### 통계 - count(), sum(), average(), max(), min()
+
+IntStream과 같은 기본형 스트림에는 스트림의 요소들에 대한 통계 정보를 얻을 수 있는 메서드들이 있다. 그러나 기본형 스트림이 아닌 경우에는 통게와 관련된 메서드들이 아래의 3개뿐이다.
+
+> [참고] 기본형 스트림의 min(), max()와 달리 매개변수로 Comparator를 필요로 한다는 차이가 있다.
+
+```java
+long count()
+Optional<T> max(Comparator<? super T> comparator)
+Optional<T> min(Comparator<? super T> comparator)
+```
+
+대부분의 경우 위의 메서들를 사용하기보다 기본형 스트림으로 변환하거나, 아니면 앞으로 배우게 될 reduce()와 collect()를 사용해서 통계 정보를 얻는다.
+
+#### reduce()
+
+reduce()s는 이름에서 짐작할 수 있듯이, 스트림의 요소를 줄여나가면서 연산을 수행하고 최종결과를 반환한다. 그래서 매개변수의 타입이 BinaryOperator<T> 인 것이다. 처음 두 요소를 가지고 연산한 결과를 가지고 그 다음 요소와 연산한다.
+
+이 과정에서 스트림의 요소를 하나씩 소모하게 되며, 스트림의 모든 요소를 소모하게 되면 그 결과를 반환한다.
+
+```java
+Optional<T> reduce(BinaryOperator<T> acculmulator)
+```
+
+이외 에도 연산결과의 초기값(identity)을 갖는 reduce()도 있는데, 이 메서드들은 초기값과 스트림의 첫 번째 요소로 연산을 시작한다. 스트릠의 요소가 하나도 없는 경우, 초기값이 반환되므로 반환 타입이 Optional<T>가 아니라 T이다.
+
+> [참고] BinaryOperator<T>는 BiFunction의 자손이며, BiFunction<T, T, T>와 동등하다.
+
+```java
+T reduce(T identtity, BinaryOperator<T> accumulator)
+U redcue(U identity, BiFunction<U,T,U> accumulator, BinaryOperator<U> combiner);
+```
+
+위의 두 번째 메서드의 마지막 매개변수인 combiner는 병렬 스트림에 의해 처리된 결과를 합칠 때 사용하기 위해 사용하는 것이며, 후에 병렬 스트림에서 명할 것이다.
+
+앞서 소개한 최종 연산 count()와 sum() 등은 내부적으로 모두 reduce()를 이용해서 아래와 같이 작성된 것이다.
+
+```java
+int count = intStream.reduce(0, (a, b) -> a + 1);       // count
+int sum = intStream.reduce(0, (a, b) -> a + b);         // sum()
+int max = intStream.reduce(Integer.MIN_VALUE, (a, b) -> a > b ? a : b); // MAX
+int min = intStream.reduce(Integer.MAX_VALUE, (a, b) -> a < b ? a: b);  // MIN
+```
+
+사실 max()와 min()의 경우, 초기값이 필요없으므로 Optional<T>를 반환하는 매개변수 하나짜리 reduce()를 사용하는 것이 낫다. 단, intStream의 타입이 IntStream인 경우 OptionalInt를 사용해야한다. Stream<T>와 달리 IntStream에 정의된 reduce()의 반환 타입이 OptionalInt이기 때문이다.
+
+```java
+// OptionalInt reduce(IntBinaryOperator accumulator)
+OptionalInt max = intStream.reduce((a, b) -> a > b ? a : b);        // MAX
+OptionalInt min = intStream.reduce((a, b) -> a < b ? a : b);        // MIN
+```
+
+참고로 위의 문장들에서 람다식으로 Integer클래스의 static메서드 max()와 min()을 이용해서 메서드 참조로 바꾸면 다음과 같다.
+
+```java
+OptionalInt max = intStream.reduce(Integer::max);
+OptionalInt min = intStream.reduce(Integer::min);
+```
+
+그리고 OptionalInt에 저장된 값을 꺼내려면 아래와 같이 하면 된다.
+
+```java
+int maxValue = max.getAsInt();      // OptionalInt에 저장된 값을 maxValue에 저장
+```
+
+reduce()가 내부적으로 어떻게 동작하는지 이해를 돕기 위해, reduce()로 스트림의 모든 요소를 다 더하는 과정을 for문으로 표현해 보았다.
+
+```java
+int a = identity;       // 초기값을 a에 저장한다.
+
+for(int b : stream) {
+    a = a + b;          // 모든 요소의 값을 a에 누적    
+}
+```
+
+위의 for문을 보고 나면, reduce()가 아마도 다음과 같이 작성되어 있을 것이라고 추측하는 것은 그리 어려운 일이 아니다.
+
+````java
+T reduce(T identity, BInaryOperator<T> accumulator) {
+    T a = identity;
+    
+    for(T b : stream)
+        a = accumulator.apply(a, b);
+    
+    return a;
+}
+````
+
+reduce()를 사용하는 방법은 간단하다. 그저 초기값(identity)과 어떤 연산(Binary Operator)으로 스트림의 요소를 줄여나갈 것인지만 결정하면 된다.
+
+### 2.6 collect()
+
+스트림의 최종 연산중에서 가장 복잡하면서도 유용하게 활용될 수 있는 부분이 collect()이다.
+
+collect()는 스트릠의 요소를 수집하는 최종 연산으로 앞서 배운 reducing과 유사하다. collect()가 스트릠의 요소를 수집하려면, 어떻게 수집할 것인가에 대한 방법이 정의되어 있어야 하는데, 이 방법을 정의한 것이 바로 컬렉터(collector)이다.
+
+컬렉터는 Collector인터페이스를 구현한 것으로, 직접 구현할 수도 있고 미리 작성된 것을 사용할 수 도 있다. Collectors클래스는 미리 작성된 다양한 종류의 컬렉터를 반환하는 static메서드를 가지고 있으며, 이 클래스를 통해 제공되는 컬렉터만으로도 많은 일들을 할 수 있다.
+
+- collect() : 스트릠의 최종연산, 매개변수로 컬렉터를 필요로 한다.
+- Collector : 인터페이스, 컬렉터는 이 인터페이스를 구현해야한다.
+- Collctors : 클래스, static 메서드로 미리 작성된 컬렉터를 제공해야한다.
+
+
+collect()는 매개변수의 타입이 Collector인데, 매개변수가 Collector를 구현한 클래스의 객체이어야 한다는 뜻이다. 그리고 collect()는 이 객체에 구현된 방법대로 스트림의 요소를 수집한다.
+
+> [참고] sort()할 때, Comparator가 필요한 것처럼 collect()할 때는 Collector가 필요하다.
+
+```java
+Object collect(Collector collector)     // Collector를 구현한 클래스의 객체를 매개변수로
+Object collect(Supplier supplier, BiConsumer accumulator, BiConsumer combiner)
+```
+
+그리고 매개변수가 3개나 정의된 collect()는 잘 사용하지 않지만, Collector인터페이스를 구현하지 않고 간단히 람다식으로 수집할 때 사용하면 편리하다.
+
+#### 스트림을 컬렉션과 배열로 변환 - toList(), toSet(), toMap(), toCollection(), toArray()
+
+스트림의 모든 요소를 컬렉션에 수집하려면, Collectors클래스의 toList()와 같은 메서드를 사용하면 된다. List나 Set이 아닌 특정 컬렉션을 지정하려면, toCollection()에 해당 컬렉션의 생성자 참조를 매개변수로 넣어주면 된다.
+
+```java
+List<String> names = stuStream.map(Student::getName)
+        .collect(Collectors.toList());
+
+ArrayList<String> list = names.stream()
+        .collect(Collectors.toCollection(ArrayList::new));
+```
+
+Map은 키와 값의 쌍으로 저장해야하므로 객체의 어떤 필드를 키로 사용할지와 값으로 사용할지를 지정해줘야 한다.
+
+```java
+Map<String, Person> map = personStream.collect(Collectors.toMap(p -> p.getRegId(), p -> p));
+```
+
+위의 문장은 요소의 타입이 Person인 스트림에서 사람의 주민번호(regId)를 키로 하고, 값으로 Person객체를 그대로 저장한다.
+
+> [참고] 항등 함수를 의미하는 람다식 'p -> p' 대신 Function.identity()를 쓸 수도 있다.
+
+스트림에 저장된 요소들을 'T[]'타입의 배열로 변환하려면, toArray()를 사용하면 된다. 단, 해당 타입의 생성자 참조를 매개변수로 지정해줘야 한다. 만일 매개변수를 지정하지 않으면 반환되는 배열의 타입은 'Object[]'이다.
+
+```java
+Student[] stuNames = studentStream.toArray(Student[]::new); // OK
+Student[] stuNames = studentStream.toArray();               // 에러
+Object[] stuNames = studentStream.toArray();                // OK
+```
+
+#### 통계 - counting(), summingInt(), averagingInt(), maxBy(), minBy()
+
+collect()를 사용하지 않고도 쉽게 얻을 수 있는데, 굳이 collect()를 사용한 방법을 보여주는 것은 collect()의 사용법을 보여주기 위한 것이다. 나중에 groupingBy()와 함꼐 사용할 때 비로소 이 메서드들이 왜 필요한지 알게 될 것이다. 보다 간결한 코드를 위해 Collectors의 static메서드를 호출할 때는 'Collectors.'를 생략하였다.
+
+> [참고] summingInt()외에도 summingLong(), summingDouble()이 있다.
+
+```java
+long count = stuStream.count();
+long count = stuStream.collect(counting());
+
+long totalScore = stuStream.mapToInt(Student::getTotalScore).sum();
+long totalScore = stuStream.collect(summingInt(Student::getTotalScore));
+
+OptionalInt topScore = studentStream.mapToInt(Student::getTotalScore).max();
+
+Optional<Student> topStudent = stuStream.max(Comparator.comparingInt(Student::getTotalScore));
+Optional<Student> topStudent = stuStream.collect(maxBy(Comparator.comparingInt(Student::getTotalScore)));
+
+IntSummaryStatistics stat = stuStream.mapToInt(Student::getTotalScore).summaryStatistics();
+IntSummaryStatistics stat = stuStream.collect(summarizing(Student::getTotalScore));
+```
+
+#### 리듀싱 - reducing
+
+IntStream에는 매개변수 3개짜리 collect()만 정의되어 있으므로 boxed()를 통해 IntStream을 Stream<Integer>로 변환해야 매개변수 1개짜리 collect()를 쓸수 있다.
+
+```java
+IntStream intStream = new Random().ints(1, 46).distinct().limit(6);
+
+OptionalInt max = intStream.reduce(Integer::max);
+Optional<Integer> max = intStream.boxed().collect(reducing(Integer::max));
+
+long sum = intStream.reduce(0, (a, b) -> a + b);
+long sum = intStream.boxed().collect(reducing(0, (a, b) -> a + b));
+
+int grandTotal = stuStream.map(Student::getTotalScore).reduce(0, Integer::sum);
+int grandTotal = stuStream.collect(reducing(0, Student::getTotalScore, Integer::sum));
+```
+
+Collectors.reducing()에는 아래와 같이 3가지 종류가 있다. 세 번째 메서드만 제외하고 reduce()와 같다. 세 번쨰 것은 위의 예에서 알 수 있듯이 map()과 reduce()를 하나로 합쳐놓은 것이다.
+
+```java
+Collector reducing(BinaryOperator<T> op)
+Collector reducing(T identity, BinaryOperator<T> op)
+Collector reducing(U identity, Function<T, U> mapper, BinaryOperator<U> op)
+```
+
+위의 메서드 목록 역시 와일드 카드를 제거하여 간략히 하였다.
+
+#### 문자열 결합 - joining()
+
+문자열 스트림의 모든 요소를 하나의 문자열로 연결해서 반환하다. 구분자를 지정해줄 수도 있고, 접두사와 접미사도 지정가능하다. 스트림의 요소가 String이나 StringBuffer처럼 CharSequence의 자손인 경우에만 결합이 가능하므로 스트림의 ㅅ요소가 문자열이 아닌 경우에는 먼저 map()을 이용해서 스트림의 요소를 문자열로 변환해야 한다.
+
+```java
+String studentNames = stuStream.amp(Student::getName).collect(joining());
+String studentNames = stuStream.amp(Student::getName).collect(joining(","));
+String studentNames = stuStream.amp(Student::getName).collect(joining(",", "[", "]"));
+```
+
+만일 map()없이 스트릠에 바로 joining()하면, 스트림의 요소에 toString()을 호출한 겨로가를 결합한다.
+
+```java
+// Student의 toString()으로 결합
+String studentInfo = stuStream.collect(joining(","));
+```
+
+#### 그룹화와 분할 - groupingBy(), partitioningBy()
+
+그룹화는 스트림의 요소를 특정 기준으로 그룹화하는 것을 의미하고, 분할은 스트림의 요소를 두 가지, 지정된 조건에 일치하는 그룹과 일치하지 않는 그룹으로의 분할을 의미한다. 아래의 메서드 정의에서 알 수 있듯이, groupingBy()는 스트림의 요소를 Function으로, partitioningBy()는 Predicate로 분류한다.
+
+```java
+Collector groupingBy(Function classifier)
+Collector groupingBy(Function classifier, Collector downstream)
+Collector groupingBy(Function classifier, Supplier mapFactory, Collector downstream)
+        
+Collector partitioningBy(Predicate predicate)
+Collector partitioningBy(Predicate predicate, Collector downStream)
+```
+
+메서드의 정의를 보면 groupingBy()와 partitioningBy()가 분류를 Function으로 하는냐 Predicate로 하느냐의 차이만 있을 뿐 동일하다는 것을 알 수 있다. 스트림을 두 개의 그룹으로 나눠야 한다면, 당연히 partitioningBy()로 분할하는 것이 더 빠르다. 그 외에는 groupingBy()를 쓰면 된다. 그리고 그룹화와 분할의 결과는 Map에 담겨 반환된다.
+
+#### partitioningBy()에 의한 분류
+
+예제 14-15참고
+
+#### groupingBy()에 의한 분류
+
+예제 14-16참고
+
+
+### 2.7 Collector 구현
+
+Collector 인터페이스는 다음과 같이 정의되어 있다.
+
+```java
+import java.util.function.BinaryOperator;
+import java.util.function.Supplier;
+
+public interface Collector<T, A, R> {
+    Supplier<A> supplier();
+
+    BiConsumer<A, T> accumulator();
+
+    BinaryOperator<A> combiner();
+    Function<A, R> finisher();
+    
+    Set<Characteristics> characteristics();  // 컬렉터의 특성이 담긴 Set을 반환
+    ...
+}
+```
+
+직접 구현해야하는 것은 위의 5개의 메서드인데, characteristics()를 제외하면 모두 반환타입이 함수형 인터페이스이다. 즉, 4개의 람다식을 작성하면 되는 것이다.
+
+> - supplier() : 작업 결과를 저장할 공간을 제공
+> - accumulator() : 스트림의 요소를 수집(collect)할 방법 제공
+> - combiner() : 두 저장공간을 병합할 방법 제공(병렬 스트림)
+> - finisher() : 결과를 최종적으로 변환할 방법 제공
+
+supplier()는 수집 결과를 저장할 공간을 제공하기 위한 것이고, accumulator()는 스트림의 요소를 어떻게 supplier()가 제공한 공간에 누적할 것인지를 정의한다. combiner()는 병렬 스트림인 경우, 여러 쓰레드에 의해 처리된 겨로가를 어떻게 합칠 것인가를 정의한다. 그리고, finisher()는 작업 결과를 변환하는 일을 하는 데 변환이 필요없다면, 항등 함수인 Function.identity()를 반환하면 된다.
+
+```java
+public Function finisher() {
+    return Function.identity(); // 항등 함수를 반환
+}
+```
+
+마지막으로 characteristics()는 컬렉터가 수행하는 작업의 속성에 대한 정보를 제공하기 위한 것이다.
+
+- Characteristics.CONCURRENT: 병렬로 처리할 수 있는 작업
+- Characteristics.UNORDERED: 스트림의 요소의 순서가 유지될 필요가 없는 작업
+- Characteristics.IDENTRITY_FINISH: finisher()가 항등 함수인 작업
+
+위의 3가지 속성 중에서 해당하는 것을 다음과 같이 Set에 담아서 반환하도록 구현하면 된다.
+
+```java
+public Set<Characteristics> characteristics() {
+    return Collections.unmodifiableSet(EnumSet.of(
+            Collector.Characteristics.CONCURRENT,
+            Collector.Characteristics.UNORDERED,
+        )
+    );
+}
+```
+
+만일 아무런 속성도 지정하고 싶지 않으면 아래와 같이 하면 된다.
+
+```java
+public Set<Characteristics> characteristics() {
+    return Collections.emptySet();
+}
+```
+
+finisher()를 제외하고 supplier(), accumulator(), combiner()는 모두 앞서 리듀싱에 대해서 배울 때 등장했던 개념이다. 결국 Collector도 내부적으로 처리하는 과정이 리듀싱과 같다는 것을 의미한다. IntStream의 count(), sum(), max(), min()등이 reduce()로 구현되어 있다는 것을 기억할 것이다. 그리고 collect()로도 count()등의 메서드와 같은 일을 할 수 있었다.
+
+```java
+long count = stuStream.count();
+long count = stuStream.collecot(counting());
+```
+
+이쯤에서 reduce()와 collect()의 차이에 대해서 궁금할 것인데, 이 둘은 근본적으로 하는 일이 같다. collect()는 앞서 살펴 본 것처럼, 그룹화와 분할, 집계 등에 유용하게 쓰이고, 병렬화에 있어서 reduce()보다 collect()가 더 유리하다. 
+
+
+
+
+
+
