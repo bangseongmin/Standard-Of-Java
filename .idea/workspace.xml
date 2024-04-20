@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="" />
+    <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter15/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter15/README.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,25 +38,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "chapter15",
-    "last_opened_file_path": "C:/Study/Standard-Of-Java/src/chapter12/ex4",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Problems",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;chapter15&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java/src/chapter12/ex4&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Study\Standard-Of-Java\src\chapter12\ex4" />
@@ -69,20 +72,20 @@
       <recent name="C:\Study\Standard-Of-Java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chapter15.stream" />
       <recent name="chapter14.stream.ex16" />
       <recent name="chapter14.lambda.ex7" />
       <recent name="chapter14.lambda.ex3" />
       <recent name="chapter13" />
-      <recent name="chapter12.ex6" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CollectorEx1">
-    <configuration name="CollectorEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.collector.ex17.CollectorEx1" />
+  <component name="RunManager" selected="Application.DataInputStreamEx1">
+    <configuration name="BufferedOutputStreamEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.stream.BufferedOutputStreamEx1" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.collector.ex17.*" />
+          <option name="PATTERN" value="chapter15.stream.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -90,12 +93,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StreamEx5" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.stream.ex13.StreamEx5" />
+    <configuration name="DataInputStreamEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.stream.DataInputStreamEx1" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.stream.ex13.*" />
+          <option name="PATTERN" value="chapter15.stream.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -103,12 +106,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StreamEx6" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.stream.ex14.StreamEx6" />
+    <configuration name="DataOutputStreamEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.stream.DataOutputStreamEx1" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.stream.ex14.*" />
+          <option name="PATTERN" value="chapter15.stream.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -116,12 +119,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StreamEx7" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.stream.ex15.StreamEx7" />
+    <configuration name="DataOutputStreamEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.stream.DataOutputStreamEx2" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.stream.ex15.*" />
+          <option name="PATTERN" value="chapter15.stream.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -129,12 +132,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StreamEx8" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.stream.ex16.StreamEx8" />
+    <configuration name="FileViewer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.file.FileViewer" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.stream.ex16.*" />
+          <option name="PATTERN" value="chapter15.file.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -144,11 +147,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CollectorEx1" />
-        <item itemvalue="Application.StreamEx8" />
-        <item itemvalue="Application.StreamEx7" />
-        <item itemvalue="Application.StreamEx6" />
-        <item itemvalue="Application.StreamEx5" />
+        <item itemvalue="Application.DataInputStreamEx1" />
+        <item itemvalue="Application.DataOutputStreamEx1" />
+        <item itemvalue="Application.DataOutputStreamEx2" />
+        <item itemvalue="Application.BufferedOutputStreamEx1" />
+        <item itemvalue="Application.FileViewer" />
       </list>
     </recent_temporary>
   </component>
@@ -207,6 +210,7 @@
       <workItem from="1712070725994" duration="6000" />
       <workItem from="1712980741209" duration="16973000" />
       <workItem from="1713363465787" duration="7456000" />
+      <workItem from="1713588607824" duration="17493000" />
     </task>
     <servers />
   </component>
