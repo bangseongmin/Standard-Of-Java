@@ -581,5 +581,500 @@ sample.dat파일로부터 데이터를 읽어 올 때, 아무런 변환이나 �
 
 하지만 이처럼 DataInputStream과 DataOutputStream을 사용하면, 데이터를 변환할 필요도 없고, 자리수를 세어서 따지지 않아도 되므로 편리하고 빠르게 데이터를 저장하고 읽을 수 있게 된다.
 
+```java
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+public class DataOutputStreamEx3 {
+
+    public static void main(String[] args) {
+        int[] score = { 100, 90, 95, 85, 80 };
+
+        try {
+            FileOutputStream fos = new FileOutputStream("score.dat");
+            DataOutputStream dos = new DataOutputStream(fos);
+
+            for(int i = 0; i < score.length; i++) {
+                dos.writeInt(score[i]);
+            }
+
+            dos.close();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+```
+
+int형 배열 score의 값들을 DataOutputStream을 이용해서 score.dat파일에 출력하는 예제이다. type 명령으로 score.dat의 내용을 보면 숫자가 아니라 문자들이 나타나는데, 그 이유는 type 명령이 파일의 내용을 문자로 변환해서 보여주기 때문이다. 파일에 실제 저장되 낸용은 다음과 같다.
+
+> [참고] Editplus의 편집 메뉴에서 'Hex 뷰어'를 선택하면 파일 'score.dat'의 실제 저장된 내용을 볼 수 있다.
+
+int의 크기가 4byte이므로 모두 20bytte의 데이터가 저장되어 있다. 참고로 16진수 두 자리가 1byte이다. 밑줄 아래의 숫자는 10진수로 변환한 겨로가이다.
+
+```java
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class DataInputStreamEx2 {
+
+    public static void main(String[] args) {
+        int sum = 0;
+        int score = 0;
+
+        FileInputStream fis = null;
+        DataInputStream dis = null;
+
+        try {
+            fis = new FileInputStream("score.dat");
+            dis = new DataInputStream(fis);
+
+            while (true) {
+                score = dis.readInt();
+                System.out.println(score);
+                sum += score;
+            }
+        } catch (EOFException e) {
+            System.out.println("정수의 총합은 " + sum + " 입니다.");
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        } finally {
+            try {
+                if(dis != null)
+                    dis.close();
+            } catch (IOException ie) {
+                ie.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+DataInputStream의 readInt()와 같이 데이터를 읽는 메서드는 더 이상 이 ㄺ을 데이터가 없으면 EOFException을 발생시킨다. 그래서 다른 입력스트림들과는 달리 문한 반복문과 EOFException을 처리하는 catch문을 이용해서 데이터를 읽는다.
+
+원래 while문으로 작업을 마친 후에 스트림을 닫아 줘야 하는데, while문이 무한 반복문이기 때문에 finally블럭에서 스트림을 닫도록 처리하였다.
+
+```java
+finally {
+    try {
+        if(dis != null)
+            dis.close();
+    } catch (IOException ie) {
+        ie.printStackTrace();
+    }
+}
+```
+
+참조변수 dis가 null일 때 close()를 호출하면 NullPointerException이 발생하므로 if문을 사용해서 dis가 null인지 체크한 후에 'close()'를 호출해야 한다. 그리고 'close()'는 IOException을 발생시킬 수 있으므로 try-catch블럭으로 감싸주었다.
+
+지금까지는 try블럭 내에서 스트림을 닫아주었지만, 작업 도중에 예외가 발생해서 스트림을 닫지 못하고 try블럭을 빠져나갈 수 있기 때문에 이처럼 finally블럭을 이용해서 스트림을 닫아주는 것이 더확실한 방법이다.
+
+사실 프로그램이 종료될 때, 가비지 컬렉터가 사용하던 자원들을 모두 해제 해주기 때문에 이렇게 간단한 예제에서는 스트림을 닫지 않아도 별문제가 되지는 않는다. 그래도 가능하면 스트림을 사용한 직후에 바로 닫아서 자원을 반환하는 것이 좋다.
+
+JDK 1.7부터는 try-with-resources문을 이용해서 close()를 직접 호출하지 않아도 자동호출되도록 할 수 있다.
+
+```java
+import java.io.DataInputStream;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+public class DataInputStreamEx3 {
+
+    public static void main(String[] args) {
+        int sum = 0;
+        int score = 0;
+
+        try (
+                FileInputStream fis = new FileInputStream("score.dat");
+                DataInputStream dis = new DataInputStream(fis)
+        ) {
+
+            while (true) {
+                score = dis.readInt();
+                System.out.println(score);
+                sum += score;
+            }
+        } catch (EOFException e) {
+            System.out.println("정수의 총합은 " + sum + " 입니다.");
+        } catch (IOException ie) {
+            ie.printStackTrace();
+        } 
+    }
+}
+```
+
+### 3.4 SequencelInputStream
+
+SequenceInputStream은 여러 개의 입력스트림을 연속적으로 연결해서 하나의 스트림으로부터 데이터를 읽는 것과 같이 처리할 수 있도록 도와준다. SequenceInputStream의 생성자를 제외하고 나머지 작업은 다른 입력스트림과 다르지 않다. 큰 파일을 여러 개의 작은 파일로 나누었다가 하나의 파일로 합치는 것과 같은 작업을 수행할 떄 사용하면 좋을 것이다.
+
+> [참고] SequenceInputStream은 다른 보조스트림들과는 달리 FilterInputStream의 자손이 아닌 InputStream을 바로 상속받아서 구현하였다.
+
+| 메서드 / 생성자 | 설명 |
+| --- | --- |
+| SequenceInputStream(Enumeration e) | Enumeration에 저장된 순서대로 입력스트림을 하나의 스트림으로 연결한다. |
+| SequenceInputStream(InputStream s1, InputStream s2) | 두 개의 입력스트림을 하나로 연결한다. |
+
+
+Vector에 연결할 입력스트림들을 저장한 다음 Vector의 Enumeration elements()를 호출해서 생성자의 매개변수로 사용한다.
+
+```java
+// [사용 예 1]
+Vector files = new Vector();
+files.add(new FileInputStream("file.001"));
+files.add(new FileInputStream("file.002"));
+SequenceInputStream in = new SequenceInputStream(files.elements());
+
+// [사용 예 2]
+FileInputStream file1 = new FileInputStream("file.001");
+FileInputStream file2 = new FileInputStream("file.002");
+SequenceInputStream in = new SequenceInputStream(file1, file2);
+```
+
+```java
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.SequenceInputStream;
+import java.util.Arrays;
+import java.util.Vector;
+
+public class SequenceInputStreamEx {
+
+    public static void main(String[] args) {
+        byte[] arr1 = { 0, 1, 2 };
+        byte[] arr2 = { 3, 4, 5 };
+        byte[] arr3 = { 6, 7, 8 };
+        byte[] outSrc = null;
+
+        Vector v = new Vector();
+        v.add(new ByteArrayInputStream(arr1));
+        v.add(new ByteArrayInputStream(arr2));
+        v.add(new ByteArrayInputStream(arr3));
+
+        SequenceInputStream input = new SequenceInputStream(v.elements());
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        int data = 0;
+
+        try {
+            while ((data = input.read()) != -1) {
+                output.write(data);
+            }
+        }catch (IOException e) {}
+
+        outSrc = output.toByteArray();
+
+        System.out.println("Input Source1   : " + Arrays.toString(arr1));
+        System.out.println("Input Source2   : " + Arrays.toString(arr2));
+        System.out.println("Input Source3   : " + Arrays.toString(arr3));
+        System.out.println("Output Source1  : " + Arrays.toString(outSrc));
+    }
+}
+```
+
+3개의 ByteArrayInputStream을 Vector와 SequenceInputStream을 이용해서 하나의 입력스트림처럼 다룰 수 있다. Vector에 저장된 순서대로 입력되므로 순서에 주의하도록 하자.
+
+
+### 3.5 PrintStream
+
+PrintStream은 데이터를 기반스트림에 다양한 형태로 출력할 수 있는 print, println, printf와 같은 메서드를 오버로딩하여 제공한다.
+
+PrintStream은 데이터를 적절한 문자로 출력하는 것이기 때문에 문자기반 스트림의 역할을 수행한다. 그래서 JDK1.1에서 부터 PrintStream보다 향상된 기능의 문자기반 스트림인 PrintWriter가 추가되었으나 그 동안 매우 빈번히 사용되던 System.out이 PrintStream이다 보니 둘 다 사용할 수 밖에 없게 된다.
+
+PrintStream과 PrintWriter는 거의 같은 기능을 가지고 있지만 PrintWriter가 PrintStream에 비해 다양한 언어의 문자를 처리하는데 적합하기 때문에 가능하면 PrintWriter를 사용하는 것이 좋다.
+
+> [참고] PrintStream은 우리가 지금까지 알게 모르게 많이 사용해 왔다. System클래스의 static멤버인 out과 err. 즉 System.out, System.err이 printStream이다.
+
+![그림1](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/115ab161-d0a3-436b-805a-963c82878bb1)
+
+print()나 println()을 이용해서 출력하는 중에 PrintStream의 기반스트림에서 IOException이 발생하면 checkError()를 통해서 인지할 수 있다. println()이나 print()는 예외를 더닞지 않고 내부에서 처리하도록 정의하였는데, 그 이유는 println()과 같은 메서드가 매우 자주 사용되는 것이기 때문이다.
+
+```java
+import java.io.Closeable;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+
+public class PrintStream extends FilterOutputStream implements Appendable, Closeable {
+    private boolean trouble = false;
+
+    public void print(int i) {
+        write(String.valueOf(i));
+    }
+
+    private void write(String s) {
+        try {
+            ...
+        } catch (IOException e) {
+            trouble = true;
+        }
+    }
+    
+    public boolean checkError() {
+        if(out != null) flush();
+        return trouble;
+    }
+}
+```
+
+> [참고] i+""와 String.valueOf(i)는 같은 결과를 얻지만, String.valueOf(i)가 더 성능이 좋다.
+
+
+printf()는 JDK1.5부터 추가된 것으로, C언어와 같이 편리한 형식화된 출력을 지원하게 되었다. printf()에 사용될 수 있는 옵션은 꽤나 다양한데 그에 대한 자세한 내용은 Java API에서 찾을 수 있다. 만일 Java API문서에서 Formatter클래스를 참고하면 된다. 우선 자주 사용되는 옵션들만을 골라서 정리해보았다.
+
+![그림2](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/25057d46-3077-4122-976b-2e8319fb43cb)
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/b5d67fe8-3686-46b9-9df9-b2a91ec9e614)
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/92b1aa8e-9b9a-4224-9d28-c826f5d850f3)
+
+![그림3](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/fbab6b77-ec93-4067-b985-8206eef0267f)
+
+```java
+import java.util.Date;
+
+public class PrintStreamEx1 {
+
+    public static void main(String[] args) {
+        int i = 65;
+        float f = 1234.56789f;
+
+        Date d = new Date();
+
+        System.out.printf("문자 %c의 코드는 %d\n", i, i);
+        System.out.printf("%d는 8진수로 %o, 16진수로 %x\n", i, i, i);
+        System.out.printf("%3d%3d%3d\n", 100, 90, 80);
+        System.out.println();
+
+        System.out.printf("123456789012345678901234567890\n");
+        System.out.printf("%s%-5s%5s\n", "123", "123", "123");
+        System.out.println();
+
+        System.out.printf("%-8.1f%8.1f %e\n", f, f, f);
+        System.out.println();
+
+        System.out.printf("오늘은 %tY년 %tm월 %td일 입니다.\n", d, d, d);
+        System.out.printf("지금은 %tH시 %tM분 %tS초 입니다.\n", d, d, d);
+        System.out.printf("지금은 %1$tH시 %1$tM분 %1$tS초 입니다.\n", d, d, d);
+    }
+}
+```
+
+옵션을 변경해가면서 테스트하고 그 결과를 확인하도록 하자. 한 가지 덧붙여 설명할 것은 매개변수(argument)의 개수에 대한 것인데, 형식화된 문자열에 사용된 옵션의 개수와 매개변수의 개수가 일치하도록 신경 써야 한다.
+
+```java
+System.out.printf("지금은 %tH시 %tM분 %tS초 입니다.\n", d, d, d);
+System.out.printf("지금은 %1$tH시 %1$tM분 %1$tS초 입니다.\n", d, d, d);
+```
+
+위의 두 문장은 같은 결과를 출력하는데, 두 번째 문장의 경우 형식화된 문자열에 사용된 옵션의 개수와 매개변수의 개수가 일치하지 않는다는 것을 알 수 있다. 이처럼 '숫자$'를 옵션 앞에 붙여 줌으로써 출력된 매개변수를 지정해 줄 수 있다. 예를 들어 '1$'라면 첫 번째 매개변수를 의미한다.
+
+## 4. 문자기반 스트림
+
+문자데이터를 다루는데 사용된 다는 것을 제외하고는 바이트기반 스트림과 문자기반의 스트림에서는 Reader/Wrtier가 그와 같은 역할을 한다. 다음은 Reader/Writer의 메서드인데 byte배열 대신 char배열을 사용한다는 것 외에는 InputStream/OutputStream의 메서드와 다르지 않다.
+
+![그림4](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/a42079b4-4b24-41f8-9615-d5cb8b2bb9a1)
+
+![그림5](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/b97e4e20-71a6-4e1e-b007-5d3e635ef852)
+
+한 가지 더 얘기하고 싶은 것은 문자기반 스트림이라는 것이 단순히 2byte로 스트림을 처리하는 것만을 의미하지는 않는다는 것이다. 문자 데이터를 다루는데 필요한 또 하나의 정보는 인코딩이다.
+
+문자기반 스트림, 즉 Reader/Writer 그리고 그 자손들은 여러 종류의 인코딩과 자바에서 사용하는 유니코드(UTF-16)간의 변환을 자동적으로 처리해준다. Reader는 특정 인코딩을 읽어서 유니코드로 변환하고 Writer는 유니코드를 특정 인코딩으로 ㅂ변환하여 저장한다.
+
+### 4.2 FileReader와 FileWriter
+
+FileReader/FileWriter는 파일로부터 텍스트데이터를 익고, 파일에 쓰는데 사용된다. 사용방법은 FileInputStream/FileOutputStream과 다르지 않으므로 자세한 내용은 생략한다.
+
+```java
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class FileConversion {
+
+    public static void main(String[] args) {
+        try {
+            FileReader fr = new FileReader(args[0]);
+            FileWriter fw = new FileWriter(args[1]);
+
+            int data = 0;
+
+            while ((data = fr.read()) != -1) {
+                if(data != '\t' && data != '\n' && data != ' ' && data != '\r')
+                    fw.write(data);
+            }
+
+            fr.close();
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+파일의 공백을 몯 ㅜ없애는 예제인데 입력스트림으로부터 읽은 데이터를 변환해서 출력 스트림에 쓰는 작업의 예를 보여주기 위한 것이다. 
+
+
+### 4.3 PipedReader와 PipedWriter
+
+PipedReader/PipedWriter는 쓰레드 간에 데이터를 주고받을 때 사용된다. 다른 스트림과는 달리 입력과 출력스트림을 하나의 스트림으로 연결(connect)해서 데이터를 주고받는다는 특징이 있다.
+
+스트림을 생성한 다음에 어느 한쪽 쓰레드에서 connect()를 호출해서 입력스트림과 출력스트림을 연결한다. 입출력을 마친 후에는 어느 한쪽 스트림만 닫아도 나머지 스트림은 자동으로 닫힌다. 이 점을 제외하고는 일반 입출력방법과 다르지 않다.
+
+PipedReaderWriter 예제를 보면 두 쓰레드가 PipedReader/PipedWriter를 이용해서 서로 메시지를 주고받는 예제이다. 쓰레드를 시작하기 전에 PipedReader와 PipedWriter를 연결해야한다는 것에 유의하자.
+
+StringWriter는 CharArrayWriter처럼 메모리를 사용하는 스트림인데 내부적으로 StringBuffer를 가지고 있어서 출력하는 내용이 여기에 저장된다.
+
+
+### 4.4 StringReader와 StringWriter
+
+StringReader/StringWriter는 CharArrayReader/CharArrayWriter와 같이 입출력 대상이 메모리인 스트림이다. StringWriter에 출력되는 데이터는 내부의 StringBuffer에 저장되면 StringWriterㅇ의 다음과 같은 메서드를 이용해서 저장된 데이터를 얻을 수 있다.
+
+> StringBuffer getBuffer() : StringWriter에 출력한 데이터가 저장된 StringBuffer를 반환한다.
+> String toString(): StringWriter에 출력된 (StringBuffer에 저장된) 문자열을 반환한다.
+
+근본적으로 String도 char배열이지만, 아무래도 char배열보다는 String으로 처리하는 것이 여러모로 편리한 경우가 더 많을 것이다.
+
+
+## 5. 문자기반의 보조스트림
+
+### 5.1 BufferedReader와 BufferedWriter
+
+BufferedReader/BufferedWriter는 버퍼를 이용해서 입출력의 효율을 높일 수 있또록 해주는 역할을 한다. 버퍼를 이용하면 입출력의 효율이 비교할 수 없을 정도로 좋아지기 때문에 사용하는 것이 좋다.
+
+BufferedReader의 readLine()을 사용하면 데이터를 라인단위로 읽을 수 있고 BufferedWriter는 newLine()이라는 줄바꿈 해주는 메서드를 가지고 있다.
+
+```java
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class BufferedReaderEx1 {
+
+    public static void main(String[] args) {
+        try {
+            FileReader fr = new FileReader("BufferedReaderEx1.java");
+            BufferedReader br = new BufferedReader(fr);
+
+            String line = "";
+            for(int i = 1; (line = br.readLine()) != null; i++) {
+                if(line.contains(";")) {
+                    System.out.println(i + ":" + line);
+                }
+            }
+
+            br.close();
+        }catch (IOException e){}
+    }
+}
+```
+
+BufferedReader의 readLine()을 이용해서 파일을 라인단위로 라인단위로 읽은 다음 contains()를 이용해서 ';'를 포함하고 있는지 확인하여 출력하는 예제이다. 파일에서 특정 문자 또는 문자열을 포함한 라인을 쉽게 찾아낼 수 있음을 보여준다.
+
+### 5.2 InputStreamReader와 OutputStreamWriter
+
+InputStreamReader/OutputStreamWriter는 이름에서 알 수 있는 것과 같이 바이트기반 스트림을 문자기반 스트림으로 연결시켜주는 역할을 한다. 그리고 바이트기반 스트림의 데이터를 지정된 인코딩의 문자데이터로 변환하는 작업을 수행한다.
+
+> [참고] InputStreamReader/OutputStreamWriter는 Reader/Writer의 자손이다.
+
+![그림6](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/b9eb6910-c8b8-4172-9a5d-27b467ab848e)
+
+한글 윈도우에서 중국어로 작성된 파일을 읽을 때 InputStreamReader(InputStream in, String encoding)을 이용해서 인코딩이 중국어로 되어있다는 것을 지정해주어야 파일의 내용이 깨지지 않고 올바르게 보일 것이다. 인코딩을 지정해 주징 않는다면 OS에서 사용하는 인코딩을 사용해서 파일을 해석해서 보여주기 때문에 원래 작성된 데로 볼 수 없을 것이다.
+
+이와 마찬가지로 OutputStreamWriter를 이용해서 파일에 텍스트데이터를 저장할 때 생성자OutputStreamWriter(OutputStream in, String encoding)를 이용해서 인코딩을 지정하지 않으면 OS에서 사용하는 인코딩으로 데이터를 저장할 것이다.
+
+> [참고] 시스템 속성에서 sun.jnu.encoding의 값을 보면 OS에서 사용하는 인코딩의 종류를 알 수 있다.
+
+
+## 6. 표준입출력과 File
+
+### 6.1 표준입출력 -System.in, System.out, System.err
+
+표준입출력은 콘솔(console, 도스창)을 통한 데이터 입력과 콘솔로의 데이터 출력을 의미한다. 자바에서는 표준 입출력(Standard I/O)을 위해 3가지 입출력 스트림, Sytstem.in, System.out, Sytstem.err을 제공하는데, 이 들은 자바 어플리케이션의 실행과 동시에 사용할 수 있게 자동적으로 생성되기 때문에 개발자가 별도로 스트림을 생성하는 코드를 작성하지 않고도 사용가 가능하다.
+
+> System.in - 콘솔로부터 데이터를 입력받는데 사용
+> 
+> System.out - 콘솔로 데이터를 출력하는데 사용
+> 
+> System.err - 콘솔로 데이터를 출력하는데 사용
+
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/9b0ce3cc-1277-43d7-87c8-f77fb2ab3b47)
+
+System클래스의 소스에서 알 수 있듯이 in, out, err은 System클래스에 선언된 클래스변수(static변수)이다. 선언부분만을 봐서는 out, err, in의 타입은 InputStream과 PrintStream이지만 실제로는 버퍼를 이용하는 BufferedInputStream과 BufferedOutputStream의 인스턴스를 사용한다.
+
+```java
+public final class System {
+    public final static InputStream in = nullInputStream();
+    public final static PrintStream out = nullInputStream();
+    public final static PrintStream err = nullInputStream();
+}
+```
+
+```java
+import java.io.IOException;
+
+public class StandardIOEx1 {
+
+    public static void main(String[] args) {
+        try {
+            int input = 0;
+
+            while ((input = System.in.read()) != -1) {
+                System.out.println("input: " + input + " , (char)input: " + (char)input);
+            }
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+ 
+화면에 커서가 입력을 기다리고 있을 것이다. hello라고 입력하고 '^Z'를 누르거나 Enter를 누르면, 입력한 문자들이 출력되고 프로그램이 종료된다.
+
+예제를 실행하여 System.in.read()가 호출되면, 코드의 진행을 멈추고 콘솔에 커서가 깜빡이며 사용자의 입력을 기다린다.
+
+콘솔입력은 버퍼를 가지고 있기 때문에 Backspace키를 이용해서 편집이 가능함며 한 번에 버퍼의 크기만큼 입력이 가능해진다. 그래서 Enter키나 입력의 끝을 알리는 '^z'를 누르기 전까지는 아직 데이터가 입력 중인 것으로 간주되어 커서가 입력을 계속 기다리는 상태에 머무리게 된다.
+
+콘솔에 데이터를 입력하고 Enter키를 누르면 입력대기상태에서 벗어나 입력된 데이터를 읽기 시작하고 입력된 뎅치터를 모두 읽으면 다시 입력대기 상태가 된다.
+
+이러한 과정이 반복되다가 사용자가 '^z'를 입력하면, read()는 입력이 종료되었음을 인식하고 -1을 반환하여 while문을 벗어나 프로그램이 종료된다.
+
+
+위의 결과에서 알 수 있듯이 Enter키를 누르는 것은 두 개의 특수문자 '\r'과 '\n'이 입력된 것으로 간주된다. 'r'은 캐리지리턴, 즉 커서를 현재 라인의 첫 번쨰 컬럼으로 이동시키고 '\n'은 커서를 다음 줄로 이동시키는 줄바꿈(new line)을 한다.
+
+그래서 Enter키를 누르면, 캐리지리턴과 줄바꿈이 수행되어 다음 줄의 첫 번째 칼럼으로 커서가 이동하는 것이다.
+
+
+여기서 한 가지 문제는 Enter키도 사용자입력으로 간주되어 매 입력마다 '\r'과 '\n'이 붙기 때문에 이 들을 제거해주어야 하는 불편함이 있다는 것이다. 이러한 불편함을 제거하려면 전에 살펴본 것과 같이 System.in에 BufferedReader를 이용해서 readLine()을 통해 라인단위로 데이터를 입력받으면 된다.
+
+텍스트기반의 사용자인터페이스 시대에 탄생한 C언어는 콘솔이 데이터를 입력받는 주요 수단이었지만, 자바의 탄생한 그래픽기반의 사용자인터페이스 시대는 콘솔을 통해서 데이터를 입력받은 경우는 드물기 때문에 Java에서 콘솔을 통한 입력에 대한 지원이 미약했다.
+
+
+### 6.2 표준입출력의 대상 변경 - setOut(), setErr(), setIn()
+
+초기에는 System.in, System.out, System.err의 입출력대상이 콘솔화면이지만, setIn(), setOut(), setErr()를 사용하면 입출력을 콘솔 이외에 다른 입출력 대상으로 변경하는 것이 가능하다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/3cdc0ff9-ae46-4fa3-8558-9bcb6762bb65)
+
+그러나 JDK1.5부터 Scanner클래스가 제공되면서 System.in으로부터 데이터를 입력받아 작업하는 것이 편리해졌다.
+
+```java
+public class StandardIOEx2 {
+
+    public static void main(String[] args) {
+        System.out.println("out: Hello World!");
+        System.err.println("err: Hello World!");
+    }
+}
+```
+
+System.out, System.err 모두 출력대상이 콘솔이기 때문에 System.out대신 System.err을 사용해도 같은 결과를 얻는다.
+
+
 
 
