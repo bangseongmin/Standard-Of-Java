@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter15/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter15/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,7 +42,7 @@
     &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;chapter15&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;chapter16&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -53,7 +52,7 @@
     &quot;project.structure.last.edited&quot;: &quot;Problems&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;File.Encoding&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -73,20 +72,20 @@
       <recent name="C:\Study\Standard-Of-Java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chapter16.network" />
+      <recent name="chapter15.serializable_ex" />
       <recent name="chapter15.file" />
       <recent name="chapter15.io" />
       <recent name="chapter15.stream" />
-      <recent name="chapter14.stream.ex16" />
-      <recent name="chapter14.lambda.ex7" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.SerialEx2">
-    <configuration name="FileEx6" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter15.file.FileEx6" />
+  <component name="RunManager" selected="Application.NetworkEx5">
+    <configuration name="NetworkEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx1" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter15.file.*" />
+          <option name="PATTERN" value="chapter16.network.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -94,12 +93,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FileEx9" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter15.file.FileEx9" />
+    <configuration name="NetworkEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx2" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter15.file.*" />
+          <option name="PATTERN" value="chapter16.network.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -107,12 +106,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="FileSplit" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter15.file.FileSplit" />
+    <configuration name="NetworkEx3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx3" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter15.file.*" />
+          <option name="PATTERN" value="chapter16.network.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -120,12 +119,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SerialEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter15.serializable_ex.SerialEx1" />
+    <configuration name="NetworkEx4" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx4" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter15.serializable_ex.*" />
+          <option name="PATTERN" value="chapter16.network.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -133,12 +132,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="SerialEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter15.serializable_ex.SerialEx2" />
+    <configuration name="NetworkEx5" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx5" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter15.serializable_ex.*" />
+          <option name="PATTERN" value="chapter16.network.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -148,11 +147,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.SerialEx2" />
-        <item itemvalue="Application.SerialEx1" />
-        <item itemvalue="Application.FileSplit" />
-        <item itemvalue="Application.FileEx9" />
-        <item itemvalue="Application.FileEx6" />
+        <item itemvalue="Application.NetworkEx5" />
+        <item itemvalue="Application.NetworkEx4" />
+        <item itemvalue="Application.NetworkEx3" />
+        <item itemvalue="Application.NetworkEx2" />
+        <item itemvalue="Application.NetworkEx1" />
       </list>
     </recent_temporary>
   </component>
@@ -215,7 +214,8 @@
       <workItem from="1713671714319" duration="13365000" />
       <workItem from="1714147239176" duration="7000" />
       <workItem from="1714390151458" duration="6000" />
-      <workItem from="1714968844498" duration="13633000" />
+      <workItem from="1714968844498" duration="19835000" />
+      <workItem from="1715014017170" duration="132000" />
     </task>
     <servers />
   </component>
