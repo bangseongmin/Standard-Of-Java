@@ -6,9 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter14/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter14/README.MD" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter14/collector/ex17/CollectorEx1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter14/collector/ex17/CollectorEx1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/chapter14/collector/ex17/ConcatCollector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter14/collector/ex17/ConcatCollector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter15/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter15/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,8 +43,8 @@
     &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;chapter14&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java/src/chapter12/ex4&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;chapter15&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Study/Standard-Of-Java&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -61,33 +59,34 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Study\Standard-Of-Java" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter12\ex4" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter09\ex06" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter8\chainedException" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter7\example05" />
-      <recent name="C:\Study\Standard-Of-Java\src\chapter7\example06" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Study\Standard-Of-Java\src\chapter15\stringstream" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter14\lambda\ex8" />
       <recent name="C:\Study\Standard-Of-Java\src\chapter09\ex37" />
       <recent name="C:\Study\Standard-Of-Java\src" />
       <recent name="C:\Study\Standard-Of-Java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chapter15.file" />
+      <recent name="chapter15.io" />
+      <recent name="chapter15.stream" />
       <recent name="chapter14.stream.ex16" />
       <recent name="chapter14.lambda.ex7" />
-      <recent name="chapter14.lambda.ex3" />
-      <recent name="chapter13" />
-      <recent name="chapter12.ex6" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CollectorEx1">
-    <configuration name="CollectorEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.collector.ex17.CollectorEx1" />
+  <component name="RunManager" selected="Application.SerialEx2">
+    <configuration name="FileEx6" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.file.FileEx6" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.collector.ex17.*" />
+          <option name="PATTERN" value="chapter15.file.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -95,12 +94,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StreamEx5" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.stream.ex13.StreamEx5" />
+    <configuration name="FileEx9" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.file.FileEx9" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.stream.ex13.*" />
+          <option name="PATTERN" value="chapter15.file.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -108,12 +107,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StreamEx6" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.stream.ex14.StreamEx6" />
+    <configuration name="FileSplit" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.file.FileSplit" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.stream.ex14.*" />
+          <option name="PATTERN" value="chapter15.file.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -121,12 +120,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StreamEx7" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.stream.ex15.StreamEx7" />
+    <configuration name="SerialEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.serializable_ex.SerialEx1" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.stream.ex15.*" />
+          <option name="PATTERN" value="chapter15.serializable_ex.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -134,12 +133,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="StreamEx8" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter14.stream.ex16.StreamEx8" />
+    <configuration name="SerialEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter15.serializable_ex.SerialEx2" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter14.stream.ex16.*" />
+          <option name="PATTERN" value="chapter15.serializable_ex.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -149,11 +148,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.CollectorEx1" />
-        <item itemvalue="Application.StreamEx8" />
-        <item itemvalue="Application.StreamEx7" />
-        <item itemvalue="Application.StreamEx6" />
-        <item itemvalue="Application.StreamEx5" />
+        <item itemvalue="Application.SerialEx2" />
+        <item itemvalue="Application.SerialEx1" />
+        <item itemvalue="Application.FileSplit" />
+        <item itemvalue="Application.FileEx9" />
+        <item itemvalue="Application.FileEx6" />
       </list>
     </recent_temporary>
   </component>
@@ -211,7 +210,12 @@
       <workItem from="1711984809091" duration="4855000" />
       <workItem from="1712070725994" duration="6000" />
       <workItem from="1712980741209" duration="16973000" />
-      <workItem from="1713363465787" duration="7100000" />
+      <workItem from="1713363465787" duration="7456000" />
+      <workItem from="1713588607824" duration="17493000" />
+      <workItem from="1713671714319" duration="13365000" />
+      <workItem from="1714147239176" duration="7000" />
+      <workItem from="1714390151458" duration="6000" />
+      <workItem from="1714968844498" duration="13633000" />
     </task>
     <servers />
   </component>
@@ -224,7 +228,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/chapter08/ExceptionEx9.java</url>
           <line>4</line>
-          <properties class="chapter08.ExceptionEx9">
+          <properties class="chapter08.ExceptionEx9" method="main">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -233,7 +237,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/chapter08/ExceptionEx15.java</url>
           <line>6</line>
-          <properties class="chapter08.ExceptionEx15">
+          <properties class="chapter08.ExceptionEx15" method="main">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -242,7 +246,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/chapter09/ex14/StringEx4.java</url>
           <line>6</line>
-          <properties class="chapter09.ex14.StringEx4">
+          <properties class="chapter09.ex14.StringEx4" method="main">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -251,7 +255,7 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/chapter09/ex36/ScannerEx2.java</url>
           <line>8</line>
-          <properties class="chapter09.ex36.ScannerEx2">
+          <properties class="chapter09.ex36.ScannerEx2" method="main">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
@@ -260,11 +264,20 @@
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/chapter11/TreeMapEx1.java</url>
           <line>6</line>
-          <properties class="chapter11.TreeMapEx1">
+          <properties class="chapter11.TreeMapEx1" method="main">
             <option name="EMULATED" value="true" />
             <option name="WATCH_EXIT" value="false" />
           </properties>
           <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/chapter15/io/StandardIOEx3.java</url>
+          <line>8</line>
+          <properties class="chapter15.io.StandardIOEx3" method="main">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="28" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/chapter13/ThreadEx05.java</url>
