@@ -1075,6 +1075,276 @@ public class StandardIOEx2 {
 
 System.out, System.err 모두 출력대상이 콘솔이기 때문에 System.out대신 System.err을 사용해도 같은 결과를 얻는다.
 
+setOut과 같은 메소드를 사용하는 방법 외에도 커맨드 라인에서 표준입출력의 대상을 간단히 바꿀 수 있는 다음과 같은 방법이 있다.
 
+C:\ java StandardIOEx2
+out: Hello World!
+
+StandardIOEx2의 System.out출력을 콘솔이 아닌 output.txt로 지정한다. 즉, System.out에 출력하는 것은 output.txt에 저장된다. 기존에 output.txt파일이 있었다면, 기존의 내용은 삭제된다.
+
+```shell
+C:\java StandardIOEx2 > output.txt
+err: Hello World!
+
+C:\type output.txt
+out : Hello World!
+```
+
+StandardIOEx2의 System.out출력을 output.txt에 저장한다. '>'를 사용했을 때와는 달리 '>>'는 기존 내용의 마지막에 새로운 내용이 추가된다.
+
+```shell
+C:\java StandardIOEx2 >> output.txt
+err: Hello World!
+
+C:\type output.txt
+out : Hello World!
+out : Hello World!
+```
+
+StandardIOEx2의 표준입력을 output.txt로 지정한다. 즉, 콘솔이 아닌 output.txt로부터 데이터를 입력받는다.
+
+```shell
+C:\type output.txt
+out : Hello World!
+out : Hello World!
+```
+
+### 4.3 RandomAccessFile
+
+자바에서는 입력과 출력이 각각 분리되어 별도로 작업을 하도록 설계되어 있는데, RandomAccessFile만은 하나의 클래스로 파일에 대한 입력과 출력을 모두 할 수 있도록 되어 있다. 아래 그림에서도 알 수 있듯이, InputStream이나 OutputStream으로부터 상속받지 않고 DataInput인터페이스와 DataOutput인터페이스를 모두 구현했기 때문에 읽기와 쓰기가 모두 가능하다. 
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/f1dee962-04a8-4301-afc0-cb0dabd580c4)
+
+사실 DataInputStream은 DataInput인터페이스를, DataOutputStream은 DataOutput인터페이스를 구현했다. 이 두 클래스의 기본 자료형(primitive data type)을 읽고 쓰기 위한 메서드들은 모두 이 2개의 인터페이스에 정의되어 있는 것들이다.
+
+따라서 RandomAccessFile클래스도 DataInputStream과 DataOutputStream처럼, 기본자료형 단위로 데이터를 읽고 쓸 수 있다.
+
+그래도 역시 RandomAccessFile클래스의 가장 큰 장점은 파이르이 어느 위치에나 읽기/쓰기가 가능하다는 것이다. 다른 입출력 클래스들은 입출력소스에 순차적으로 읽기/쓰기를 하기 때문에 읽기와 쓰기가 제한적인데 반해서 RandomAccessFile클래스는 파일에 읽고 쓰는 위치에 제한이 없다.
+
+이것을 가능하게 하기 위해서 내부적으로 파일 포인터를 사용하는데, 입출력 시에 작업이 수행되는 곳이 바로 파일 포인터가 위치한 곳이 된다.
+
+파일 포인터의 위치는 파일의 제일 첫 부분(0부터 시작)이며, 읽기 또는 쓰기를 수행할 때마다 작업이 수행된 ㅈ다음 위치로 이동하게 된다. 순차적으로 읽기나 쓰기를 한다면, 파일 포인터를 이동시키기 위해 별도의 작업이 필요하지 않지만, 파일의 임의의 위치에 있는 내용에 대해서 작업하고자 한다면, 먼저 파일 포인터를 원하는 위치로 옮긴 다음 작업을 해야 한다.
+
+현재 작업 중인 파일에서 파일 포인터의 위치를 알고 싶을 때는 getFilePointer()를 사용하면 되고, 파일 포인터의 위치를 옮기기 위해서는 seek(long pos)나 skipBytes(int n)를 사용하면 된다.
+
+> [참고] 사실 모든 입출력에 사용되는 클래스들은 입출력 시 다음 작업이 이루어질 위치를 저장하고 있는 포인터를 내부적으로 갖고 있다. 다만 내부적으로만 사용될 수 있기 때문에 작업자가 포인터의 위치를 마음대로 변경할 수 없다는 것이 RandomAccessFile과 다른 점이다.
+
+| 생성자/메서드                                                                                  | 설명                                                                                                                                                                                                                                                  |
+|------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| RandomAccessFile(File file, String mode), RandomAccessFile(String fileName, String mode) | 주어진 file에 읽기 또는 읽기와 쓰기를 하기 위한 RandomAccessFile인스턴스를 생성한다. mode의 값은 'r', 'rw', 'rws', 'rwd'가 지정가능하다. 'r'은 파일로부터 읽기만을 수애할 때, 'rw'은 파일에 읽기와 쓰기가 가능할 때, 'rws'와 'rwd'은 기본적으로 'rw'와 같은데, 출력내용이 파일에 지연 없이 바로 쓰이게 한다. 'rwd'는 파일 내용만, 'rws'는 파일의 메타정보도 포함한다. |
+| FileChannel getChannel()                                                                 | 파일의 파일 채널을 반환한다.                                                                                                                                                                                                                                    |
+| FileDescriptor getFD()                                                                   | 파일의 파일 디스크립터를 반환                                                                                                                                                                                                                                    | 
+| long getFilePointer()                                                                    | 파일 포인터픠 위치를 알려 준다.                                                                                                                                                                                                                                  |
+| long length()                                                                            | 파일의 크기를 얻을 수 있다.                                                                                                                                                                                                                                    |
+| void seek(long pos)                                                                      | 파일 포인터의 위치를 변경한다. 위치는 파일의 첫 부분부터 pos크기만큼 떨어진 곳이다                                                                                                                                                                                                    |
+| void setLength(long newLength)                                                           | 파일의 크기를 지정된 길이로 변경한다.                                                                                                                                                                                                                               |
+| int skipBytes(int n)                                                                     | 지정된 수만큼의 byte를 건너뛴다.                                                                                                                                                                                                                                |
+
+
+### 6.4 File
+
+파일은 기본적이면서도 가장 많이 사용되는 입출력 대상이기 때문에 중요하다.
+
+자바에서는 File클래스를 통해서 파일과 디렉토리를 다룰 수 있도록 하고 있다. 그래서 File인스턴스는 파일일 수도 있고 디렉토리일 수 도 있다. 앞으로 File클래스의 생성자와 메서드를 관련된 것들끼리 나누어서 예제와 함께 설명하고자 한다.
+
+| 생성자/메서드                                                                      | 설명                                                                                                                                                               | 
+|------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| File(String fileName)                                                        | 주어진 문자열을 이름으로 갖는 파일을 위한 File인스턴스를 생성한다. 파일 뿐만 아니라 디렉토리도 같은 방법으로 다룬다. 여기서 fileName은 주로 경로(path)를 포함해서 지정해주지만, 파일 이름만 사용해도 되는 데 이 경우 프로그램이 실행되는 위치가 경로(path)로 간주된다. |
+| File(String pathName, String fileName), File(File pathName, String fileName) | 파일의 경로와 이름을 따로 분리해서 지정할 수 있도록 한 생성자. 이 중 두번째 것은 경로를 문자열이 아닌 File인스턴스인 경우를 위해서 제공된 것이다.                                                                           |
+| File(URI uri)                                                                | 지정된 uri로 파일을 생성                                                                                                                                                  |
+| String getName()                                                             | 파일이름을 String으로 반환                                                                                                                                                |
+| String getPath()                                                             | 파일의 경로(path)를 String으로 반환                                                                                                                                        |
+| String getAbsolutePath(), File getAbsoluteFile()                             | 파일의 절대경로를 String으로 반환, 파일의 절대경로를 File로 반환                                                                                                                        |
+| String getParent(), File getParentFile() | 파일의 조상 디렉토리를 String으로 반환, 파이르이 조상 디렉토리를 File로 반환 |
+| String getCanonicalPath(), File getCanonicalFile() | 파일의 정규경로를 String으로 반환, 파일의 정규경로를 File로 반환 |
+
+
+| 멤버변수 | 설명 |
+| --- | --- |
+| static String pathSeparator() | OS에서 사용하는 경로(path) 구분자. 윈도우 ";", 유닉스 ":" |
+| static char pathSeparatorChar() | OS에서 사용하는 경로(path)구분자. 윈도우(;), 유닉스(:) |
+| static String separator() | OS에서 사용하는 이름 구분자. 윈도우(\), 유닉스(/) |
+| static char separtorChar() | OS에서 사용하는 이름 구분자. 윈도우(\), 유닉스(/) |
+
+표에서 알 수 있는 것과 같이 파일의 경로와 디렉토리나 파일의 이름을 분하는 데 사용되는 구분자가 OS마다 다를 수 있기 떄문에, OS독립적으로 프로그램을 작성하기 위해서는 반드시 위의 멤버변수들을 이용해야한다. 만일 윈도우에서 사용하는 구분자를 코드에 직접 적어 놓았다면, 이 코드는 다른 OS에서는 오류를 일으킬 수 있다.
+
+```java
+public class FileEx1 {
+
+    public static void main(String[] args) throws IOException {
+        File f = new File("C:\\Study\\Standard-Of-Java\\src\\chapter15\\file\\FileEx1.java");
+        String fileName = f.getName();
+        int pos = fileName.lastIndexOf(".");
+
+        System.out.println("경로를 제외한 파일이름 - " + f.getName());
+        System.out.println("확장자를 제외한 파일이름 - " + fileName.substring(0,pos));
+        System.out.println("확장자 - " + fileName.substring(pos+1));
+
+        System.out.println("경로를 포함한 파일이름 - "		+ f.getPath());
+        System.out.println("파일의 절대경로        - "	+ f.getAbsolutePath());
+        System.out.println("파일의 정규경로        - "	+ f.getCanonicalPath());
+        System.out.println("파일이 속해 있는 디렉토리 - "	+ f.getParent());
+        System.out.println();
+        System.out.println("File.pathSeparator - "		+ File.pathSeparator);
+        System.out.println("File.pathSeparatorChar - "  + File.pathSeparatorChar);
+        System.out.println("File.separator - "		+ File.separator);
+        System.out.println("File.separatorChar - "	+ File.separatorChar);
+        System.out.println();
+        System.out.println("user.dir=" + System.getProperty("user.dir"));
+        System.out.println("sun.boot.class.path=" + System.getProperty("sun.boot.class.path"));
+    }
+}
+```
+
+File인스턴스를 생성하고 메서드를 이용해서 파일의 경로와 구분자 등의 정보를 출력하는 예제이다. 결과를 보면 어떤 결과를 얻기 위해서는 어떤 메서드를 사용해야하는지 알 수 있다.
+
+> 1. 이미 존재하는 파일을 참조할 때 
+> 
+>   File f = new File("c:\\", "FileEx1.java");
+> 
+> 2. 기존에 없는 파일을 새로 생성할 때
+> 
+>   File f = new File("c:\\", "FileEx1.java");
+>   f.createFile();
+
+
+## 7. 직렬화
+
+객체를 컴퓨터에 저장했다가 다음에 다시 꺼내 쓸 수 없을지 또는 네트워크를 통해 컴퓨터 간에 서로 객체를 주고받을 수는 없을까라고 고민해본 적이 있는가? 과연 이러한 일들이 가능할까? 직렬화를 통해 이러한 일들이 가능하다.
+
+### 7.1 직렬화란?
+
+직렬화(serialization)란 객체를 데이터 스트림으로 만드는 것을 뜻한다. 다시 얘기하면 객체에 저장된 데이터를 스트림에 쓰기(write)위에 연속적인(serial) 데이터로 변화나흔ㄴ 것을 말한다. 
+
+반대로 스트림으로부터 데이터를 읽어서 객체를 만드는 것을 역직려로하(deserialization)라고 한다.
+
+![image](https://github.com/bangseongmin/Standard-Of-Java/assets/22147400/229b306e-eeb0-4e6b-b36b-fb010c2beb75)
+
+직렬화라는 요엉 떄문에 괜히 어렵게 느낄수 있는데 사실 객체를 저장하거나 전송하려면 당연히 이렇게 할 수 밖에 없다.
+
+이미 앞서 객체에 대해서 설명했지만, 여기서 객체란 무엇이며, 객체를 저장한다는 것은 무엇을 의미하는가에 대해서 다시 한번 정리하고 넘어가는 것이 좋을 것 같다.
+
+객체는 클래스에 정의된 오직 인스턴스변수의 집합이다. 객체에는 클래스변수나 메서드가 포함되지 않는다. 객체는 오직 인스턴스변수들로만 구성되어 있다.
+
+전에는 이해를 돕기 위해 객체를 생성하면 인스턴스변수와 메서드를 함께 그렸지만, 사실 객체에는 메서드가 포함되지 않는다. 인스턴스 변수는 인스턴스마다 다른 값을 가질 수 있어야하기 때문에 별도의 메모리공간이 필요하지만 메서드는 변하는 것이 아니라서 메모리를 낭비해 가면서 인스턴스마다 같은 내용의 코드(메서드)를 포함시킬 이유는 없다.
+
+객체를 저장한다는 것은 바로 객체의 모든 인스턴스변수의 값을 저장한다는 것과 같은 의미이다. 어떤 객체를 저장하고자 한다면, 현재 객체의 모든 인스턴스변수의 값을 저장하기만 하면 된다. 그리고 저장했던 객체를 다시 생성하려면, 객체를 생성한 우에 저장했던 값을 읽어서 생성한 객체의 인스턴스변수에 저장하면 되는 것이다.
+
+클래스에 정의된 인스턴스변수가 단순히 기본형일 때는 인스턴스변수의 값을 저장하는 것이 간단하지만, 인스턴스변수의 타입이 참조형일 때는 그리 간단하지 않다. 예를 들어 인스턴스변수의 타입이 배열이라면 배열에 저장된 값들도 모두 저장되어야할 것이다. 
+
+그러나 우이는 객체를 어떻게 직렬화해야 하는지 전혀 고민하지 않아도 된다. 다만 객체를 직렬화/역질렬화할 수 있는 ObjectInputStream과 ObjectOuputStream을 사용하는 방법만 알면 된다.
+
+> [참고] 두 객체가 동일한지 판단하는 기준이 두 객체의 인스턴스변수의 값들이 같고 다름이라는 것을 상기하자.
+
+
+### 7.2 ObjectInputStream, ObjectOutputStream
+
+직렬화(스트림에 객체를 출력)에는 ObejctOutputStream을 사용하고 역직렬화(스트림으로부터 객체를 입력)에는 ObjectInputStream을 사용한다.
+
+ObjectInputStream과 ObjectOutputStream은 각각 InputStream과 OutputStream을 직접 상속받지만 기반스트림을 필요로 하는 보조스트림이다. 그래서 객체를 생성할 때 입출력(직렬화/역직렬화)할 스트림을 지정해주어야 한다.
+
+```java
+ObjectInputStream(InputStream in)
+ObjectOuputStream(OutputStream out)
+```
+
+만일 파일에 객체를 저장(직렬화)하고 싶다면 다음과 같이 하면 된다.
+
+```java
+FileOutputStream fos = new FileOutputStream("objectfile.ser");
+ObjectOutputStream out = new ObjectOutputStream(fos);
+out.writeObject(new UserInfo());
+```
+
+위의 코드는 objectfile.ser이라는 파일에 userInfo객체를 직렬화하여 저장한다. 출력할 스트림(FileOutputStream)을 생성해서 이를 기반스트림으로 하는 ObjectOutputStream을 생성한다.
+
+ObjectOutputStream의 writeObject(Object obj)를 사용해서 객체를 출력하면, 객체가 파일에 직렬화되어 저장된다.
+
+역직별화 방법 역시 간단하다. 직렬화할 떄와는 달리 입력스트림을 사용하고 writeObject(Object obj)대신 readObject( )를 사용하여 저장된 데이터를 읽기만 하면 객체로 역직렬화된다.
+
+다만 readObject()의 반환타입이 Obejct이기 때문에 객체 원래의 타입으로 형변홚 ㅐ주어야 한다.
+
+
+### 7.3 직렬화가 가능한 클래스 만들기 - Serializable, transient
+
+직렬화가 가능한 클래스를 만드는 방법은 간단하다. 직렬화하고자 하는 클래스가 java.io.Serializable 인터페이스를 구현하도록 하면 된다.
+
+예를 들어 왼쪽과 같이 UserInfo라는 클래스가 있을 때, 이 클래스를 직렬화가 가능하도록 변경하려면 오른쪽과 같이 Serializable인터페이스를 구현하도록 변경하면 된다.
+
+```java
+import java.io.Serializable;
+
+// AS-IS
+public class UserInfo { }
+
+// TO-BE
+public class UserInfo implements Serializable { }
+```
+
+Serializable 인터페이슨느 아무런 내용도 없는 빈 인터페이스지이지만, 직렬화를 고려하여 작성한 클래스인지를 판단하는 기준이 된다.
+
+아래와 같이 Serializable을 구현한 클래스를 상속받는다면, Serializable을 구현하지 않아도 된다.  UserInfo는 Serializable을 구현하지 않았지만 조상인 SuperUserInfo가 Serializable를 구현하였으므로 UserInfo역시 직렬화가 가능하다.
+
+```java
+class SuperUserInfo implements Serializable {
+    String name;
+    String password;
+}
+
+class UserInfo extends SuperUserInfo {
+    int age;
+}
+```
+
+위의 경우 UserInfo 객체를 직렬화하면 조상인 SuperUserInfo에 정의된 인스턴스 변수 name, password도 함께 직렬화된다.
+
+그러나 다음과 같이 조상클래스가 Serializable을 구현하지 않았다면 자손클래스를 직렬화할 떄 조상클래스에 정의된 인스턴스변수 name과 pasword는 직렬화 대상에서 제외된다.
+
+조상클래스에 정의된 인스턴스변수를 직렬화 대상에 포함시키기 위해서는 조상클래스가 Serializable을 구현하도록 하던가, 조상의 인스턴스 변수들이 직렬화되도록 처리하는 코드를 직접 추가해 주어야한다.
+
+모든 클래스의 최고조상인 Object는 Serializable을 구현하지 않았기 때문에 직렬화할 수 없다.
+
+직렬화하고자 하는 객체의 클래스에 직렬화가 안 되는 객체에 대한 참조가 포함하고 있다면 제어자 transient를 붙여서 직렬화 대상에서 제외되도록 할 수 있다.
+
+
+### 7.4 직렬화가능한 클래스의 버전관리
+
+직렬화된 객체를 역직렬화할 때는 직렬화 했을 떄와 같은 클래스를 사용해야한다. 그러나 클래스의 이름이 같더라도 클래스의 내용이 변경된 겨웅 역직렬화는 실패하면 다음과 같은 예외가 발생한다.
+
+```shell
+java.io.InvalidClassException: UserInfo; local class incompatible;
+stream classdesc serialVersionUID = 695367358338942489, local class serialVersionUID = ....
+```
+
+위 예외의 내용은 직렬화 할 때오ㅠㅏ 역직렬화 할 때의 클래스의 버전이 같아야 하는데 다르다는 것이다. 객체가 직렬화될 때 클래스에 정의된 멤버들의 정보를 이용해서 serialVersionUID라는 클래스의 버전을 자동생성해서 직렬화 내용에 포함된다.
+
+그래서 역직렬화할 때 클래스의 버전을 비교함으로써 직렬화할 때의 클래스의 버전과 일치하는지 확인할 수있는 것이다.
+
+그러나 static변수나 상수 또는 transient가 붙은 인스턴스변수가 추가되는 경우에는 직렬화에 영향을 미치지 않기 떄문에 클래스의 버전을 다르게 인식하도록 할 필요는 없다.
+
+네트워크으로 객체를 직렬화하여 전송하는 경우, 보내는 쪽과 받는 쪽이 모두 같은 버전의 클래스를 가지고 있어야하는데 클래스가 조금만 변경되어도 해당 클래스를 재배포하는 것은 프로그램을 관리하기 어렵게 만든다.
+
+이럴 때는 클래스의 버전을 수동으로 관리해줄 필요가 있다.
+
+```java
+import java.io.Serializable;
+
+class MyData implements Serializable {}
+```
+
+위와 같이 MyData라는 직렬화가 가능한 클래스가 있을 때, 클래스의 버전을 수동으로 관리하려면 다음과 같이 serialVersionUID를 추가로 정의해야한다.
+
+```java
+import java.io.Serializable;
+
+class MyData implements Serializable {
+    static final long serialVersionUID = 351831546721365L;
+    int valuel;
+}
+```
+
+이렇게 클래스 내에 serialVersionUID를 정의해주면, 클래스의 내용이 바뀌어도 클래스의 버전이 자동생성된 값으로 변경되지 않는다.
+
+serialVersionUID의 값을 정수값이면 어떠한 값으로도 지정할 수 있지만 서로 다른 클래스간에 같은 값을 갖지 않도록 serialve.exe를 사용해서 생성된 값을 사용하느 ㄴ것이 보통이다.
 
 
