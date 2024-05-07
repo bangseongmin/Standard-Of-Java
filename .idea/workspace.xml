@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="452c335d-d714-428b-8c63-89dd38d35f20" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/chapter16/README.MD" beforeDir="false" afterPath="$PROJECT_DIR$/src/chapter16/README.MD" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,20 +73,20 @@
       <recent name="C:\Study\Standard-Of-Java" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="chapter16.tcp" />
       <recent name="chapter16.network" />
       <recent name="chapter15.serializable_ex" />
       <recent name="chapter15.file" />
       <recent name="chapter15.io" />
-      <recent name="chapter15.stream" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.NetworkEx5">
-    <configuration name="NetworkEx1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx1" />
+  <component name="RunManager" selected="Application.UdpClient">
+    <configuration name="TcpIpClient5" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.tcp.TcpIpClient5" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter16.network.*" />
+          <option name="PATTERN" value="chapter16.tcp.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -93,12 +94,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NetworkEx2" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx2" />
+    <configuration name="TcpIpMultichatServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.tcp.TcpIpMultichatServer" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter16.network.*" />
+          <option name="PATTERN" value="chapter16.tcp.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -106,12 +107,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NetworkEx3" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx3" />
+    <configuration name="TcpIpServer5 (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.tcp.TcpIpServer5" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter16.network.*" />
+          <option name="PATTERN" value="chapter16.tcp.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -119,12 +120,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NetworkEx4" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx4" />
+    <configuration name="UdpClient" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.udp.UdpClient" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter16.network.*" />
+          <option name="PATTERN" value="chapter16.udp.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -132,12 +133,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NetworkEx5" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="chapter16.network.NetworkEx5" />
+    <configuration name="UdpServer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="chapter16.udp.UdpServer" />
       <module name="Standard-Of-Java" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="chapter16.network.*" />
+          <option name="PATTERN" value="chapter16.udp.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -147,11 +148,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.NetworkEx5" />
-        <item itemvalue="Application.NetworkEx4" />
-        <item itemvalue="Application.NetworkEx3" />
-        <item itemvalue="Application.NetworkEx2" />
-        <item itemvalue="Application.NetworkEx1" />
+        <item itemvalue="Application.UdpClient" />
+        <item itemvalue="Application.UdpServer" />
+        <item itemvalue="Application.TcpIpClient5" />
+        <item itemvalue="Application.TcpIpMultichatServer" />
+        <item itemvalue="Application.TcpIpServer5 (1)" />
       </list>
     </recent_temporary>
   </component>
@@ -216,11 +217,23 @@
       <workItem from="1714390151458" duration="6000" />
       <workItem from="1714968844498" duration="19835000" />
       <workItem from="1715014017170" duration="132000" />
+      <workItem from="1715089651365" duration="5736000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -298,6 +311,11 @@
           <url>file://$PROJECT_DIR$/src/chapter14/stream/ex15/StreamEx7.java</url>
           <line>44</line>
           <option name="timeStamp" value="25" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/chapter16/tcp/TcpIpServer5.java</url>
+          <line>10</line>
+          <option name="timeStamp" value="31" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -154,3 +154,13 @@ TCP소켓 프로그래밍은 클라이언트와 서버간의 일대일 통신이
 > 
 > ServerSocket: 포트와 연결(bind)되어 외부의 연결요청을 기다리다 연결요청이 들어오면, Socket을 생성해서 소켓과 소켓간의 통신이 이루어지도록 한다. 한 포트에 하나의 ServerSocket만 연결할 수 있다.
 
+### 2.3 UDP 소켓 프로그래밍
+
+TCP소켓 프로그래밍에서는 Socket과 ServerSocket을 사용하지만, UDP소켓 프로그래밍에서는 DatagramSocket과 DatagramPacket을 사용한다.
+
+UDP는 연결지향적인 프로토콜이 아니기 때문에 ServerSocket이 필요하지 않다. UDP통신에서 사용하는 소켓은 DatagramSocket이며 데이터를 DatagramPacket에 담아서 전송한다.
+
+DatagramPacket은 헤더와 데이터로 구성되어 있으며, 헤더에는 DatagramPacket을 수신할 호스트의 정보(호스트의 주소와 포트)가 저장되어 있다. 소포(packet)에 수신할 상대편의 주소를 적어서 보내는 것과 같다고 이해하면 된다.
+
+그래서 DatagramPacket을 전송하면 DatagramPacket에 지정된 주소(호스트의 포트)와 DatagramSocket에 도착한다.
+
